@@ -47,7 +47,7 @@ This can happen as a result of a few different things:
     Note the window that appears titled 'Change Password'
     _Your password is expired. You must enter another password before you can log on_
     
-    **Providing a weak password brings another error:    **
+    **Providing a weak password brings another error:**
     Password could not be changed. Microsoft.SqlServer.connectionInfo)
     Additional information:
     _Login failed for user 'sa'. Reason: Password change failed. The passowrd does not meet Windows policy requirements because it is not complex enough.
