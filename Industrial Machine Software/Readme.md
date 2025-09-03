@@ -43,3 +43,22 @@ This section documents software solutions, installation guides, and configuratio
   - **Note**: Ensure the machine is connected to the network with the selected IP address before starting.
 
 ---
+
+## "Ethernet Does Not Have a Valid IP Configuration" on Encoder Machine
+
+- **Issue**: The Ethernet adapter shows no valid IP configuration, preventing communication with the Encoder Machine, typically due to missing static IP settings.
+- **Solution**: Manually assign a static IP address to match the machine's expected network range.
+  - Go to **Control Panel > Network and Internet > Network Connections**.
+  - Right-click the **Ethernet** adapter and select **Properties**.
+  - Select **Internet Protocol Version 4 (TCP/IPv4)** and click **Properties**.
+  - Choose **Use the following IP address**:
+    - **IP address**: `192.168.1.89`
+    - **Subnet mask**: `255.255.255.0`
+    - Leave **Default gateway**, **DNS**, and other fields blank.
+  - Click **OK**, then close all windows.
+  - Open the marking software (e.g., **File > Edit Marking Systems**).
+  - Set the **Marking System IP** to `192.168.1.1`.
+  - Ensure **IP - Number** is also set to `192.168.1.1`.
+  - Save and test connection to the Encoder Machine.
+
+---
