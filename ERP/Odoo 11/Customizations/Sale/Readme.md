@@ -108,3 +108,134 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After validation, invoices will generate XMLs in the dedicated folder with the quotation origin in the filename and full traceability.
 
 ---
+
+## Enhanced XML Generation for Quotations: Support Blank, Finance, Store, and Combined Copy Types
+
+- **Issue**: Printing single or dual copies (1 or 2) of SOVs leads to paper wastage when one copy (e.g., Finance or Store) fails due to printer jams or errors, with no option to selectively generate specific copy types.
+- **Solution**: Redesign XML generation to support explicit copy type tagging (`B`, `F`, `S`, `FS`) and update UI actions for precise control.
+
+  - **Step 1: Modify `sale.py` – Add `copy_type` to XML output**
+    - In `create_xml` method, add:
+      ```python
+      copy_type = self.env.context.get('copy_type', 'B')  # Default: Blank
+      ```
+    - Inject into XML:
+      ```python
+      childOfproduct = root.createElement('copy_type')
+      childOfproduct.appendChild(root.createTextNode(str(copy_type)))
+      second_root.appendChild(childOfproduct)
+      ```
+  - **Step 2: Update `sale_views.xml` – Replace old buttons**
+    - Remove legacy buttons for _LOJ • 1 Copy_ and _LOJ • 2 Copy_ from the form view.
+    - Add new button:
+      ```xml
+      <button name="action_confirm_create_xml" type="object" string="LOJ • Finance &amp; Store" class="oe_highlight"
+              confirm="Are you sure you want to send Finance &amp; Store copies to Loj?"
+              context="{'copies': 1, 'copy_type': 'FS'}"/>
+      ```
+  - **Step 3: Replace server actions for bulk list-view operations**
+
+    - Remove old actions: _LOJ • 1 Copy_, _LOJ • 2 Copy_.
+    - Add new contextual actions:
+
+      ```xml
+      <!-- LOJ • Blank -->
+      <record id="action_sale_order_loj_blank" model="ir.actions.server">
+        <field name="name">LOJ • Blank</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+          records.with_context(copies=1, copy_type='B').action_confirm_create_xml()
+        </field>
+      </record>
+
+      <!-- LOJ • Finance -->
+      <record id="action_sale_order_loj_finance_copy" model="ir.actions.server">
+        <field name="name">LOJ • Finance</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+          records.with_context(copies=1, copy_type='F').action_confirm_create_xml()
+        </field>
+      </record>
+
+      <!-- LOJ • Store -->
+      <record id="action_sale_order_loj_store_copy" model="ir.actions.server">
+        <field name="name">LOJ • Store</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+          records.with_context(copies=1, copy_type='S').action_confirm_create_xml()
+        </field>
+      </record>
+
+      <!-- LOJ • Finance & Store -->
+      <record id="action_sale_order_loj_finance_store" model="ir.actions.server">
+        <field name="name">LOJ • Finance &amp; Store</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+          records.with_context(copies=1, copy_type='FS').action_confirm_create_xml()
+        </field>
+      </record>
+      ```
+
+  - **Step 4**: Restart the Odoo service and upgrade the **Sales** module.
+  - After upgrade, users can select quotations and choose _Blank_, _Finance_, _Store_, or _Finance & Store_ from the **Action** menu, generating XMLs with accurate `copy_type` for targeted, waste-minimized printing.
+
+---
+
+## Added Warehouse Location to SOV XML Export
+
+- **Issue**: The generated SOV XML lacks warehouse location information, which is critical for logistics, picking, and fulfillment tracking.
+- **Solution**: Extend the SOV XML generation to include the `location` field from the quotation/sales order.
+  - In `sale.py`, within the `create_xml` method, add:
+    ```python
+    location_name = self.location.name if self.location else 'No Location'
+    childOfLocation = root.createElement('location')
+    childOfLocation.appendChild(root.createTextNode(location_name))
+    second_root.appendChild(childOfLocation)
+    ```
+  - This injects a `<location>` tag into the XML output containing the name of the assigned warehouse location.
+  - Example output in XML:
+    ```xml
+    <location>Stock</location>
+    ```
+  - Restart the Odoo service and upgrade the **Sales** module to apply the change.
+  - Now, every SOV XML export will include location data, improving traceability and operational accuracy.
+
+---
+
+## Enforced Required Fields: Payment Terms, Plate Number, and Location in Sales Orders
+
+- **Issue**: Users frequently issue quotations without setting **Payment Terms**, **Plate Number**, or **Location**, leading to operational delays, incorrect dispatch, and invoicing issues.
+- **Solution**: Make the fields mandatory at the model level to prevent saving or confirming quotations without them.
+  - **Step 1**: Update `sale/models/sale.py` in `SaleOrder` class:
+    ```python
+    payment_term_id = fields.Many2one(
+        'account.payment.term',
+        string='Payment Terms',
+        required=True,
+        default=lambda self: self.env.ref('account.account_payment_term_immediate').id
+    )
+    ```
+  - **Step 2**: Update `sales_location/models/sale.py` in `SaleOrder` class:
+    ```python
+    location = fields.Many2one('sale.locations', string="Location", required=True)
+    plate_no = fields.Char(string='Plate Number', required=True)
+    ```
+  - **Step 3**: Restart the Odoo service.
+  - **Step 4**: Upgrade both modules:
+    - Go to **Apps > sale** > Upgrade
+    - Go to **Apps > sales_location** > Upgrade
+  - After upgrade, users **must** fill in **Payment Terms**, **Plate Number**, and **Location** before saving or confirming a quotation, ensuring completeness for downstream operations.
+
+---
