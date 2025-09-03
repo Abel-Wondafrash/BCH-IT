@@ -24,6 +24,6 @@ This section documents software utilities and tools, including code editors, des
 - **Description**: Utilities for managing the HID FARGO DTC1250e ID Card Printer & Encoder, including the driver for printer functionality and HID Asure ID Software for designing and printing ID cards.
 - **Resources**:
   - **[HID FARGO DTC1250e Driver](./Files/SFW-00435_RevK_DTC1250e_v5.5.0.3_setup.zip)**
-  - **[HID Asure ID Software](./Files/Asure_ID_Setup_v7.8.6.537.exe)**
+  - **[HID Asure ID Software](https://drive.google.com/file/d/1NYsjM2Fkdou67VqEZrJuH_PYcO5W1oL8/view?usp=drive_link)**
 
 ---
