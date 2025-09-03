@@ -68,9 +68,10 @@ Covers:
 - [Handover & Onboarding](#)  
 - [Reference & Resources](#)  
 - [Tribal Knowledge](#)  
-- [Contacts – TOP Staff](#)  
-- [Contacts – Vendors](#)  
+- [Contacts – TOP Staff](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.p5r7sz95ao4n)
+- [Contacts – Vendors](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.csmeknmtdzmk)
 
 *(Each item will link to the corresponding Google Doc or internal resource.)*  
 
 ---
+
