@@ -35,7 +35,6 @@ This section contains SQL queries used to manage and troubleshoot Odoo 11 databa
 - **Output**: Lists all BOMs linked to product templates with duplicate entries under the same code, enabling cleanup via archiving obsolete versions.
 
 ---
-<<<<<<< HEAD
 
 ## Force Cancel Sales Order and All Associated Records via PostgreSQL Function
 
@@ -126,5 +125,3 @@ This section contains SQL queries used to manage and troubleshoot Odoo 11 databa
   - **Warning**: Only use on **fully processed orders** where standard cancellation is blocked. **`COMMIT;` is required** for changes to persist. Use with extreme caution — bypasses Odoo business logic and constraints.
 
 ---
-=======
->>>>>>> c906e047885f5db71744aacff9ca8d5cc6336518
