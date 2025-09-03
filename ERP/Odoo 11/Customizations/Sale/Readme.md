@@ -108,7 +108,6 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After validation, invoices will generate XMLs in the dedicated folder with the quotation origin in the filename and full traceability.
 
 ---
-<<<<<<< HEAD
 
 ## Enhanced XML Generation for Quotations: Support Blank, Finance, Store, and Combined Copy Types
 
@@ -240,5 +239,3 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After upgrade, users **must** fill in **Payment Terms**, **Plate Number**, and **Location** before saving or confirming a quotation, ensuring completeness for downstream operations.
 
 ---
-=======
->>>>>>> c906e047885f5db71744aacff9ca8d5cc6336518
