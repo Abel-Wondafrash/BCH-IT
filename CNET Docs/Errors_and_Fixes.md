@@ -64,6 +64,6 @@ This can happen as a result of a few different things:
 ## ID Generator Error – Cash Sales Voucher
 
 - **Error:** ID Generation for Cash Sales Voucher Failed!
-- **Issue:** Filled up storage on the server
+- **Probable Reason:** Filled up storage on the server
 - **Solution:** Free up space in the partition where CNET stores files on the server
 ---
