@@ -72,21 +72,25 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
 
 ---
 
-## HR Appraisal Access Denied: "Sorry, you are not allowed to access this document" on appraisal.subject.line1
+## Document Access Denied: "Sorry, you are not allowed to access this document" for HR & Recruitment Models (skip.stage, hr.recruitment.note, appraisal.subject.line, hr.appraisal.parameter)
 
 - **Issue**: Users receive the exact error:  
-  _"Odoo Server Error - Access Error: Sorry, you are not allowed to access this document. Document model: appraisal.subject.line1"_  
-  when opening appraisal records created prior to module update. This is caused by missing Access Control List (ACL) permissions for the `appraisal.subject.line1` model.
-- **Solution**: Create an ACL entry to grant full access to the Appraisals/Manager group.
+  _"Sorry, you are not allowed to access this document. Please contact your system administrator if you think this is an error."_  
+  when accessing records in models such as `skip.stage`, `hr.recruitment.note`, `appraisal.subject.line`, or `hr.appraisal.parameter`. This occurs due to missing Access Control List (ACL) rules for these models, commonly after module customization or migration.
+- **Solution**: Create individual ACL entries for each model to grant proper access.
   - Enable **Developer Mode**.
-  - Navigate to **Settings > Technical > Access Controls List > Access Rights**.
-  - Click **Create**.
-  - Set the following values:
-    - **Name**: `hr.appraisal`
-    - **Object**: `appraisal.subject.line1`
-    - **Group**: _Appraisals / Manager_
-    - **Read**, **Write**, **Create**, **Delete**: ✅ Enabled
-  - Click **Save** to apply. Affected users can now access the appraisal records.
+  - Go to **Settings > Technical > Access Controls List > Access Rights**.
+  - Click **Create** and configure:
+    - **Name**: Descriptive name (e.g., `HR Appraisal Models Access`)
+    - **Object**: Set to one of the affected models (e.g., `appraisal.subject.line`)
+    - **Group**: _Appraisals / Manager_ (or appropriate group)
+    - **Permissions**: Enable **Read**, **Write**, **Create**, **Delete** as required
+  - Repeat for each model:
+    - `skip.stage`
+    - `hr.recruitment.note`
+    - `appraisal.subject.line`
+    - `hr.appraisal.parameter`
+  - Click **Save** for each entry. Access will be enforced immediately upon user session refresh.
 
 ---
 
@@ -127,42 +131,159 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
 
 ---
 
-## Restrict Visibility of Confirm, Done, Cancel Buttons in payment_request Module via Custom Access Group
+## Job Title-Specific Appraisal Parameters Not Loading in Appraisal Form
 
-- **Issue**: Standard users must be restricted from seeing or using key action buttons ([Confirm], [Done], [Cancel]) in the `payment_request` module, requiring granular access control.
-- **Solution**: Create a custom security group and apply it to target buttons through XML view and security definition.
-  - **Step 1**: Identify the target buttons (`Confirm`, `Done`, `Cancel`) in the module’s `models.py` or corresponding view files.
-  - **Step 2**: Edit the view in `security/views.xml` (or appropriate view file under `security/` folder):
-    - Add the `groups` attribute to each button:
-      ```xml
-      <button name="button_confirmed" string="Confirm" type="object" class="oe_highlight" groups="payment_request.group_payment_manager"/>
-      ```
-    - Repeat for `button_done` and `button_cancel` with the same group restriction.
-  - **Step 3**: Create `security/security_groups.xml` with:
-    ```xml
-    <odoo>
-      <data noupdate="1">
-        <record id="group_payment_manager" model="res.groups">
-          <field name="name">Payment Manager</field>
-          <field name="category_id" eval="52"/> <!-- Ensure 52 corresponds to target category (e.g., 'Extra Rights') -->
-        </record>
-      </data>
-    </odoo>
+- **Issue**: When creating or editing an appraisal, parameters specific to a selected job title are not automatically displayed or applied, leading to inconsistent or manual evaluation criteria.
+- **Solution**: Define job title-specific appraisal parameters and ensure they are linked via the job title field in the appraisal.
+  - Go to **Human Resources > Appraisal > Appraisal Parameters > Create**.
+  - Fill in the following:
+    - **Job Title**: Select the relevant job title (e.g., Sales Executive, HR Officer)
+    - **Out Of**: Enter maximum score value for the parameter
+    - **Subject Name**: Define the evaluation criterion (e.g., Communication Skills, Punctuality)
+  - Click **Save**.
+  - Create a new **Appraisal** record.
+  - In the appraisal form, set the **Job Title** field to the one configured above.
+  - The system will automatically load the associated parameters defined under that job title.
+
+---
+
+## Import Error: "Unknown error during import: <class 'NameError'>: name 'UserError' is not defined at row X"
+
+- **Issue**: During CSV import, Odoo throws the exact error:  
+  _"Unknown error during import: <class 'NameError'>: name 'UserError' is not defined at row X"_  
+  This typically occurs not due to a code-level `UserError` reference, but because the system encounters duplicate or conflicting records (e.g., already existing entries) which trigger an exception in a context where `UserError` is not properly imported or available in the execution scope.
+- **Solution**: Remove or correct the duplicate/invalid rows indicated in the error message.
+  - Identify the rows listed in the error (e.g., _row 173_, and the 7 following).
+  - Open the CSV file and remove or deduplicate entries that conflict with existing records (e.g., duplicate codes, names, or external IDs).
+  - Ensure all reference fields (e.g., product, partner, category) point to valid, pre-existing entries.
+  - Re-upload the cleaned CSV file; the import should proceed without the `NameError`.
+
+---
+
+## Job Title-Specific Appraisal Parameters Not Loading When Job Title is Selected
+
+- **Issue**: Appraisal parameters configured for specific job titles do not automatically appear when a job title is selected during appraisal creation, resulting in missing evaluation criteria.
+- **Solution**: Define parameters linked to job titles and ensure they are loaded by selecting the job title in the appraisal form.
+  - Navigate to **Human Resources > Appraisal > Appraisal Parameters**.
+  - Click **Create**.
+  - Fill in:
+    - **Job Title**: Select the target job position (e.g., Accountant, Team Lead)
+    - **Out Of**: Set the maximum score for the parameter
+    - **Subject Name**: Enter the evaluation item (e.g., Attendance, Technical Proficiency)
+  - Click **Save**.
+  - Create a new **Appraisal** record.
+  - In the appraisal form, update the **Job Title** field to match the one configured.
+  - The system will automatically load the associated parameters defined under that job title.
+
+---
+
+## Helpdesk Access Configuration for Users: Allow Read and Create on Personal Tickets
+
+- **Issue**: Users require access to view and create helpdesk tickets limited to their own records, but lack appropriate permissions by default.
+- **Solution**: Assign the user to the correct access group to enable read and create rights for personal tickets.
+  - Go to **Settings > Users & Companies > Users**.
+  - Select the target user and click **Edit**.
+  - In the **Access Rights** tab, locate the **Helpdesk** section.
+  - Set access level to:
+    - **User: Personal Tickets** — enables the ability to **Read** and **Create** tickets.
+  - Save the changes; the user can now access and create tickets in the Helpdesk module, restricted to their own.
+
+---
+
+## Odoo Server Error/Warning: "The cost of 'Product X' is currently equal to 0" During Invoice or Inventory Validation
+
+- **Issue**: Validation fails or triggers a warning with the exact message:  
+  _"The cost of 'Product X' is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation."_  
+  This occurs when a **stockable product** has a zero or undefined cost, typically during **invoice validation** or **inventory operations**, and prevents completion under real-time inventory valuation (AVCO, Standard Price, FIFO).
+- **Solution**: Assign a valid, positive cost to the affected product.
+  - Go to **Inventory > Master Data > Products**.
+  - Locate and open the product referenced in the error.
+  - Navigate to the **Inventory** tab.
+  - In the **Costing** section, set the **Cost** field to a non-zero value (e.g., procurement cost or market value).
+  - Click **Save**.
+  - Return to the invoice or stock move and retry validation.
+- **Note**: This check is enforced to ensure accurate financial reporting and correct stock valuation in accounting entries.
+
+---
+
+## Stock Move Validation Fails: "Not Possible to Reserve More Than Available in Stock"
+
+- **Issue**: Stock move fails to validate with error: _"It is not possible to reserve more products of <PRODUCT_NAME> than you have in stock"_, typically due to reservation conflicts, incorrect move state, or stale reservations blocking validation.
+- **Solution**: Cancel the problematic stock move via a server action and reprocess.
+  - **Step 1**: Activate **Developer Mode**.
+  - **Step 2**: Go to **Inventory > [Selection from Dashboard]**, locate the problematic transfer, and note its **Reference**.
+  - **Step 3**: Navigate to **Inventory > Reporting > Product Moves**, search using the reference, and confirm the move is stuck in _Reserved_ or _Assigned_ state despite insufficient stock.
+  - **Step 4**: Create a server action:
+    - Go to **Settings > Technical > Actions > Server Actions > Create**.
+    - Set:
+      - **Action Name**: `Cancel Stock Move Manually`
+      - **Model**: `stock.move`
+      - **Action To Do**: _Update the Record_
+      - **Field**: `state`
+      - **Evaluation Type**: _Value_
+      - **Value**: `cancel`
+    - Check **Create Contextual Action** to enable it in list views.
+    - Click **Save**.
+  - **Step 5**: Return to the **Product Moves** list, search for the move again, select it, click **Action > Cancel Stock Move Manually**.
+  - **Step 6**: Go back to the original transfer, click **Mark as Done** or **Validate** — the system will recreate reservations cleanly if stock is available.
+
+---
+
+## HR Manager Cannot Delete Leave Requests Despite Sufficient Role
+
+- **Issue**: Users in the _Employees / Manager_ group are unable to delete leave requests, even though they can create and edit them, due to missing delete access on the `hr.leave` model.
+- **Solution**: Manually grant delete access to the HR Manager group via a custom access control rule.
+  - **Step 1**: Activate **Developer Mode**.
+  - **Step 2**: Go to **Settings > Technical > Database Structure > Models**.
+  - **Step 3**: Search for model `hr.leave` (or create if not found — though typically exists).
+  - **Step 4**: In the **Access Rights** tab, click **Add a line**:
+    - **Group**: _Employees / Manager_
+    - **Read Access**: ✅
+    - **Write Access**: ✅
+    - **Create Access**: ✅
+    - **Delete Access**: ✅
+    - **Access Rule Name**: `hr.leave.manager`
+  - **Step 5**: Click **Save**.
+  - After applying, HR Managers can now delete leave requests through the interface, provided the leave is in a deletable state (e.g., not approved or locked).
+
+---
+
+## Manufacturing Order "Mark as Done" Fails: "Expected singleton: mrp.bom(16, 28)" Due to Duplicate BOMs
+
+- **Issue**: Clicking **Mark as Done** on a Manufacturing Order results in:  
+  `ValueError: Expected singleton: mrp.bom(16, 28)`  
+  This occurs when multiple active Bill of Materials (BOMs) exist for the same product template and BOM code, causing the system to retrieve more than one record where only one is expected.
+- **Solution**: Identify and archive duplicate BOMs to ensure a single active BOM per product and code combination.
+  - **Step 1**: Run SQL query to find duplicates:
+    ```sql
+    SELECT id, product_tmpl_id, product_id, code, type, active
+    FROM mrp_bom
+    WHERE product_tmpl_id IN (
+        SELECT product_tmpl_id
+        FROM mrp_bom
+        GROUP BY product_tmpl_id, code
+        HAVING COUNT(*) > 1
+    )
+    ORDER BY product_tmpl_id, code;
     ```
-    - Confirm `category_id` by running:
-      ```sql
-      SELECT id, name FROM ir_module_category;
-      ```
-      Use the integer `id` in `eval`, not `ref`.
-  - **Step 4**: Update `__manifest__.py` to include:
-    ```python
-    'data': [
-        'security/security_groups.xml',
-        # ... other data files
-    ],
-    ```
-  - **Step 5**: Upgrade the module:
-    - Go to **Apps**, clear default filter, search for _payment_request_.
-    - Click **Upgrade** to apply security changes.
+  - **Step 2**: Note the `product_tmpl_id` and `code` from the error and query results.
+  - **Step 3**: Go to **Manufacturing > Master Data > Bill of Materials**.
+  - **Step 4**: Search by the `code` from the results.
+  - **Step 5**: For duplicate entries, select the outdated or incorrect BOM and click **Archive** (keep only the correct, active one).
+  - **Step 6**: Retry **Mark as Done** on the manufacturing order — the error should now be resolved.
+
+---
+
+## Module Menus Visible to Unauthorized Users Despite Access Restrictions
+
+- **Issue**: Menus and submenus from restricted modules appear in user accounts that should not have access, due to missing or incorrect access group assignments on the menu items.
+- **Solution**: Manually restrict menu visibility by assigning proper access groups.
+  - **Step 1**: Activate **Developer Mode**.
+  - **Step 2**: Go to **Settings > Technical > User Interface > Menu Items**.
+  - **Step 3**: Search for the menu name causing unwanted visibility.
+  - **Step 4**: Open the menu item, click **Edit**, then go to the **Access Rights** tab.
+  - **Step 5**: Add or modify the required **Groups** to restrict access (e.g., only _Accounting / Manager_, _Inventory / User_, etc.).
+  - **Step 6**: Repeat for associated **Submenus** to ensure full access control.
+  - **Step 7**: Save changes; menu items will now only appear for users with the assigned groups.
 
 ---
