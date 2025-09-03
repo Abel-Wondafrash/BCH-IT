@@ -18,6 +18,4 @@ This section documents setup and configuration procedures for software applicati
     - Leave the **Recommender ID** field empty.
   - Click **Register** to activate the software.
 
-> **Note**: This applies to legacy versions of Sage Peachtree (now Sage 50) for offline use. Ensure compliance with software licensing terms.
-
 ---
