@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 # Odoo 11 Account Customizations
+=======
+#Odoo 11 Account Customizations
+>>>>>>> c906e047885f5db71744aacff9ca8d5cc6336518
 
 This section covers customizations to Odoo 11’s accounting module, including invoice validation fixes, partner balance methods, and new modules for customer balance exports.
 
 ---
+<<<<<<< HEAD
 
 ## Added SOV Location to Invoice XML for Location-Based Reporting
 
@@ -52,3 +57,5 @@ This section covers customizations to Odoo 11’s accounting module, including i
   - Result: Cleaner organization, faster file access, and easier daily backup isolation.
 
 ---
+=======
+>>>>>>> c906e047885f5db71744aacff9ca8d5cc6336518
