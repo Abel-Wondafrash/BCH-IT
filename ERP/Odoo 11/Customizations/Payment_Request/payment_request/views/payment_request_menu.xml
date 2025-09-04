@@ -1,0 +1,16 @@
+<odoo>
+    <!-- Reporting menu -->
+    <menuitem id="menu_payment_request_reporting"
+              name="Reporting"
+              parent="payment_request_menu_root"
+              sequence="50"
+              groups="payment_request.group_payment_reporter"/>
+
+    <!-- Export menu item -->
+    <menuitem id="menu_export_payment_requests"
+              name="Export Payment Requests"
+              parent="menu_payment_request_reporting"
+              action="action_payment_request_export_wizard"
+              sequence="10"
+              groups="payment_request.group_payment_reporter"/>
+</odoo>

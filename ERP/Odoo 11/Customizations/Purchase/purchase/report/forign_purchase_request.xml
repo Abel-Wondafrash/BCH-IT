@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="forign_purchase_request_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                    <h2>Foriegn Purchase Request </h2>
+                    <br/><br/>
+                    <table style="border-top:none">
+                        <tr> 
+                         <td>    <p style="text-align:left"><b>Order Date</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.date_order"/>  </p>
+                         </td> 
+                         <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                          <td> 
+                            <p><b>Category :</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.category.name"/> </p>
+                         <p style="text-align:left"><b>Status  :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.state"/>  </p>
+    
+                        </td> 
+                       </tr>
+                    </table>
+                    <h3>Products</h3>
+    <table class="table table-condensed" style="width:100%;"> 
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Depertment</th>
+        <th >Product</th>
+        <th style="text-align: right;">Quantity </th>
+    </tr>
+    
+   <t t-foreach='o.order_line' t-as='value'>
+   <tr>
+     <td> <t t-esc="value.department.name"/></td>
+     <td> <t t-esc="value.product_id.name"/></td>
+     <td style="text-align: right;"> <t t-esc="value.product_qty"/></td>
+      </tr>
+</t>
+    </table>
+<br/><br/>
+      <table style="border-top:none">
+                        <tr> 
+                         <td>    
+                        
+                         
+                     <p style="text-align:left"><b>Requested By :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.create_uid.name"/>  </p>
+                           </td>
+ <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                           <td>
+ <p style="text-align:left"><b>Approved By :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.approve_uid.name"/>  </p>
+                  
+                           </td> 
+                           </tr>
+                           </table>
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>    
+    
+    <report
+    id="forign_purchase_request_report_view"
+    model="forign.purchase.request"
+    string="Foriegn Purchase Request"
+    report_type="qweb-pdf"
+    name="purchase.forign_purchase_request_report"
+    file="purchase.forign_purchase_request_report"
+   
+  
+/>
+  
+
+    </data>
+</odoo>

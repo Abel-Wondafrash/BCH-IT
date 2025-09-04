@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="purchase_order_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                    <h2>Purchase Order </h2>
+                    <br/><br/>
+                    <table style="border-top:none">
+                        <tr> 
+                         <td>    
+                         <p style="text-align:left"><b>Order Date</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.date_order"/>  </p>
+                            
+                          
+                            <p><b>Purchase Order :</b>&#160;&#160;&#160;&#160;
+                           <span style="border-bottom: 2px solid black; " > PO-<span t-field="o.id"/> </span></p>
+                        
+                           <p><b>Purchase Request :</b>&#160;&#160;&#160;&#160;
+                           <span style="border-bottom: 2px solid black; " > PR-<span t-field="o.purchase_request.id"/> </span></p>
+                         </td> 
+                         <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                          <td> 
+                            <p><b>Status :</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.state"/> </p>
+                            
+                            <p><b>Vendor :</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.partner_id.name"/> </p>
+                            <p><b>Vendor Reference(PI):</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.partner_ref"/> </p>
+                        </td> 
+                       </tr>
+                    </table>
+                    <h3>Products</h3>
+    <table class="table table-condensed" style="width:100%;"> 
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Depertment</th>
+        <th >Product</th>
+        <th style="text-align: right;">Quantity </th>
+        <th style="text-align: right;">Unit Price </th>
+        <th style="text-align: right;">Tax </th>
+        <th style="text-align: right;">Sub Total </th>
+    </tr>
+    
+   <t t-foreach='o.order_line' t-as='value'>
+   <tr>
+     <td> <t t-esc="value.department.name"/></td>
+     <td> <t t-esc="value.product_id.name"/></td>
+     <td style="text-align: right;"> <t t-esc="value.product_qty"/></td>
+     <td style="text-align: right;"> <t t-esc="value.price_unit"/></td>
+     <td style="text-align: right;"> <t t-esc="value.price_tax"/></td>
+     <td style="text-align: right;"> <t t-esc="value.price_subtotal"/></td>
+      </tr>
+</t>
+<tr>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td style="text-align: right;">Untaxed Amount : <t t-esc="o.amount_untaxed"/></td>
+    
+
+</tr>
+<tr style="border:none">
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="text-align: right;">Taxes : <t t-esc="o.amount_tax"/></td>
+    
+
+</tr>
+<tr >
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+    <td style="border:none"> </td>
+     <td style="text-align: right;">Total : <b><t t-esc="o.amount_total"/></b></td>
+
+
+</tr>
+    </table>
+
+    
+                    <br/><br/>
+                       
+                        <table style="border-top:none">
+                        <tr> 
+                         <td>    
+                        
+                         
+                     <p style="text-align:left"><b>Requested By :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.create_uid.name"/>  </p>
+                           </td>
+ <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                           <td>
+ <p style="text-align:left"><b>Approved By :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.approve_uid.name"/>  </p>
+                     
+                           </td> 
+                           </tr>
+                           </table>
+                          
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>    
+    
+    <report
+    id="purchase_order_report_view"
+    model="purchase.order"
+    string="Purchase Order"
+    report_type="qweb-pdf"
+    name="purchase.purchase_order_report"
+    file="purchase.purchase_order_report"
+   
+  
+/>
+  
+
+    </data>
+</odoo>

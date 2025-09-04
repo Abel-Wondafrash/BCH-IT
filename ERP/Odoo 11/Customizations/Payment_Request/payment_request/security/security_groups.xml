@@ -1,0 +1,21 @@
+<odoo>
+  <data noupdate="0">
+    <record id="group_payment_director" model="res.groups">
+      <field name="name">Payment Director</field>
+      <field name="category_id" eval="52"/> <!-- 52 is the id of "Extra Rights" under "base.ir_module_category" -->
+      <field name="comment">Payment Directors can mark payment requests as Done or Cancelled.</field>
+    </record>
+
+    <record id="group_payment_manager" model="res.groups">
+      <field name="name">Payment Manager</field>
+      <field name="category_id" eval="52"/> <!-- 52 is the id of "Extra Rights" under "base.ir_module_category" -->
+      <field name="comment">Payment Managers can Confirm payment requests.</field>
+    </record>
+    
+    <record id="group_payment_reporter" model="res.groups">
+      <field name="name">Payment Reporter</field>
+      <field name="category_id" eval="52"/> <!-- "Extra Rights" -->
+      <field name="comment">Can access Reporting tab and export payment request data.</field>
+    </record>
+  </data>
+</odoo>

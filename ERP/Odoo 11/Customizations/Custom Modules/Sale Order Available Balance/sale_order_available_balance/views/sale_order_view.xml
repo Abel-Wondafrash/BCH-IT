@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_order_form_available_balance" model="ir.ui.view">
+        <field name="name">sale.order.form.available.balance</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="current_balance" position="after">
+                <field name="available_balance" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

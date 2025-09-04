@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="appraisal_report2">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Performance Appraisal Report</h2>
+                    <p style="text-align:right"> <b>Date:- </b> <span t-field="o.date" t-options='{"format": "MM/dd/yyyy"}'/> </p>
+                    <p><b>Employee's Name</b> <span style="border-bottom: 2px solid black; " t-field="o.employee_name.name"/>  &#160;&#160;&#160;&#160;<b>Job Title </b> <span style="border-bottom: 2px solid black; " t-field="o.job_id"  t-options='{"format": "MM/dd/yyyy"}'/> </p>
+                   
+                    <p><b>Evaluation period: &#160;&#160;&#160;&#160;from </b>&#160;&#160;  <span style="border-bottom: 2px solid black; " t-field="o.date_from"  t-options='{"format": "MM/dd/yyyy"}'/> &#160;&#160;&#160;&#160;<b>up to</b>  <span style="border-bottom: 2px solid black; " t-field="o.date_to"  t-options='{"format": "MM/dd/yyyy"}'/> </p>
+                    <p><b>Reason: &#160;&#160;&#160;&#160; </b>&#160;&#160;  <span style="border-bottom: 2px solid black; " t-field="o.reason" /> </p>
+                    
+					<p><b>Immediate Supervisor: </b>&#160;&#160;&#160;&#160;  <span style="border-bottom: 2px solid black; " t-field="o.immediate_supervisor.name"/> </p>
+                    
+                    <table class="table table-bordered" style="width:100%;"> 
+    <tr >
+        <th rowspan="2">S/N</th>
+        <th rowspan="2">Evaluation Point </th>
+        <th  colspan="5">Rating Scale </th>
+    </tr>
+    <tr>
+        <th> 1</th>
+        <th> 2</th>
+        <th> 3</th>
+        <th> 4</th>
+        <th> 5</th>
+
+    </tr >
+   
+    <tr >
+        <td style="width:10%;">1</td>
+        <td><b>productivity:</b>great commitment to intensify the output. </td>
+        <td > 
+            <t t-if="o.productivity == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.productivity == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.productivity == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.productivity == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.productivity == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+     <tr >
+        <td>2</td>
+        <td><b>Quality of Work Accuracy: </b>neatness and thoroughness of work effort.</td>
+        <td > 
+            <t t-if="o.work_quality == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.work_quality == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.work_quality == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.work_quality == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.work_quality == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+
+    <tr >
+        <td>3</td>
+        <td><b>Knowledge of Job:</b> demonstrates the knowledge of fundamental methods and procedures of job.  </td>
+        <td > 
+            <t t-if="o.job_knowledge == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.job_knowledge == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.job_knowledge == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.job_knowledge == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.job_knowledge == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>4</td>
+        <td><b>Teamwork Ability:</b> to work well with co-workers and supervisors.</td>
+        <td > 
+            <t t-if="o.team_work == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.team_work == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.team_work == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.team_work == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.team_work == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>5</td>
+        <td><b>Independence: </b>Ability to work independently, be resourceful and display initiative.</td>
+        <td > 
+            <t t-if="o.independence == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.independence == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.independence == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.independence == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.independence == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>6</td>
+        <td><b>Records and Reports: </b>Ability to produce and maintain written job reports and records.</td>
+        <td > 
+            <t t-if="o.record_report == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.record_report == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.record_report == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.record_report == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.record_report == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>7</td>
+        <td><b>Guest Service:</b> Ability to deal with guests/customers in polite and helpful manner.</td>
+        <td > 
+            <t t-if="o.guest_service == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.guest_service == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.guest_service == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.guest_service == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.guest_service == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>8</td>
+        <td><b>Safety Ability :</b>to comply with precautions for safety of self and others.</td>
+        <td > 
+            <t t-if="o.safety == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.safety == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.safety == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.safety == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.safety == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>9</td>
+        <td><b>Attendance :</b>Regularity of attendance and absence for legitimate reasons</td>
+        <td > 
+            <t t-if="o.attendance == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.attendance == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.attendance == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.attendance == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.attendance == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>10</td>
+        <td><b>Character:</b>personality or the nature  of the worker for all responds and activities.</td>
+        <td > 
+            <t t-if="o.character == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.character == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.character == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.character == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.character == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>11</td>
+        <td><b>Readiness to know new skills :</b> self-initiation and eagerness to know new things and systems.</td>
+        <td > 
+            <t t-if="o.new_skill == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.new_skill == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.new_skill == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.new_skill == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.new_skill == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr >
+        <td>12</td>
+        <td><b>  Obedience : </b>commitment to the order of immediate boss.</td>
+        <td > 
+            <t t-if="o.obedience == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.obedience == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.obedience == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.obedience == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.obedience == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    
+    <tr >
+        <td>13</td>
+        <td><b>Leadership and Supervision : (Management Only)</b> Ability to plan, organize and supervise so that jobs are completed</td>
+        <td > 
+            <t t-if="o.leadership == '1'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.leadership == '2'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.leadership == '3'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.leadership == '4'">
+            X
+            </t>
+        </td>
+        <td  > 
+            <t t-if="o.leadership == '5'">
+            X
+            </t>
+        </td>
+    </tr>
+    <tr>
+        <td> </td>
+        <td > Total</td>
+        <td colspan="5" > <span t-field="o.total"/> </td>
+    </tr>
+    <tr>
+        <td> </td>
+        <td > Average</td>
+        <td colspan="5"> <span t-field="o.average"/> </td>
+    </tr>
+</table>
+                   <p><b>Comment given by the immediate supervisor: </b>
+                   <span t-field="o.supervisor_comment" style="width:100%;border-bottom: 2px solid black;"/>
+                   
+                   
+                   </p>
+                    <p> Signature ___________________________  &#160;&#160;&#160;&#160;Date ________________________</p>
+                   <p><b>Comment of the employee : </b>
+                   <span t-field="o.employee_comment" style="width:100%;border-bottom: 2px solid black;"/>
+                   </p>
+                    <p> Signature ___________________________  &#160;&#160;&#160;&#160;Date ________________________</p>
+                   
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+<report
+    id="hr_appraisal_report"
+    model="hr.appraisal"
+    string="Appraisal Report"
+    report_type="qweb-pdf"
+    name="hr_appraisal.appraisal_report2"
+    file="hr_appraisal.appraisal_report2"
+   
+  
+/>
+  
+
+    </data>
+</odoo>

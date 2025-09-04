@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_reconcile">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                <t t-call="web.internal_layout">
+                <div class="page">
+                  <center><h2><t t-esc="o.name"/> </h2></center>
+                  </div>
+                  <table class="table table-condensed">
+                      <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Lable</th>
+                                <th>Amount</th>
+                                <th>Journal Date</th>
+                                <!-- <th>Journal Date</th> -->
+                                <th>Journal Reference</th>
+                            </tr>
+                        </thead>
+
+                          <t t-set="totalPosetive" t-value="0.0" />
+                          <t t-set="totalNegetive" t-value="0.0" />
+                        <tr t-foreach="o.line_ids" t-as="lines">  
+
+                            <td style="width:10%"><t t-esc="lines.date"/>  </td>
+                            <td ><t t-esc="lines.name"/>  </td>
+                            <td >
+                            <t t-if="lines.amount &gt;  0">
+                             <t t-set="totalPosetive" t-value="totalPosetive+lines.amount" />
+                            
+                            </t>
+
+                             <t t-if="lines.amount &lt; 0">
+                             <t t-set="totalNegetive" t-value="totalNegetive+lines.amount" />
+                             
+                            </t>
+                            <t t-esc="lines.amount"/> 
+                                <!-- <t t-if="lines.amount > 0"> -->
+                               
+                                
+
+                             </td>
+                            <!-- <td ><t t-esc="lines._getAccount()"/>  </td> -->
+                            <td style="width:10%"><t t-esc="lines._getDate()"/>  </td>
+                            <td ><t t-esc="lines._getRef()"/>  </td>
+                            
+                            
+                        </tr>
+
+                  </table>
+                 <h3><span >Total Deposits:<t t-esc="totalPosetive"/></span> </h3>
+                 <h3><span >Total Withdrowal :<t t-esc="totalNegetive"/></span> </h3>
+                 <h3><span >Payment In Transit:<t t-esc="o._getTransitPayment()"/></span> </h3>
+                 <h3><span >Outstanding Check:<t t-esc="o._getOutstanding()"/></span> </h3>
+                 
+
+                 
+                  </t>
+                </t>
+            </t>
+        </template>
+    </data>
+    </odoo>

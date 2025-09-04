@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="account.report_current_balance_document">
+    <t t-call="web.external_layout">
+        <div class="page">
+            <div class="row">
+               
+                <p>
+                   Customer Current Balance<br/>
+                </p>
+
+                   <table class="table table-condensed"  >
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Current Balance</th>
+                            </tr>
+                        </thead>
+                        <tr t-foreach="docs" t-as="o">
+                            <td>
+                                <span t-esc="o.name"/>
+                            </td>
+                            <td>
+                                <span t-esc="o.current_balance"/>
+                            </td>
+                          
+                       </tr>
+                    </table>
+              
+              
+            </div>
+        </div>
+   </t>
+</template>
+
+<template id="report_current_balance">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="account.report_current_balance_document" t-lang="o.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

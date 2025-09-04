@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_account_balance">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+           <t t-call="web.external_layout">
+                <div class="page">
+
+                <center>
+                <h2> Customer Balance</h2>
+                </center>
+
+                 <t t-set="loop" t-value="0.0" />
+                     <table>
+                     <tr>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td><strong><span>From Date: </span><span t-field="doc.from_date"/></strong></td>
+                            </tr>
+
+                               <tr>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td><strong><span>Through Date: </span>  <span t-field="doc.to_date"/></strong></td>
+                            </tr>
+                            
+                                <tr  t-foreach="doc.getcustomerBalance()" t-as="t" class="item">
+                                    <t t-if="loop ==0 "> 
+                                     <td><strong><span>Customer: </span>  <span t-esc="t['customer']"/></strong></td>
+                                     <td><strong><span>Initail Balance: </span>  <span t-esc="t['current_balance']"/></strong></td>
+                          
+                                       
+                                            <t t-set="loop" t-value="1" />
+                                    </t>
+                                   
+                                </tr>
+                                <tr>
+                                <td> </td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Date </th>
+                                    <th>Deposit </th>
+                                    <th>Sales </th>
+                                    <th >Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sale_tbody">
+                            
+
+  
+
+
+<t t-if="loop !=0 ">
+                                <tr  t-foreach="doc.getcustomerBalance()" t-as="t" class="item">
+                                        
+                                    <td><span t-esc="t['date']"/></td>
+                                    <td><span t-esc="t['deposit']"/></td>
+                                    <td><span t-esc="t['sale']"/></td>
+                                    <td><span t-esc="t['new_balance']"/></td>
+                                </tr>
+                               </t>
+
+
+
+                            </tbody>
+                        </table>
+                
+                     
+
+
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</odoo>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="actual_costing_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                    <h2>Actual Costing Report</h2>
+                    <br/><br/>
+                    <table style="border-top:none">
+                        <tr> 
+                         <td>    <p style="text-align:left"><b>Shipment Id </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.shipment_id.shipment_no"/>  </p>
+                         </td> 
+                         <td>
+                         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                          <td> 
+                           <p><b>PI Amount :</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.pi_amount"/> </p>
+                            <p><b>Shipment Cost: </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.cost_total"/>  </p>
+                             </td> 
+                       </tr>
+                    </table>
+                    <h3>Products</h3>
+    <table class="table table-condensed" style="width:100%;"> 
+     <t t-set="price_subtotal" t-value="0.0" />
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Product</th>
+        <th  style="text-align: right;">Quantity </th>
+        <th style="text-align: right;" >Unit Price </th>
+        <th  style="text-align: right;">Sub Total </th>
+    </tr>
+    
+   <t t-foreach='o.order_line' t-as='value'>
+   <tr>
+     <td > <t t-esc="value.product_id.name"/></td>
+     <td style="text-align: right;"> <t t-esc="value.product_qty"/></td>
+     <td style="text-align: right;"> <t t-esc="value.price_unit"/></td>
+     <td style="text-align: right;"> <t t-esc="value.price_subtotal"/></td>
+     
+      <t t-set="price_subtotal" t-value="price_subtotal + value.price_subtotal" />
+      </tr>
+    
+     
+</t>
+<tr>
+     <td> </td>
+     <td> </td>
+     <td style="text-align: right;"><b> Total</b></td>
+     <td style="text-align: right;"> <t t-esc="price_subtotal"/></td>
+    </tr>
+    </table>
+
+     
+
+     <h3>Cost Build Up</h3>
+    <table class="table table-condensed" style="width:100%;"> 
+      <t t-set="amount" t-value="0.0" />
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Source Document</th>
+        <th >Reference </th>
+        <th >Cost Category </th>
+        <th style="text-align: right;" >Amount</th>
+    </tr>
+    
+   <t t-foreach='o.cost_build_up' t-as='value_build_up'>
+   <tr>
+     <td> <t t-esc="value_build_up.source_document"/></td>
+     <td> <t t-esc="value_build_up.reference"/></td>
+     <td> <t t-esc="value_build_up.cost_category.name"/></td>
+     <td> <t t-esc="value_build_up.amount"/></td>
+      <t t-set="amount" t-value="amount + value_build_up.amount" />
+      </tr>
+
+</t>
+<tr>
+     <td> </td>
+     <td> </td>
+     <td style="text-align: right;"> <b> Total</b></td>
+     <td style="text-align: right;"> 
+     <span t-esc="amount"></span></td>
+    </tr>
+    </table>
+    
+                   <h3>Item Cost</h3>
+    <table class="table table-condensed" style="width:100%;"> 
+     <t t-set="total" t-value="0.0" />
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Product</th>
+        <th style="text-align: right;">Quantity </th>
+        <th style="text-align: right;">Unit Price </th>
+        <th style="text-align: right;">Total </th>
+    </tr>
+    
+   <t t-foreach='o.item_cost' t-as='value_cost'>
+   <tr>
+     <td> <t t-esc="value_cost.product_id.name"/></td>
+     <td> <t t-esc="value_cost.product_qty"/></td>
+     <td> <t t-esc="value_cost.cost"/></td>
+     <td style="text-align: right;"> <t t-esc="value_cost.total"/></td>
+      <t t-set="total" t-value="total + value_cost.total" />
+      </tr>
+</t> 
+    <tr>
+     <td> </td>
+     <td> </td>
+     <td style="text-align: right;"><b> Total</b> </td>
+    <td style="text-align: right;"> <span t-esc="total"></span></td>
+        
+    </tr>
+
+    </table>
+
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>    
+    
+    <report
+    id="purchase_actual_costing_report"
+    model="actual.costing"
+    string="Actual Costing"
+    report_type="qweb-pdf"
+    name="purchase.actual_costing_report"
+    file="purchase.actual_costing_report"
+   
+  
+/>
+  
+
+    </data>
+</odoo>

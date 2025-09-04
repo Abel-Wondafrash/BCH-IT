@@ -1,0 +1,3 @@
+https://odooforbeginnersblog.wordpress.com/2017/03/09/widgets-in-odoo/
+
+https://www.cybrosys.com/blog/defining-header-statusbar-and-buttons-in-odoo-v12

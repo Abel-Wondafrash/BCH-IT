@@ -1,0 +1,26 @@
+<odoo>
+    <record id="view_payment_request_export_wizard" model="ir.ui.view">
+        <field name="name">payment.request.export.wizard.form</field>
+        <field name="model">payment_request_export_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Payment Requests">
+                <group>
+                    <field name="start_date" required="1"/>
+                    <field name="end_date" required="1"/>
+                    <field name="filter_approved"/>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Export CSV" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payment_request_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Payment Requests</field>
+        <field name="res_model">payment_request_export_wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

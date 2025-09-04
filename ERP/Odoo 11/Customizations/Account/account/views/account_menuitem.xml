@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Top menu item -->
+        <!-- <menuitem name="Invoicing"
+            id="menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"
+            web_icon="account_invoicing,static/description/icon.png"
+            sequence="40"/> -->
+
+<menuitem name="Accounting"
+            id="menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"
+            web_icon="account_invoicing,static/description/icon.png"
+            sequence="40"/>
+        <record id="menu_finance" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- <menuitem id="menu_finance_receivables" name="Sales" parent="menu_finance" sequence="2"/> -->
+        <menuitem id="menu_finance_receivables" name="Customers" 
+        parent="menu_finance" sequence="2"/>
+     
+            <!--Sales sub-menus-->
+            <menuitem id="menu_finance_receivables_documents" name="Documents" parent="menu_finance_receivables" sequence="1"/>
+            <menuitem id="menu_finance_receivables_follow_up" name="Follow-up" parent="menu_finance_receivables" sequence="2"/>
+            <menuitem id="menu_finance_receivables_master_data" name="Master Data" parent="menu_finance_receivables" sequence="3"/>
+        <!-- <menuitem id="menu_finance_payables" name="Purchases" parent="menu_finance" sequence="3"/> -->
+        <menuitem id="menu_finance_payables" name="Vendors" parent="menu_finance" sequence="3"/>
+       
+            <!--Purchases sub-menus-->
+            <menuitem id="menu_finance_payables_documents" name="Documents" parent="menu_finance_payables" sequence="1"/>
+            <menuitem id="menu_finance_payables_master_data" name="Master Data" parent="menu_finance_payables" sequence="2"/>
+       
+         <menuitem id="menu_payment" name="Payment" parent="menu_finance" sequence="4" />
+       
+          
+       
+        <!-- <menuitem id="menu_finance_entries" name="Adviser" parent="menu_finance" sequence="4" groups="account.group_account_user"/> -->
+        <menuitem id="menu_finance_entries" name="Accounting" parent="menu_finance" 
+        sequence="5" groups="account.group_account_manager,account.group_account_accountant,account.group_account_user,group_account_invoice"/>
+       
+            <!-- Adviser sub-menus -->
+            <menuitem id="menu_finance_entries_accounting_entries" name="Accounting Entries" 
+            parent="account.menu_finance_entries" groups="account.group_account_manager,account.group_account_accountant"/>
+            <menuitem id="menu_finance_entries_management" name="Management" parent="account.menu_finance_entries"/>
+            <menuitem id="menu_finance_entries_actions" name="Actions" parent="account.menu_finance_entries" 
+            groups="account.group_account_accountant,account.group_account_manager"/>
+            <menuitem id="menu_finance_entries_generate_entries" name="Generate Entries" parent="account.menu_finance_entries"/>
+            
+        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="6" 
+        groups="account.group_account_manager"/>
+            <!-- Reporting sub-menus -->
+            <menuitem id="account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4"/>
+            <!-- <menuitem id="account_reports_customer_menu" name="Customer Balance" parent="account.menu_finance_reports" sequence="5"/> -->
+            <menuitem id="account_reports_legal_statements_menu" name="Generic Statements" parent="account.menu_finance_reports" sequence="1" groups="account.group_account_user"/>
+            <menuitem id="account_reports_business_intelligence_menu" name="Business Intelligence" parent="account.menu_finance_reports" sequence="5" groups="account.group_account_invoice"/>
+            <menuitem id="menu_finance_legal_statement" name="PDF Reports" parent="account.menu_finance_reports"/>
+
+        <menuitem id="menu_finance_configuration" name="Configuration" 
+        parent="menu_finance" sequence="15" groups="account.group_account_manager"/>
+            <!-- Configuration Sub-Menu -->
+            <menuitem id="account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="2" />
+            <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="3" groups="account.group_account_manager"/>
+            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
+            <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" 
+            parent="account_account_menu" sequence="1" groups="base.group_multi_currency"/>
+            <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_configuration" groups="account.group_account_user"/>
+
+
+
+  <record id="setup_opening_move_lines_tree2" model="ir.ui.view">
+            <field name="name">account.setup.opening.move.lines.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Journal Items" decoration-info="is_unaffected_earnings_line == True">
+                    <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                    <field name="partner_id"/>
+                    <field name="name"/>
+                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="company_id" invisible="True"/>
+                    <field name="is_unaffected_earnings_line" invisible="True"/>
+                </tree>
+            </field>
+        </record>
+         <record id="tree_setup_opening_account" model="ir.ui.view">
+            <field name="name">>account.setup.opening.move.wizard.tree</field>
+            <field name="model">account.opening</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="journal_id"/>
+                    <field name="date"/>
+                    
+                </tree>
+            </field>
+        </record>
+<record id="setup_opening_move_wizard_form2" model="ir.ui.view">
+            <field name="name">account.setup.opening.move.wizard.form</field>
+            <field name="model">account.opening</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="journal_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </group>
+
+                    <field name="company_id" invisible="1"/>
+                    <field name="opening_move_line_ids" context="{'tree_view_ref': 'account.setup_opening_move_lines_tree2'}"/>
+
+                
+                </form>
+            </field>
+        </record>
+
+
+<record id="account_opening_action" model="ir.actions.act_window">
+        <field name="name">Accounting Dashboard</field>
+        <field name="res_model">account.opening</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        
+    </record>
+
+
+<record model="ir.actions.act_window.view" id="account_opening_action_tree">
+ <field name="sequence" eval="1"/>
+ <field name="view_mode">tree</field>
+ <field name="view_id" ref="tree_setup_opening_account"/>
+ <field name="act_window_id" ref="account_opening_action"/>
+</record>
+
+<record model="ir.actions.act_window.view" id="account_opening_action_form">
+ <field name="sequence" eval="2"/>
+ <field name="view_mode">form</field>
+ <field name="view_id" ref="setup_opening_move_wizard_form2"/>
+ <field name="act_window_id" ref="account_opening_action"/>
+</record>
+    <menuitem id="initial_balance_menu" 
+    name="Initial Balance" action="account_opening_action" 
+    parent="menu_finance_entries_actions" />
+
+
+
+         <record id="reconcile_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.reconcile.tree</field>
+            <field name="model">account.bank.statement.line.reconcile</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="date" />
+                            <field name="name" />
+                            <field name="account_id" />
+                             <field name="ref"/>
+                            <field name="amount" />
+                            <field name="journal" />
+                            <field name="statment_line_id" />
+                            <field name="status" />
+                </tree>
+            </field>
+        </record>
+        <record id="reconcile_form" model="ir.ui.view">
+            <field name="name">account.bank.statement.line.reconcile.form</field>
+            <field name="model">account.bank.statement.line.reconcile</field>
+            <field name="arch" type="xml">
+                <form>
+                <header>
+                 <field name="listed"  invisible="True" />
+                 <field name="Reconcile"  invisible="True" />
+                 <button name="listJournals"  string="List Journal" 
+                 type="object" class="oe_highlight"  attrs="{'invisible':[('listed','=',True)]}" />
+
+                 <button name="reconcile"  string="Reconcile" 
+                 type="object" class="oe_highlight"  attrs="{'invisible':['|',('listed','=',False),('Reconcile','=',True)]}"/>
+                <button name="clear"  string="Clear List" 
+                 type="object" class="oe_highlight"  attrs="{'invisible':['|',('listed','=',False),('Reconcile','=',True)]}"/>
+
+                      
+                        </header>
+                         <sheet>
+                    <group>
+                    <field name="status" readonly="1"/>
+                       <field name="date" />
+                            <field name="name" />
+                            <field name="account_id" />
+                             <field name="ref"/>
+                            <field name="amount" />
+                            <field name="journal" />
+                             <field name="account_move_line"  >
+                             <field name="statment_line_id" />
+                             
+                        <tree string="Period Lines" 
+                        editable="bottom" create="true">
+                        
+                            <field name="check" />
+                            <field name="name" />
+                            <field name="ref" />
+                            <field name="account_id" />
+                            <field name="amount" invisible="True" />
+                           
+                            
+                            <field name="move_line_id" invisible="True"/>
+                            <field name="debit" />
+                             <field name="credit"/>
+                             <field name="sum" sum='Total Tax'/>
+                        </tree>
+                        <form string="Period Lines">
+                       <field name="check" />
+                         <field name="name" />
+                            <field name="ref" />
+                             <field name="account_id" />
+                             <field name="amount" invisible="True"/>
+                             <field name="move_line_id" invisible="True"/>
+                            
+                            <field name="debit" />
+                             <field name="credit"/>
+                        </form>
+                    </field>
+                    </group>
+
+                     <!-- <notebook>
+                        <page string="Reconciled" name="statement_line_ids">
+                            <field name="reconciled_line_id" >
+                              
+                              </field> -->
+                     </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+  <record id="account_auto_reconcile_tree" model="ir.ui.view">
+            <field name="name">account.auto.reconcile.tree</field>
+            <field name="model">account.auto.reconcile</field>
+            <field name="arch" type="xml">
+                <tree >
+                    
+                    <field name="bank_statment" />
+                    <field name="bank_statment_line" />
+                    
+                    
+                </tree>
+            </field>
+        </record>
+        <record id="account_auto_reconcile_form" model="ir.ui.view">
+            <field name="name">account.auto.reconcile.form</field>
+            <field name="model">account.auto.reconcile</field>
+            <field name="arch" type="xml">
+                <form string="Bank Deposit">
+                <header>
+                 <!-- <button name="reconcile_selected" string="Reconcile" 
+                 type="object" 
+                        class="oe_highlight" groups="account.group_account_accountant"/> -->
+
+                      
+                        <!-- <field name="state" widget="statusbar"/> -->
+                </header>
+                    <sheet>
+                    
+                        <group>
+                          
+                            <group>
+  <field name="bank_statment" />
+                 
+                            </group>
+                        
+                    
+                        </group>
+                       
+                        <field name="bank_statment_line"  />
+                             <!-- <button  class="btn btn-default" name="reconcile" string="Reconcile" type="object"/> -->
+              
+                    </sheet>
+                </form>
+            </field>
+
+        </record>
+
+<record id="automaticReconcilation" model="ir.actions.act_window">
+        <field name="name">Accounting Automatic Reconcilation</field>
+        <field name="res_model">account.auto.reconcile</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        
+    </record>
+
+    <menuitem id="automaticReconcilation_menu" 
+    name="Automatic Reconcilation" action="automaticReconcilation" 
+    parent="menu_finance_entries_actions" />
+
+   <record id="account_auto_reconcile_detail_form" model="ir.ui.view">
+            <field name="name">account.auto.reconcile.form</field>
+            <field name="model">account.auto.reconcile.detail</field>
+            <field name="arch" type="xml">
+                <form string="Bank Deposit">
+            
+                    <sheet>
+                    
+                      
+                       
+                        <field name="account_move_line" >
+                        <tree string="Period Lines" 
+                        editable="bottom" create="true">
+                            <field name="account_id" />
+                            <field name="debit" />
+                             <field name="credit"/>
+                             
+                        </tree>
+                        <form string="Period Lines">
+                             <field name="account_id" />
+                            <field name="debit" />
+                             <field name="credit"/>
+                        </form>
+                    </field>
+                    </sheet>
+                </form>
+            </field>
+
+        </record>
+<!-- <record id="account_auto_reconcile_detail_action" model="ir.actions.act_window">
+        <field name="name">Assignment Sub</field>
+        <field name="res_model">account.auto.reconcile.detail</field>
+        <field name="src_model">account.auto.reconcile</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+         <field name="context">{'order_id': active_id}</field> 
+    </record> -->
+<record id="account_auto_reconcile_detail_action" model="ir.actions.act_window">
+        <field name="name">Assignment Sub</field>
+        <field name="res_model">account.bank.statement.line.reconcile</field>
+        <field name="src_model">account.auto.reconcile</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <!-- <field name="context">{'order_id': active_id}</field> -->
+    </record>
+
+    </data>
+</odoo>
+

@@ -1,0 +1,21 @@
+<odoo>
+  <data>
+    <record id="view_partner_form_inherit_custom" model="ir.ui.view">
+      <field name="name">res.partner.form.inherit.custom</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <!-- Modify VAT field to be conditionally required -->
+        <field name="vat" position="attributes">
+          <attribute name="attrs">{'required': [('customer', '=', True)]}</attribute>
+        </field>
+
+        <field name="inital_balance" position="attributes">
+          <attribute name="string">Opening Balance</attribute>
+          <attribute name="groups">partner_customization.group_edit_opening_balance</attribute>
+        </field>
+        
+      </field>
+    </record>
+  </data>
+</odoo>

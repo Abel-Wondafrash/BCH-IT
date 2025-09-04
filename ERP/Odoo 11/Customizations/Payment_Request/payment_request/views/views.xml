@@ -1,0 +1,101 @@
+<odoo>
+  <data>
+
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="payment_request_tree">
+      <field name="name">payment_request_tree</field>
+      <field name="model">payment_request</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="start_datetime"/>
+          <field name="branch_2"/>
+          <field name="description"/>
+          <field name="amount_birr"/>
+          <field name="employee_id"/>
+          <field name="partner_id"/>
+          <field name="selection_field" widget="statusbar" statusbar_visible="draft,done"/>
+        </tree>
+      </field>
+    </record>
+    
+    <record model="ir.ui.view" id="payment_request_form">
+      <field name="name">payment_request_form</field>
+      <field name="model">payment_request</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+              <button name="button_confirmed" string="Confirm" class="oe_highlight" type="object" groups="payment_request.group_payment_manager"/>
+              <button name="button_done" string="Done" type="object" groups="payment_request.group_payment_director" attrs="{'invisible': [('selection_field', '!=', 'confirmed')]}"/>
+              <button name="button_cancel" string="cancel" class="oe_highlight" type="object" groups="payment_request.group_payment_director"/>
+              <field name="selection_field" widget="statusbar"/>
+          </header>
+          <sheet>
+            <group> 
+              <group>
+                <field name="prepared_by" readonly="1" attrs="{'invisible': [('id', '=', False)]}" />
+                <field name="requester_id"/>
+                <field name="employee_id"/>
+                <field name="partner_id"/>
+                <field name="amount_birr"/>
+              </group> 
+              <group>     
+                <field name="start_datetime"/>
+                <field name="source_doc"/>
+                <field name="branch_2"/>
+                <field name="approve_uid" readonly="1"/>
+                <field name="approve_date" readonly="1"/>
+              </group>
+            </group> 
+            <group> 
+              <field name="description"/> 
+            </group> 
+          </sheet>
+        
+        </form>
+      </field>
+    </record>
+   
+
+    <!-- actions opening views on models -->
+    
+    <record model="ir.actions.act_window" id="payment_request_action">
+      <field name="name">Payment Request</field>
+      <field name="res_model">payment_request</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+   
+
+    <!-- server action to the one above -->
+    
+    <!-- <record model="ir.actions.server" id="payment_request.action_server">
+      <field name="name">payment_request server</field>
+      <field name="model_id" ref="model_payment_request_payment_request"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    
+    <menuitem name="Payment Request" id="payment_request_menu_root"/>
+   
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="payment_request.menu_1" parent="payment_request.menu_root"/>
+    <menuitem name="Menu 2" id="payment_request.menu_2" parent="payment_request.menu_root"/>
+    -->
+    <!-- actions -->
+    
+    <menuitem name="Payment Request" id="payment_request_menuitem" parent="payment_request_menu_root" action="payment_request_action"/>
+
+   
+  </data>
+</odoo>

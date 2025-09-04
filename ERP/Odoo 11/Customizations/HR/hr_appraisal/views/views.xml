@@ -1,0 +1,262 @@
+<odoo>
+  <data>
+   <menuitem name="Appraisal" id="hr_appraisal_menu_root" 
+   parent="hr.menu_hr_root" sequence="5"/>
+
+  
+   
+    <!-- menu categories -->
+    
+    <!-- explicit list view definition -->
+   
+    <record model="ir.ui.view" id="hr_appraisal_list">
+      <field name="name">hr_appraisal list</field>
+      <field name="model">hr.appraisal</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="employee_name"/>
+          <field name="date"/>
+          <field name="job_id"/>
+          <field name="total"/>
+          <field name="average"/>
+        </tree>
+      </field>
+    </record>
+
+     <record id="view_appraisal_approve" model="ir.ui.view">
+    <field name="name">Approve </field>
+    <field name="model">approve.appraisal</field>
+    <field name="arch" type="xml">
+        <form string="Approve" >
+            <group>
+                <label string="Are you sure do you want to  approve appraisal?"/>
+            </group>
+			 <group>
+			 </group>
+            <footer>
+                <button name="yes" string="Yes" type="object" class="oe_highlight"/>
+               
+                <button string="no" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+     <record model="ir.ui.view" id="hr_appraisal_form">
+      <field name="name">hr_appraisal form</field>
+      <field name="model">hr.appraisal</field>
+      <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="approve_appraisal" string="Approve" 
+                 type="object" class="oe_highlight" groups="hr_appraisal.group_hr_appraisal_approver" attrs="{'invisible': [('status', '=', True)]}"/>
+            </header>
+
+        <sheet>
+         <field name="status" invisible="1"/>
+        <group>
+            <group>
+               <field name="employee_name" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="job_id" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="out_of" />
+            </group>
+
+            <group>
+              <field name="date" />
+              <field name="immediate_supervisor" />
+            </group>
+        </group>
+          <separator string="Evaluation Period"/>
+            <group>
+                <group >
+                  <field name="date_from" attrs="{'readonly': [('status', '=', True)]}"/>
+                </group>
+                <group>
+                  <field name="date_to" attrs="{'readonly': [('status', '=', True)]}"/>
+                </group>
+				
+				
+            </group>
+
+			<group>
+				 <field name="reason" />
+			</group>
+      <notebook>
+                <page string="Subjects">
+                    <field name="subject_line" >
+                        <tree string="Subject Lines" 
+                        editable="bottom" create="false">
+                            
+                            <field name="name" />
+                            <field name="evaluation" />
+                            
+                            <field name="out_of_val" invisible="1" />
+                        </tree>
+                        <form string="Subject Line">
+                            <field name="name" readonly="1" />
+                            <field name="evaluation" />
+                            <field name="out_of_val" invisible="1" />
+                            
+                        </form>
+                    </field>
+                          
+                </page>
+            </notebook>
+           <!-- <separator string="Subject" attrs="{'readonly': [('status', '=', True)]}"/>
+            <group>
+              <group>
+                <field name="productivity" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="job_knowledge" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="independence" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="guest_service" attrs="{'readonly': [('status', '=', True)]}"/>
+                
+                <field name="safety" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="character" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="obedience" attrs="{'readonly': [('status', '=', True)]}"/>
+              </group>
+              <group>
+                <field name="work_quality" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="team_work" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="record_report" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="attendance" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="new_skill" attrs="{'readonly': [('status', '=', True)]}"/>
+                <field name="leadership" attrs="{'readonly': [('status', '=', True)]}"/>
+              </group>
+            </group> -->
+        <separator string="Result"/>
+            <group>
+              <group>
+                <field name="total" />
+              </group>
+              <group>
+                <field name="average" />
+              </group>
+            </group>
+         
+          <separator string="Supervisor Comment"/>
+          <field name="supervisor_comment" attrs="{'readonly': [('status', '=', True)]}"/>
+           <separator string="Employee Comment"/>
+           <field name="employee_comment" attrs="{'readonly': [('status', '=', True)]}"/>
+          </sheet>
+        </form>
+      </field>
+    </record>
+    
+
+    <!-- actions opening views on models -->
+   
+    <record model="ir.actions.act_window" id="hr_appraisal_action_window">
+      <field name="name">Appraisal</field>
+      <field name="res_model">hr.appraisal</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+   
+
+    <menuitem name="Appraisal" id="hr_appraisal_menu_1" 
+    parent="hr_appraisal_menu_root" action="hr_appraisal_action_window"  groups="hr_appraisal.group_hr_appraisal_manager"/>
+
+
+
+
+    <record id="view_hr_appraisal_parameter_form" model="ir.ui.view">
+        <field name="name">hr_appraisal_parameter_form</field>
+        <field name="model">hr.appraisal.parameter</field>
+        <field name="arch" type="xml">
+          
+          <form>
+           
+            <sheet>
+              
+            <group>
+                <group>
+                   
+                <field name="job_position"/>
+                 </group>
+                  <group>
+                   
+                <field name="out_of"/>
+                 </group>
+                
+            </group>
+             <notebook>
+                <page string="Subjects">
+                    <field name="subject_line" >
+                        <tree string="Subject Lines" 
+                        editable="bottom" create="true">
+                            
+                            <field name="name" />
+
+                        </tree>
+                        <form string="Subject Line">
+                            <field name="name" />
+                        </form>
+                    </field>
+                          
+                </page>
+            </notebook>
+            </sheet>
+                
+          </form>
+
+        </field>
+    </record>
+     <record id="view_hr_appraisal_parameter_tree" model="ir.ui.view">
+        <field name="name">hr_appraisal_parameter_tree</field>
+        <field name="model">hr.appraisal.parameter</field>
+        <field name="arch" type="xml">
+          
+          <tree>
+                <field name="job_position"/>
+                <field name="out_of"/>
+          </tree>
+
+        </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="action_hr_appraisal_parameter">
+        <field name="name">Appraisal Parameter</field>
+        <field name="res_model">hr.appraisal.parameter</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+              Click here to create a new Appraisal Parameter.
+          </p>
+        </field>
+    </record>
+
+
+
+     <menuitem name="Configuration" id="hr_appraisal_configuration" 
+    parent="hr_appraisal_menu_root" />
+     <menuitem name="Appraisal Parameter" id="hr_appraisal_parameter" 
+    parent="hr_appraisal_configuration" action="action_hr_appraisal_parameter"/>
+ 
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="hr_appraisal.action_server">
+      <field name="name">hr_appraisal server</field>
+      <field name="model_id" ref="model_hr_appraisal_hr_appraisal"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+   
+      <!-- <menuitem name="Menu 2" id="hr_appraisal.menu_2" parent="hr_appraisal.menu_root"/> -->
+   
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="hr_appraisal.menu_1_list" parent="hr_appraisal.menu_1"
+              action="hr_appraisal.action_window"/>
+    <menuitem name="Server to list" id="hr_appraisal" parent="hr_appraisal.menu_2"
+              action="hr_appraisal.action_server"/>
+    -->
+  </data>
+</odoo>

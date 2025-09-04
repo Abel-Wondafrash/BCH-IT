@@ -1,0 +1,6 @@
+access_sale_order_locations,sale.locations,model_sale_locations,sales_team.group_sale_salesman,1,1,1,0
+access_sale_order_location_manager,sale.locations,model_sale_locations,sales_team.group_sale_manager,1,1,1,1
+access_sale_order_location_accountant,sale.locations,model_sale_locations,account.group_account_user,1,1,0,0
+access_sale_order_location_invoicing_payments,sale.locations,model_sale_locations,account.group_account_invoice,1,1,0,0
+
+

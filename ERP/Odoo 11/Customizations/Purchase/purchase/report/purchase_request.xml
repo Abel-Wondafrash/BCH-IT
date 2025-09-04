@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="purchase_request_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                    <h2>Purchase Request - <span style="border-bottom: 2px solid black; " t-field="o.name"/> </h2>
+                    <br/><br/>
+                    <table style="border-top:none">
+                        <tr> 
+                         <!-- <td>    <p style="text-align:left"><b>Order Date</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.date_order"/>  </p>
+                         </td>  -->
+                         <td>    
+                            <p style="text-align:left"><b>Order Date:</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.date_order"/>  </p>
+                            <p style="text-align:left"><b>Prepared By:</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.prepared"/>  </p>
+                            <p style="text-align:left"><b>Grand Total Expected Price:</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.grand_total_expected_price"/>  </p>
+                         </td>
+
+                         <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                          <td> 
+                            <p><b>Branch :</b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.branch_2"/> </p>
+                            <p style="text-align:left"><b>Status:  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.state"/>  </p>
+                        </td> 
+                       </tr>
+                    </table>
+    <p style="color: black; font-weight: bold; text-align: left;">Note: All prices are VAT inclusive.</p>
+    <h3>Products</h3>
+    <table class="table table-condensed" style="width:100%;">
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Department</th>
+        <th >Product</th>
+        <th >Description</th>
+        <th >Expected Unit Price</th>
+        <th >Expected total Price</th>     
+        <th style="text-align: right;">Unit </th>
+        <th style="text-align: right;">Quantity </th>
+    </tr>
+    
+   <t t-foreach='o.order_line' t-as='value'>
+   <tr>
+     <td> <t t-esc="value.department.name"/></td>
+     <td> <t t-esc="value.product_id.name"/></td>
+     <!-- <td> <t t-esc="value.product_id.default_code"/></td> -->
+     <td> <t t-esc="value.name"/></td>
+     <td> <t t-esc="value.expected_price"/> </td>
+     <td> <t t-esc="value.expected_total_price"/> </td>
+     <!-- <td> <t t-esc="value.expected_total_price"/></td> -->
+     <td style="text-align: right;"> <t t-esc="value.product_uom.name"/></td>
+     <td style="text-align: right;"> <t t-esc="value.product_qty"/></td>
+      </tr>
+</t>
+    </table>
+<br/><br/>
+      <table style="border-top:none">
+                        <tr> 
+                         <td>    
+                        
+                         
+                     <p style="text-align:left"><b>Requested By :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.create_uid2"/>  </p>
+                           </td>
+ <td>
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                          </td>
+                           <td>
+ <p style="text-align:left"><b>Approved By :  </b>&#160;&#160;&#160;&#160;
+                            <span style="border-bottom: 2px solid black; " t-field="o.approve_uid.name"/>  </p>
+                  
+                           </td> 
+                           </tr>
+                           </table>
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>    
+    
+    <report
+    id="purchase_request_report_view"
+    model="purchase.request"
+    string="Purchase Request"
+    report_type="qweb-pdf"
+    name="purchase.purchase_request_report"
+    file="purchase.purchase_request_report"
+   
+  
+/>
+  
+
+    </data>
+</odoo>

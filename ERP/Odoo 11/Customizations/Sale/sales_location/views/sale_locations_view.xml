@@ -1,0 +1,54 @@
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_sale_locations_tree" model="ir.ui.view">
+        <field name="name">sale.locations.tree</field>
+        <field name="model">sale.locations</field>
+        <field name="arch" type="xml">
+            <tree string="Sales Locations">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="is_rural"/>
+                <field name="pricelist_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_sale_locations_form" model="ir.ui.view">
+        <field name="name">sale.locations.form</field>
+        <field name="model">sale.locations</field>
+        <field name="arch" type="xml">
+            <form string="Sales Location">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="is_rural"/>
+                        <field name="pricelist_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_sales_locations" model="ir.actions.act_window">
+        <field name="name">Sales Locations</field>
+        <field name="res_model">sale.locations</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Safe parent menu: Sales main menu -->
+    <menuitem id="menu_sales_location_root"
+              name="Sales Locations"
+              parent="sale.sale_order_menu"
+              sequence="30"/>
+
+    <menuitem id="menu_sales_locations"
+              name="Manage Locations"
+              parent="menu_sales_location_root"
+              action="action_sales_locations"
+              sequence="10"/>
+
+</odoo>

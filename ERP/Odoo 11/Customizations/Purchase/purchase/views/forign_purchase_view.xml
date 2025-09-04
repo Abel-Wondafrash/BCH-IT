@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+ <!-- create  forign purchase menu-->
+        <menuitem id="menu_forign_purchase" name="Foreign Purchase"
+            parent="menu_purchase_root"
+             sequence="2" groups="group_store_request_forign"/>
+        <!-- forign purchase request-->
+
+
+<record id="forign_purchase_request_form" model="ir.ui.view">
+    <field name="name">forign.purchase.request.form</field>
+    <field name="model">forign.purchase.request</field>
+    <field name="arch" type="xml">
+        <form  string="Purchase request">
+            <header>
+                <button name="submit_request" 
+                states="item_filled" string="Submit" type="object"
+                 class="oe_highlight" groups="purchase.group_purchase_user,purchase.group_foriegn_purchaser_admin"/>
+                    
+                <button name="approve_request" 
+                states="PRsent" string="Approve PR" type="object"
+                 class="oe_highlight" groups="purchase.group_purchase_manager,purchase.group_foriegn_purchaser_admin"/>
+                 <button name="cancel_request" 
+                states="PRsent" string="Cancel PR" type="object"
+                groups="purchase.group_purchase_manager,purchase.group_foriegn_purchaser_admin"/>
+                
+                <field name="state" widget="statusbar" 
+                statusbar_visible="draft,PRsent,PR Approved" readonly="1"/>
+            </header>
+
+                <group>
+                    <group>
+                        <!-- <field name="department_id"
+                         attrs="{'readonly': [('state', 'in', ('done', 'cancel','PR Approved'))]}"/> -->
+                    <field name="date_order" 
+                         attrs="{'readonly': [('state', 'in', ('done', 'cancel','PR Approved'))]}"/>
+                        
+                    </group>
+                    <group>
+                         
+                    <field name="category_type" invisible="1"/>
+                     <field name="category" widget="selection"/>
+                    </group> 
+                </group>
+            <notebook>
+                <page string="Products">
+                    <field name="order_line" 
+                    attrs="{'readonly': [('state', 'in', ('done', 'cancel','PR Approved'))]}">
+                        <tree string="Purchase Order Lines" 
+                        editable="bottom" create="true">
+
+                            <field name="state" invisible="1"/>
+                            <field name="department"/>
+                            <field name="product_id" />
+                             <field name="name"/>
+                            <field name="product_qty" />
+                            
+                               <field name="remaning_budget_qty"  />
+                        </tree>
+                        <form string="Purchase Order Line">
+                        <field name="department"/>
+                            <field name="product_id"/>
+                            <field name="name"/>
+                             <field name="product_qty" /> 
+                             
+                               <field name="remaning_budget_qty" attrs="{'readonly': [('product_id', '!=',False)]}" />
+                        </form>
+                    </field>
+                          
+                </page>
+            </notebook>
+        </form>
+    </field>
+</record>
+<record id="forign_purchase_request_tree" model="ir.ui.view">
+    <field name="name">forign.purchase.request.tree</field>
+    <field name="model">forign.purchase.request</field>
+    <field name="arch" type="xml">
+        <tree  string="Purchase request"  default_order="date_order desc"
+         decoration-primary="category_type == True"
+        >
+            <field name="id"/>
+           
+            <field name="date_order"/>
+            <field name="state"/>
+             <field name="category_type" />
+        </tree>
+    </field>
+</record>
+ <record id="forign_purchase_request_form_action" 
+    model="ir.actions.act_window">
+    <field name="name">Foreign Purchase Request</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">forign.purchase.request</field>
+    <field name="view_mode">tree,form</field>
+            
+</record>
+            <menuitem
+            action="forign_purchase_request_form_action"
+            id="menu_forign_purchase_request" 
+            parent="menu_forign_purchase" sequence="0" 
+            groups="group_store_request_forign"/>
+<!-- confirm when submit request-->
+<record id="comfirm_submit_forign_request" model="ir.ui.view">
+    <field name="name">Confirm </field>
+    <field name="model">forign.purchase.reqest.confirm.submit</field>
+    <field name="arch" type="xml">
+        <form string="Confirm" >
+            <group>
+                <label string="Are you sure Do you want to submit purchase request?" />
+            </group>
+            <footer>
+                <button name="yes" string="Yes" type="object" class="oe_highlight"/>
+               
+                <button string="no" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="view_forign_purchase_order_filter" model="ir.ui.view">
+            <field name="name">request.quotation.select</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Order">
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
+                    
+                    <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
+                    <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
+                    <separator/>
+                    <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
+                    <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" domain="[]" context="{'group_by':'date_planned'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+ <record id="forign_purchase_rfq" model="ir.actions.act_window">
+            <field name="name">Performa invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">forign.purchase.order</field>
+            <field name="context">{'search_default_todo':1, 'show_purchase': False}</field>
+            <field name="domain">[('state','=',('RFQ','sent','bid','cancel', 'confirmed'))]</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
+            <field name="search_view_id" ref="view_forign_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a request for quotation.
+              </p><p>
+                The quotation contains the history of the discussion/negotiation
+                you had with your vendor. Once confirmed, a request for
+                quotation is converted into a purchase order.
+              </p><p>
+                Most propositions of purchase orders are created automatically
+                by Odoo based on inventory needs.
+              </p>
+            </field>
+        </record>
+        <menuitem action="forign_purchase_rfq" id="menu_forign_purchase_rfq"
+            parent="menu_forign_purchase"
+            sequence="1"/>
+
+        <record model="ir.ui.view" id="forign_purchase_order_calendar">
+            <field name="name">forign.purchase.order.calendar</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="date_planned" color="partner_id">
+                    <field name="name"/>
+                    <field name="amount_total" widget="monetary"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="forign_purchase_order_pivot">
+            <field name="name">forign.purchase.order.pivot</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Purchase Order" display_quantity="True">
+                    <field name="partner_id" type="row"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="forign_purchase_order_graph">
+            <field name="name">forign.purchase.order.graph</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Order">
+                    <field name="partner_id"/>
+                    <field name="amount_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="purchase_open_picking" model="ir.actions.act_window">
+            <field name="name">Receptions</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('purchase_id', '=', active_id)]</field>
+        </record>
+
+<!-- approve when purchase order equest-->
+<record id="forign_approve_purchase_order" model="ir.ui.view">
+    <field name="name">Confirm </field>
+    <field name="model">forign.purchase.order.confirm.approve</field>
+    <field name="arch" type="xml">
+        <form string="Confirm" >
+            <group>
+                <label string="Are you sure Do you want to approve this forign purchase order?" />
+            </group>
+            <footer>
+                <button name="yes" string="Yes" type="object" class="oe_highlight"/>
+               
+                <button string="no" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+        <record id="forign_purchase_order_form" model="ir.ui.view">
+            <field name="name">forign.purchase.order.form</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order">
+                <header>
+                    <!-- <button name="action_rfq_send" states="draft" 
+                    string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="action_rfq_send" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/> -->
+                    <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight"
+                     groups="base.group_user"/>
+                    <button name="print_quotation" string="Print RFQ" type="object" states="sent" 
+                    groups="base.group_user"/>
+                    <button name="button_confirm" type="object" states="RFQ" string="Confirm Order" 
+                    id="draft_confirm"
+                    />
+
+                    <button name="button_approve_order" type="object" states="draft purchase"
+                     string="Approve Order" 
+                    id="draft_confirm"
+                    groups="purchase.group_purchase_manager,purchase.group_foriegn_purchaser_admin"
+                    />
+                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" 
+                    class="oe_highlight" id="bid_confirm"/>
+                    <button name="button_approve" type="object" states='to approve'
+                     string="Approve Order" class="oe_highlight" 
+                    groups="purchase.group_purchase_manager,purchase.group_foriegn_purchaser_admin"/>
+                    <!-- <button name="action_rfq_send" states="purchase" 
+                    string="Send PO by Email" type="object" context="{'send_rfq':False}"/> -->
+                    <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
+                    <button name="button_draft" states="cancel" string="Set to Draft"
+                     type="object" />
+                    <button name="button_cancel" states="draft,to approve,sent,draft purchase,purchase" 
+                    string="Cancel" type="object" 
+                    groups="purchase.group_purchase_manager"/>
+                    <!-- <button name="button_done" type="object" string="Lock" states="purchase"/> -->
+                    <!-- <button name="button_unlock" type="object" string="Unlock" states="done" 
+                    groups="purchase.group_purchase_manager"/> -->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" 
+                    readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                            name="action_view_picking"
+                            class="oe_stat_button"
+                            icon="fa-truck" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('picking_ids','=',[])]}">
+                            <field name="picking_count" widget="statinfo" string="Shipment" help="Incoming Shipments"/>
+                            <field name="picking_ids" invisible="1"/>
+                        </button>
+                        <button type="object"  name="action_view_invoice"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o" attrs="{'invisible':[('state', 'in', ('draft','sent','to approve')),('invoice_ids','=',[])]}">
+                            <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+                            <field name='invoice_ids' invisible="1"/>
+                        </button> 
+                    </div>
+                    <div class="oe_title">
+                        <label string="Request for Quotation " 
+                        attrs="{'invisible': [('state','not in',('draft','sent','bid'))]}"/>
+                        <label string="Purchase Order " attrs="{'invisible': [('state','in',('draft','sent','bid'))]}"/>
+                        <h1>
+                            <field name="name" invisible="1"/>
+                            PO-<field name="id" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                        
+                            <field name="purchase_request" 
+                            domain="[('state', '=', 'PR Approved')]" widget="selection"/>
+                            <field name="partner_id" context="{'search_default_supplier':1, 'default_supplier':1, 'default_customer':0}" domain="[('supplier','=',True)]"/>
+                            <field name="partner_ref"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="is_shipped" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="date_order"/>
+                            <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="order_line"  
+                            attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
+                                 <tree string="Purchase Order Lines" create="false">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" 
+                                    attrs="{'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))]}" 
+                                    context="{'purchase_request.product_id': product_id}"  force_save="1"/>
+                                    <field name="name"/>
+                                    <field name="move_dest_ids" invisible="1"/>
+                                    <field name="date_planned"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="product_qty"/>
+                                    <!-- <field name="qty_received" invisible="not context.get('show_purchase', True)"/>
+                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', True)"/> -->
+                                    <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}" force_save="1"/>
+                                    <field name="price_unit"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True}"/>
+                                    <field name="price_subtotal" widget="monetary"/>
+                                </tree>
+                                <form string="Purchase Order Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="product_id"
+                                                       context="{'partner_id': parent.partner_id}"/>
+                                                <label for="product_qty"/>
+                                                <div>
+                                                    <field name="product_qty" class="oe_inline"/>
+                                                    <span class="oe_inline">&#160;</span>
+                                                    <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                                </div>
+                                                <field name="price_unit"/>
+                                            </group>
+                                            <group>
+                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True}"/>
+                                                <field name="date_planned" widget="date"/>
+                                                <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
+                                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                            </group>
+                                        </group>
+                                        <notebook>
+                                        <page string="Notes">
+                                            <field name="name"/>
+                                        </page><page string="Invoices and Incoming Shipments">
+                                            <field name="invoice_lines"/>
+                                            <field name="move_ids"/>
+                                        </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <field name="notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
+                            <div class="oe_clear"/>
+                        </page>
+                        <page string="Deliveries &amp; Invoices">
+                            <group>
+                                <group>
+                                    <label for="date_planned"/>
+                                    <div>
+                                        <field name="date_planned"  attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
+                                        <button name="action_set_date_planned" type="object"
+                                            states="draft,sent"
+                                            string="Set date to all order lines"
+                                            help="This changes the scheduled date of all order lines to the given date"
+                                            class="fa fa-calendar o_icon_button oe_edit_only"/>
+                                    </div>
+                                    <!-- <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/> -->
+                                    <field name="picking_type_id" domain="[('is_foreign','=',True)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                                    <field name="dest_address_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')],
+                                     'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
+                                    <field name="default_location_dest_id_usage" invisible="1"/>
+                                    <field name="incoterm_id"/>
+                                </group>
+                                <group>
+                                    <field name="invoice_status"/>
+                                    <field name="payment_term_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+                                    <field name="date_approve" groups="base.group_no_one"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+       
+        <!-- Purchase Orders Kanban View  -->
+        <record model="ir.ui.view" id="view_forign_purchase_order_kanban">
+            <field name="name">forign.purchase.order.kanban</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                    <field name="state"/>
+                    <field name="date_order"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top mb16">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
+                                    </div>
+                                    <strong><field name="amount_total" widget="monetary"/></strong>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value and record.date_order.value.split(' ')[0] or False"/></span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'done': 'success', 'approved': 'warning'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="forign_purchase_order_tree" model="ir.ui.view">
+            <field name="name">forign.purchase.order.tree</field>
+            <field name="model">forign.purchase.order</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_unread==True" 
+                decoration-muted="state=='cancel'" 
+                decoration-info="state in ('wait','confirmed')" 
+                string="Purchase Order">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="id" string="Reference"/>
+                    <field name="purchase_request"/>
+                    <field name="date_order" />
+                    <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="date_planned" invisible="context.get('quotation_only', False)"/>
+                     <field name="partner_ref"/>
+                    <!-- <field name="origin"/> -->
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <!-- <field name="invoice_status" invisible="not context.get('show_purchase', True)"/> -->
+                </tree>
+            </field>
+        </record>
+
+
+    
+
+
+
+             <record id="forign_purchase_form_action" model="ir.actions.act_window">
+            <field name="name">Purchase Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">forign.purchase.order</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
+            <field name="context">{'search_default_todo':1, 'show_purchase': True}</field>
+            <field name="domain">[  ('state', 'in', ['purchase', 'draft purchase','done'])]</field>
+            <field name="search_view_id" ref="view_forign_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order. 
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, vendor, products, etc. For each purchase order,
+                you can track the related discussion with the vendor, control
+                the products received and control the vendor bills.
+              </p>
+            </field>
+        </record>
+        <menuitem action="forign_purchase_form_action" id="menu_forign_purchase_form_action" 
+        parent="menu_forign_purchase" sequence="6"/>
+
+         <record id="shipment_detail_tree" model="ir.ui.view">
+            <field name="name">shipment.detail.tree</field>
+            <field name="model">shipment.detail</field>
+            <field name="arch" type="xml">
+                <tree>
+                      <field name="shipment_no"/>
+                      <field name="date"/>
+                      <field name="note"/>
+                </tree>
+            </field>
+        </record>
+         <record id="shipment_detail_form" model="ir.ui.view">
+            <field name="name">shipment.detail.form</field>
+            <field name="model">shipment.detail</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group >
+                        <group >
+                            <field name="pi_no"  widget="selection"/>
+                            <field name="shipment_no"/>
+                            <field name="state" invisible="1"/>
+                      
+                        </group >
+                        <group >
+                             <field name="date"/>
+                      <field name="note"/>
+                        </group >
+                      
+                     
+                      </group>
+                          <notebook>
+                
+                        <page string="Products">
+                            <field name="order_line">
+                        <tree string="Purchase Order Lines" create="false">
+                            <!-- <field name="state" invisible="1"/> -->
+                            <field name="product_id" />
+                            <field name="currency_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="product_qty" />
+                             <field name="price_unit" />
+                             <field name="price_subtotal" widget="monetary" />
+                        </tree>
+                        <form string="Purchase Order Line">
+                        <group>
+                            <field name="product_id"/>
+                             <field name="currency_id" invisible="1"/>
+                            <field name="name"/>
+                           
+                             <field name="product_qty" /> 
+                            <group> 
+                                <group> 
+                                    <field name="price_unit" />
+                                </group>
+                               <group>
+                                    <field name="price_subtotal" widget="monetary" />
+                                </group>
+                            </group>
+                        </group>
+                        </form>
+                    </field>
+                          
+                </page>
+            </notebook>
+                      
+                </form>
+            </field>
+        </record>
+         <record id="forign_purchase_lc_tree" model="ir.ui.view">
+            <field name="name">forign.purchase.lc.tree</field>
+            <field name="model">forign.purchase.lc</field>
+            <field name="arch" type="xml">
+                <tree>
+                      <field name="purchase_order"/>
+                      <field name="pi"/>
+                      <field name="lc_number"/>
+                      <field name="lc_date"/>
+                      <field name="bank_name"/>
+                      <field name="lc_amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="forign_purchase_lc_form" model="ir.ui.view">
+            <field name="name">forign.purchase.order.lc.form</field>
+            <field name="model">forign.purchase.lc</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="purchase_order" attrs="{'readonly': [('state','=','done')]}"
+                            domain="[('state', '=', 'purchase')]" widget="selection"/>
+                                <field name="lc_number"/>
+                                <field name="lc_date"/>
+                            </group>
+                            <group>
+                                <field name="bank_name"/>
+                                <field name="pi"/>
+                                <field name="lc_amount"/>
+                                <field name="state" invisible="1"/>
+                            </group>
+                        </group>
+
+                         <notebook>
+                <page string="Shipment">
+                    <field name="shipment" />
+                        
+                          
+                </page> 
+            </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="forign_purchase_lc_action" 
+    model="ir.actions.act_window">
+    <field name="name">Letter Of Credit</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">forign.purchase.lc</field>
+    <field name="view_mode">tree,form</field>
+            
+</record>
+ <menuitem action="forign_purchase_lc_action" id="menu_forign_purchase_lc" 
+        parent="menu_forign_purchase" sequence="8"/>
+
+        
+         <record id="actual_costing_tree" model="ir.ui.view">
+            <field name="name">actual.costing.tree</field>
+            <field name="model">actual.costing</field>
+            <field name="arch" type="xml">
+                <tree>
+                      <field name="shipment_id"/>
+                      <!-- <field name="purchase_order"/> -->
+                      <field name="lc_number"/>
+                      <field name="lc_date"/>
+                </tree>
+            </field>
+        </record>
+         <record id="actual_costing_form" model="ir.ui.view">
+            <field name="name">actual.costing.form</field>
+            <field name="model">actual.costing</field>
+            <field name="arch" type="xml">
+                <form>
+                <header>
+                <field name="status" invisible="1"/>
+                
+                    <button name="compute_actual_cost" string="Compute" type="object"
+                    attrs="{'invisible': [('status','=','done')]}"
+                 class="oe_highlight"/>
+                  
+                </header>
+                <sheet>
+                    <group >
+
+                        <group >
+                             <field name="shipment_id" 
+                            domain="[('state', '=', 'shipment')]" widget="selection"  
+                            attrs="{'readonly': [('status','=','done')]}"/>
+                       
+                      <field name="lc_number"/>
+                      <field name="lc_date"/>
+                        </group >
+                        <group >
+                        
+                         <field name="pi_amount"/>
+                         <field name="shipment_cost"/>
+                             <field name="item_total" invisible="1"/>
+                             <field name="cost_total" invisible="1"/>
+                      
+                        </group >
+                      
+                     
+                      </group>
+                          <notebook>
+                
+                        <page string="Products">
+                            <field name="order_line">
+                        <tree string="Purchase Order Lines" create="false">
+                            <!-- <field name="state" invisible="1"/> -->
+                            <field name="product_id" />
+                            <field name="currency_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="product_qty" />
+                             <field name="price_unit" />
+                             <!-- <field name="price_subtotal" widget="monetary" readonly="1"/> -->
+                             <field name="price_subtotal" sum="Total" widget="monetary"/>
+                        </tree>
+                        <form string="Purchase Order Line">
+                        <group>
+                            <field name="product_id"/>
+                             <field name="currency_id" invisible="1"/>
+                            <field name="name"/>
+                           
+                             <field name="product_qty" /> 
+                            <group> 
+                                <group> 
+                                    <field name="price_unit" />
+                                </group>
+                               <group>
+                                    <field name="price_subtotal" widget="monetary" />
+                                </group>
+                            </group>
+                        </group>
+                        </form>
+
+                    </field>
+                        <!-- <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            -->
+                        
+                
+                        </page >
+                        </notebook>
+                        <notebook>
+                            <page string="Last Year Payment">
+                                <field name="last_year_payment" >
+                                    <tree string="Last Year Payment" >
+                                        <!-- <field name="state" invisible="1"/> -->
+                                        <field name="source_document" />
+                                        <field name="reference" />
+                                        <field name="amount" sum="Total" widget="monetary"/>
+                                    </tree>
+                                    
+                                </field>
+                            </page>
+                        </notebook>
+                        <notebook>
+                            <page string="Cost Build Up">
+                                <field name="cost_build_up" >
+                                    <tree string="Cost Build Up" create="false">
+                                        <!-- <field name="state" invisible="1"/> -->
+                                        <field name="source_document" />
+                                        <field name="reference" />
+                                        <field name="cost_category"/>
+                                        <field name="amount" sum="Total" widget="monetary"/>
+                                    </tree>
+                                    
+                                </field>
+
+                                <group>
+                                <field name="total_cost"/>
+                                </group>
+                            </page>
+                        </notebook>
+                        <notebook>
+                            <page string="Item cost">
+                                <field name="item_cost" >
+                                    <tree string="Item Cost" create="false">
+                                        <!-- <field name="state" invisible="1"/> -->
+                                        <field name="product_id" />
+                                        <field name="product_qty" />
+                                        <field name="price_subtotal"  invisible="1" />
+                                        
+                                        <!-- <field name="cost"  widget="monetary"/> -->
+                                        <field name="cost"  />
+                                        <field name="total" sum="Total" widget="monetary"/>
+                                    </tree>
+                                    
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+ <record id="forign_purchase_actual_costing_action" 
+    model="ir.actions.act_window">
+    <field name="name">Actual Costing</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">actual.costing</field>
+    <field name="view_mode">tree,form</field>
+            
+</record>
+ <menuitem action="forign_purchase_actual_costing_action" id="menu_forign_purchase_actual_costing" 
+        parent="menu_forign_purchase" sequence="9"/>
+<!-- budjet planning -->
+ <record id="purchase_budget_items_form" model="ir.ui.view">
+            <field name="name">purchase_budget_items_form</field>
+            <field name="model">purchase.budget.items</field>
+            <field name="arch" type="xml">
+                <form>
+
+<group>
+                            <group>
+                            
+                                <field name="currency_id" invisible="1"/>
+                                <field name="state" invisible="1"/>
+                                <field name="actual_total_price" invisible="1"/>
+                                <field name="actual_qty" invisible="1"/>
+                                <field name="budget_id" invisible="1"/>
+                                <field name="date" invisible="1"/>
+                                <field name="product_id"/>
+                                <field name="name"/>
+                           
+                                <field name="product_qty" /> 
+                            </group>
+                            <group> 
+                                <group> 
+                                    <field name="price_unit" />
+                                </group>
+                                <group>
+                                    <field name="price_subtotal" widget="monetary" />
+                                </group>
+                            </group>
+                        </group>
+  </form>
+            </field>
+        </record>
+        
+         <record id="purchase_budget_tree" model="ir.ui.view">
+            <field name="name">purchase.budget.tree</field>
+            <field name="model">purchase.budget</field>
+            <field name="arch" type="xml">
+                <tree>
+                      <field name="budget_period"/>
+                      <field name="department_id"/>
+                      <field name="state"/>
+                </tree>
+            </field>
+        </record>
+         <record id="purchase_budget_form" model="ir.ui.view">
+            <field name="name">purchase.budget.form</field>
+            <field name="model">purchase.budget</field>
+            <field name="arch" type="xml">
+                <form>
+                <header>
+                
+                             <field name="state" widget="statusbar" 
+                statusbar_visible="draft,plan_sent,approved" readonly="1"/>
+
+                  <button name="submit_plannig" string="Submit" type="object"
+                attrs="{'invisible':[('state', 'in', ('plan_sent','approved'))]}"
+                 class="oe_highlight" groups="purchase.group_purchase_user"/>
+
+                  <button name="set_to_draft" string="Set To Draft" type="object"
+                attrs="{'invisible':[('state', 'in', ('approved','draft'))]}"
+                 class="oe_highlight" groups="purchase.group_purchase_user"/>
+
+                  <button name="make_adjustment" string="Make Adjustment" type="object"
+                attrs="{'invisible':[('state', 'in', ('plan_sent','draft'))]}"
+                 class="oe_highlight" groups="purchase.group_purchase_user"/>
+                    
+                <button name="approve_plannig" 
+                
+                attrs="{'invisible':[('state', 'in', ('draft','approved'))]}"
+                string="Approve Planning" type="object"
+                 class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                </header>
+                <sheet>
+                    <group >
+
+                        <group >
+                             <field name="budget_period"/>
+                      
+                      
+                        </group >
+                        <group >
+                        <field name="department_id"/> 
+                        </group >
+                      
+                     
+                      </group>
+                          <notebook>
+                
+                        <page string="Products">
+                            <field name="order_line"   attrs="{'readonly': [('state', 'in', ('plan_sent', 'approved'))]}">
+                        <tree string="Purchase Order Lines" >
+                            <!-- <field name="state" invisible="1"/> -->
+                             <field name="date"/>
+                            <field name="product_id" />
+                            <field name="currency_id" invisible="1"/>
+                           
+                            <field name="product_qty" />
+                             <field name="actual_qty" />
+                             <field name="price_unit" />
+                             <!-- <field name="price_subtotal" widget="monetary" readonly="1"/> -->
+                             <field name="price_subtotal" sum="Total" widget="monetary"/>
+                            
+                              <field name="actual_total_price"  />
+                              <field name="state"  />
+                            
+                        </tree>
+                        <form string="Purchase Order Line">
+                        <group>
+                            <group>
+                            
+                                <field name="currency_id" invisible="1"/>
+                                <field name="state" invisible="1"/>
+                                <field name="actual_total_price" invisible="1"/>
+                                <field name="remaining_issue_quantity" invisible="1"/>
+                                <field name="actual_qty" invisible="1"/>
+                                <field name="budget_id" invisible="1"/>
+                                <field name="date" invisible="1"/>
+                                <field name="product_id"/>
+                                <field name="name"/>
+                           
+                                <field name="product_qty" /> 
+                            </group>
+                            <group> 
+                              
+                                    <field name="price_unit" />
+                                    <field name="price_subtotal" widget="monetary" />
+                              
+                                
+                            </group>
+                        </group>
+                        </form>
+
+                    </field>
+                        <!-- <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            -->
+                        
+                
+                        </page >
+                        </notebook>
+                       
+                       
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+ <record id="budget_planning_action" 
+    model="ir.actions.act_window">
+    <field name="name">Planning</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">purchase.budget</field>
+    <field name="view_mode">tree,form</field>
+            
+</record>
+<record id="planning_submit" model="ir.ui.view">
+    <field name="name">Approve </field>
+    <field name="model">plannig.submit</field>
+    <field name="arch" type="xml">
+        <form string="approve" >
+            <group>
+                <label string="Are you sure Do you want to submit for approval this purchase budget plan?" />
+            </group>
+            <footer>
+                <button name="yes" string="Yes" type="object" class="oe_highlight"/>
+               
+                <button string="no" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="planning_approve" model="ir.ui.view">
+    <field name="name">Approve </field>
+    <field name="model">plannig.approve</field>
+    <field name="arch" type="xml">
+        <form string="Approve" >
+            <group>
+                <label string="Are you sure Do you want to approve this purchase budget plan?" />
+            </group>
+            <footer>
+                <button name="yes" string="Yes" type="object" class="oe_highlight"/>
+               
+                <button string="no" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+    </field>
+</record>
+<menuitem id="menu_budgeting" name="Budgeting"
+            parent="menu_purchase_root"
+             sequence="3"/>
+ <menuitem action="budget_planning_action" id="menu_budget_planning" 
+        parent="menu_budgeting" sequence="9"/>
+</odoo>

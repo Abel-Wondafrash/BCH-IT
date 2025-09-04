@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="appraisal_report2">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Performance Appraisal Report</h2>
+                    <p style="text-align:right"> <b>Date:- </b> <span t-field="o.date" t-options='{"format": "MM/dd/yyyy"}'/> </p>
+                    <p><b>Employee's Name</b> <span style="border-bottom: 2px solid black; " t-field="o.employee_name.name"/>  &#160;&#160;&#160;&#160;<b>Job Title </b> <span style="border-bottom: 2px solid black; " t-field="o.job_id"  t-options='{"format": "MM/dd/yyyy"}'/> </p>
+                   
+                    <p><b>Evaluation period: &#160;&#160;&#160;&#160;from </b>&#160;&#160;  <span style="border-bottom: 2px solid black; " t-field="o.date_from"  t-options='{"format": "MM/dd/yyyy"}'/> &#160;&#160;&#160;&#160;<b>up to</b>  <span style="border-bottom: 2px solid black; " t-field="o.date_to"  t-options='{"format": "MM/dd/yyyy"}'/> </p>
+                    <p><b>Reason: &#160;&#160;&#160;&#160; </b>&#160;&#160;  <span style="border-bottom: 2px solid black; " t-field="o.reason" /> </p>
+                    
+					<p><b>Immediate Supervisor: </b>&#160;&#160;&#160;&#160;  <span style="border-bottom: 2px solid black; " t-field="o.immediate_supervisor.name"/> </p>
+					<p><b>Maximum Point: </b>&#160;&#160;&#160;&#160; 
+                     <span style="border-bottom: 2px solid black; " t-field="o.out_of"/> </p>
+                    
+                    <table class="table table-bordered" style="width:100%;"> 
+    <tr >
+        <!-- <th rowspan="2">S/N</th> -->
+        <th >Subject</th>
+        <th >Result </th>
+    </tr>
+    
+   <t t-foreach='o.subject_line' t-as='value'>
+   <tr>
+     <td> <t t-esc="value.name"/></td>
+     <td> <t t-esc="value.evaluation"/></td>
+      </tr>
+</t>
+    
+    <tr>
+      
+        <td > <b> Total</b></td>
+        <td colspan="5" > <b><span t-field="o.total"/></b> </td>
+    </tr>
+    <tr>
+      
+        <td ><b> Average</b></td>
+        <td colspan="5"> <b><span t-field="o.average"/></b> </td>
+    </tr>
+</table>
+                   <p><b>Comment given by the immediate supervisor: </b>
+                   <span t-field="o.supervisor_comment" style="width:100%;border-bottom: 2px solid black;"/>
+                   
+                   
+                   </p>
+                    <p> Signature ___________________________  &#160;&#160;&#160;&#160;Date ________________________</p>
+                   <p><b>Comment of the employee : </b>
+                   <span t-field="o.employee_comment" style="width:100%;border-bottom: 2px solid black;"/>
+                   </p>
+                    <p> Signature ___________________________  &#160;&#160;&#160;&#160;Date ________________________</p>
+                   
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+<report
+    id="hr_appraisal_report"
+    model="hr.appraisal"
+    string="Appraisal Report"
+    report_type="qweb-pdf"
+    name="hr_appraisal.appraisal_report2"
+    file="hr_appraisal.appraisal_report2"
+   
+  
+/>
+  
+
+    </data>
+</odoo>

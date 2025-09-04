@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Parent menu for CSV Export -->
+    <!-- <record id="menu_account_csv_export" model="ir.ui.menu">
+        <field name="name">CSV Export</field>
+        <field name="parent_id" ref="account.menu_finance_reports"/>
+        <field name="sequence">60</field>
+    </record> -->
+
+    <!-- URL action to trigger the CSV export -->
+    <!-- <record id="action_url_export_customer_balance" model="ir.actions.act_url">
+        <field name="name">Export Customer Balance</field>
+        <field name="url">/export/customers_balance</field>
+        <field name="target">self</field>
+    </record> -->
+
+    <!-- Menu item for Customer Balance CSV Export -->
+    <!-- <record id="menu_export_customer_balance" model="ir.ui.menu">
+        <field name="name">Customer Balance</field>
+        <field name="parent_id" ref="menu_account_csv_export"/>
+        <field name="action" ref="action_url_export_customer_balance"/>
+        <field name="sequence">10</field>
+    </record> -->
+</odoo>

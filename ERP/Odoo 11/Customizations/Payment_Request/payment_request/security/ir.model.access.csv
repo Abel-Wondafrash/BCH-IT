@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_request,payment_request.payment,model_payment_request,,1,1,1,1
+access_payment_request_export_wizard,payment.request.export.wizard,model_payment_request_export_wizard,payment_request.group_payment_reporter,1,0,0,0

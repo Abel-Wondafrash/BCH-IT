@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_hr_appraisal_user" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">The user will be able to approve document created by employees.</field>
+    </record>
+
+     <record id="group_hr_appraisal_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_hr_appraisal"/>
+        <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
+         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    <record id="group_hr_appraisal_approver" model="res.groups">
+      <field name="name">Appraisal Approver</field>
+      <field name="category_id" eval="52"/> <!-- 52 is the id of "Extra Rights" under "base.ir_module_category" -->
+    </record>
+
+    </odoo>

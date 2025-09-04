@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="report_payment_request">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="doc">
+				<t t-call="web.external_layout">
+					<div>
+						<h2>Payment Request -
+							<span style="border-bottom: 2px solid black; " t-field="doc.name"/>
+						</h2>
+						<!-- <p>Requester: <span  t-field="doc.requester_id"/></p> -->
+						<!-- <p>Pay to Employee: 
+							<span  t-field="doc.employee_id"/>
+						</p>
+						<p>Pay to Vendor: 
+							<span  t-field="doc.partner_id"/>
+						</p>
+						<p>Amount of birr: 
+							<span t-field="doc.amount_birr"/>
+						</p> -->
+						<table class="table table-borderless" style="border: 0px;border-collapse: collapse;">
+							<tr>
+								<!-- <td><p style="text-align:left"><b>Status</b>&#160;&#160;&#160;&#160;
+                                    <span style="border-bottom: 2px solid black; " t-field="doc.selection_field"/></p></td> -->
+								<td>
+                                    <p style="text-align:left">
+										<b>Pay to Employee:</b>&#160;&#160;&#160;&#160;
+										<span style="border-bottom: 2px solid black; " t-field="doc.employee_id"/>
+									</p>
+                                    <p style="text-align:left">
+										<b>Pay to Vendor:</b>&#160;&#160;&#160;&#160;
+										<span style="border-bottom: 2px solid black; " t-field="doc.partner_id"/>
+									</p>
+                                    <p style="text-align:left">
+										<b>Amount of Birr:</b>&#160;&#160;&#160;&#160;
+										<span style="border-bottom: 2px solid black; " t-field="doc.amount_birr"/>
+									</p>
+									<p style="text-align:left">
+										<b>Prepared By:</b>&#160;&#160;&#160;&#160;
+										<span style="border-bottom: 2px solid black;" t-field="doc.current_user"/>
+									</p>
+								</td>
+								<td>
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;
+                                </td>
+								<td>
+                                    <p style="text-align:left">
+										<b>Status:</b>&#160;&#160;&#160;&#160;
+										<span style="border-bottom: 2px solid black; " t-field="doc.selection_field"/>
+									</p>
+									<p style="text-align:left">
+										<b>Branch:</b>&#160;&#160;&#160;&#160;
+                                    
+										<span style="border-bottom: 2px solid black; " t-field="doc.branch_2"/>
+									</p>
+									<p style="text-align:left">
+										<b>Source Document:</b>&#160;&#160;&#160;&#160;
+                                    
+										<span style="border-bottom: 2px solid black; " t-field="doc.source_doc"/>
+									</p>
+								</td>
+							</tr>
+						</table>
+						<table>
+							<h4>Approval Form</h4>
+							<thead>
+								<tr>
+									<th>
+										<strong>Purpose of payment</strong>
+									</th>
+									<th>
+										<strong>
+											<p style="text-align:left">Pay to Employee </p>
+										</strong>
+									</th>
+									<th>
+										<strong>
+											<p style="text-align:right">Pay to Vendor </p>
+										</strong>
+									</th>
+									<th>
+										<strong>
+											<p style="text-align:right">Amount of birr </p>
+										</strong>
+									</th>
+									<th>
+										<strong> Date </strong>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<t t-foreach="docs" t-as="doc">
+									<!--<p><span t-field="o.service_type_id"/></p>-->
+									<tr t-foreach="doc" t-as="l">
+										<td class="text-left">
+											<p>
+												<span  t-field="l.description"/>
+											</p>
+										</td>
+										<td class="text-left">
+											<p style="text-align:left">
+												<span  t-field="l.employee_id"/>
+											</p>
+										</td>
+										<td class="text-left">
+											<p style="text-align:right">
+												<span t-field="l.partner_id"/>
+											</p>
+										</td>
+										<td class="text-left">
+											<p style="text-align:right">
+												<span t-field="l.amount_birr"/>
+											</p>
+										</td>
+										<td class="text-left">
+											<span t-field="l.start_datetime"/>
+										</td>
+									</tr>
+								</t>
+							</tbody>
+						</table>
+						<!-- <table style="border-top:none"> -->
+						<table class="table table-borderless" style="border: 0px;border-collapse: collapse;">
+							<thead>
+								<tr>
+									<th>
+										<strong>
+											<p>Requested By: 
+												<span t-field="doc.requester_id"/>
+											</p>
+										</strong>
+									</th>
+									<th >
+										<strong>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
+                                        &#160;&#160;&#160;&#160;&#160;&#160;</strong>
+									</th>
+									<th >
+										<strong>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</strong>
+									</th>
+									<th >
+										<strong>
+											<p> Authorized By: 
+												<span t-field="doc.approve_uid"/>
+											</p>
+										</strong>
+									</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</t>
+			</t>
+		</t>
+	</template>
+	<template id="payment_request">
+		<t t-call="web.html_container">
+			<t t-foreach="docs" t-as="doc">
+				<t t-call="payment_request.report_payment_request"/></t>
+		</t>
+	</template>
+</odoo>
