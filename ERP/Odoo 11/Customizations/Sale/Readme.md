@@ -477,3 +477,54 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After update, generated SOV XMLs will contain accurate `ProductWarehouseId`, ensuring seamless integration with Finance systems.
 
 ---
+
+## Simplified sale.order Model by Removing Redundant Pricelist and Location Logic
+
+- **Issue**: The `sale.order` model contained duplicate and conflicting logic for pricelist and location synchronization, already handled by the `sales_location` module, leading to maintenance complexity and potential bugs.
+- **Solution**: Remove pricelist and location-related overrides from the core `sale.order` model to centralize logic in the `sales_location` module.
+  - In `sale/models/sale.py`:
+    - **Remove** the overridden `write()` method if it includes pricelist/location sync logic.
+    - **Simplify** the `create()` method to retain only essential core functionality:
+      ```python
+      @api.model
+      def create(self, vals):
+          if not vals.get('name'):
+              vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or '/'
+          if vals.get('partner_id') and not vals.get('partner_invoice_id'):
+              vals['partner_invoice_id'] = vals['partner_id']
+          if vals.get('partner_id') and not vals.get('partner_shipping_id'):
+              vals['partner_shipping_id'] = vals['partner_id']
+          return super(SaleOrder, self).create(vals)
+      ```
+    - Remove any code that sets `pricelist_id`, `location`, or related fields.
+  - This ensures:
+    - No duplicate or conflicting field assignments.
+    - All location-pricelist logic is cleanly handled in `sales_location`.
+    - Easier debugging and future enhancements.
+  - Restart Odoo and upgrade the **Sale** module.
+  - Result: Cleaner, modular codebase with single source of truth for location and pricing logic.
+
+---
+
+## Set Default Expiration Date in Sale Orders to Match Order Date
+
+- **Issue**: Users must manually set the **Expiration Date** on every quotation, even though most quotes are valid immediately and for a standard period, leading to unnecessary input.
+- **Solution**: Automatically set `validity_date` to the current date (`date_order`) upon creation, while allowing manual override.
+  - In `sale/models/sale.py`, update the `validity_date` field:
+    ```python
+    validity_date = fields.Date(
+        string='Expiration Date',
+        readonly=True,
+        copy=False,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        default=fields.Datetime.now
+    )
+    ```
+  - This ensures:
+    - On creation, **Expiration Date** defaults to today’s date.
+    - Field remains editable in `draft` and `sent` states.
+    - No change to existing behavior for confirmed or expired orders.
+  - Restart the Odoo service and upgrade the **Sale** module.
+  - After implementation, new quotations have a sensible expiration default, reducing data entry and improving consistency.
+
+---

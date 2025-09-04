@@ -43,3 +43,46 @@ This section covers customizations to the Odoo 11 payment request module, includ
     - Click **Upgrade** to apply security changes.
 
 ---
+
+## Added Prepared By, Approved By, and Approved On Fields to Payment Request for Audit Trail
+
+- **Issue**: Payment requests lack accountability tracking — no clear record of who created, approved, or when approval occurred, limiting auditability and transparency.
+- **Solution**: Add `Prepared By`, `Approved By`, and `Approved On` fields with automatic population upon creation and approval.
+  - **Step 1**: Extend the model in `payment_request/models/models.py`:
+    ```python
+    prepared_by = fields.Many2one('res.users', string='Prepared By', readonly=True)
+    approve_uid = fields.Many2one('res.users', string='Approved By', readonly=True)
+    approve_date = fields.Datetime(string='Approved On', readonly=True)
+    ```
+  - **Step 2**: Auto-set `prepared_by` on creation:
+    ```python
+    @api.model
+    def create(self, vals):
+        if not vals.get('prepared_by'):
+            vals['prepared_by'] = self.env.uid
+        return super(paymentrequest, self).create(vals)
+    ```
+  - **Step 3**: Update approval logic in `button_done`:
+    ```python
+    @api.multi
+    def button_done(self):
+        for order in self:
+            if order.selection_field == 'confirmed':
+                order.write({
+                    'selection_field': 'approved',
+                    'approve_uid': self.env.uid,
+                    'approve_date': fields.Datetime.now()
+                })
+        return True
+    ```
+  - **Step 4**: Update form view in `payment_request/views/views.xml`:
+    ```xml
+    <field name="prepared_by" readonly="1" attrs="{'invisible': [('id', '=', False)]}"/>
+    <field name="approve_uid" readonly="1"/>
+    <field name="approve_date" readonly="1"/>
+    ```
+    - `prepared_by` is hidden until the record is saved.
+  - Restart the Odoo service and upgrade the `payment_request` module.
+  - After upgrade, all payment requests display full approval metadata directly in the form, enabling full traceability.
+
+---

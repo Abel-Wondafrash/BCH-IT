@@ -71,3 +71,73 @@ This section covers customizations to Odoo 11’s accounting module, including i
   - After activation, users must select a payment term before saving a customer, improving data consistency and downstream accuracy in sales and invoicing.
 
 ---
+
+## Enforced Sale Pricelist Assignment on Partner Creation
+
+- **Issue**: Customers can be saved without a designated sale pricelist, leading to missing or incorrect pricing in quotations and orders, especially when no default exists.
+- **Solution**: Make the **Sale Pricelist** (`property_product_pricelist`) a required field on the partner form, ensuring every customer has a pricing rule assigned.
+  - Edit `res_partner.py` in the `account` or `sale` module:
+    ```python
+    property_product_pricelist = fields.Many2one(
+        'product.pricelist',
+        string='Sale Pricelist',
+        required=True,
+        default=lambda self: self.env['product.pricelist'].search([], limit=1).id or False,
+        help="This pricelist will be used for sales to this customer."
+    )
+    ```
+  - The `default` fetches the first available pricelist (if any), improving usability.
+  - Restart the Odoo service and upgrade the **Accounting** module.
+  - After enforcement, users must select a pricelist when creating a customer, ensuring consistent and predictable pricing across all sales transactions.
+
+---
+
+## Auto-Sync Location and Pricelist on Sale Orders Based on Partner Configuration
+
+- **Issue**: Sales users must manually select both **Location** and **Pricelist** for every quotation, even though these are directly tied to the customer. This is time-consuming, error-prone, and inconsistent.
+- **Solution**: Automatically set **Pricelist** and **Location** based on the selected partner, and enforce bidirectional sync between the two fields.
+  - **Step 1**: Make `location` required and readonly in `sales_location/models/sale.py`:
+    ```python
+    location = fields.Many2one(
+        'sale.locations',
+        string="Location",
+        required=True,
+        readonly=True
+    )
+    ```
+  - **Step 2**: Add auto-configuration logic:
+    - **On partner change**:
+      ```python
+      @api.onchange('partner_id')
+      def _onchange_partner_set_pricelist_and_location(self):
+          if not self.partner_id:
+              return
+          # Set pricelist from partner
+          if self.partner_id.property_product_pricelist:
+              self.pricelist_id = self.partner_id.property_product_pricelist
+          # Set location from pricelist
+          if self.pricelist_id:
+              matching_location = self.env['sale.locations'].search([
+                  ('pricelist_id', '=', self.pricelist_id.id)
+              ], limit=1)
+              if matching_location:
+                  self.location = matching_location
+              else:
+                  self.location = False
+                  raise UserError(_(
+                      "No location found matching the selected customer's pricelist. "
+                      "Please configure a location with this pricelist or choose another customer."
+                  ))
+      ```
+    - **On create**:
+      Ensures pricelist and location are set during record creation if not provided.
+    - **On write**:
+      Syncs pricelist ↔ location when either is updated and refreshes order line prices.
+  - **Step 3**: Make field readonly in view (`sale_views.xml`):
+    ```xml
+    <field name="location" readonly="1"/>
+    ```
+  - Restart the Odoo service and upgrade the **Accounting** module.
+  - After implementation, selecting a customer automatically populates **Pricelist** and **Location**, eliminating manual input and ensuring accuracy.
+
+---
