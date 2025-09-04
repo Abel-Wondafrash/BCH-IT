@@ -722,3 +722,56 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - Ensures fulfillment feasibility and aligns with operational constraints.
 
 ---
+
+## Enhanced Validation for Warehouse Consistency in Sales Orders
+
+- **Issue**: The existing warehouse validation did not fully prevent invalid configurations — users could save orders where:
+  - Products come from mutually exclusive warehouses (no common source).
+  - The selected `warehouse_id` is not within the set of warehouses that can fulfill all products.
+- **Solution**: Strengthen the `_check_single_warehouse_source` constraint to enforce both **common sourcing** and **selected warehouse validity**.
+
+  - In `sale_stock/models/sale_order.py`, update the constraint:
+
+    ```python
+    @api.constrains('order_line')
+    def _check_single_warehouse_source(self):
+        for order in self:
+            product_template_ids = order.order_line.mapped('product_id.product_tmpl_id.id')
+            if not product_template_ids:
+                continue
+
+            common_warehouses = None
+            for tmpl_id in product_template_ids:
+                descriptors = self.env['product.descriptor'].search([
+                    ('product_temp', '=', tmpl_id),
+                    ('productWarehouseId', '!=', False),
+                    ('productWarehouseId', '!=', '')
+                ])
+                warehouse_ids = set(descriptors.mapped('warehouse_id.id'))
+
+                if common_warehouses is None:
+                    common_warehouses = warehouse_ids
+                else:
+                    common_warehouses &= warehouse_ids  # Intersection
+
+            if not common_warehouses:
+                raise ValidationError(
+                    "Sales Order cannot include products from multiple or unrelated warehouses. "
+                    "Please split them into separate orders."
+                )
+
+            if order.warehouse_id.id not in common_warehouses:
+                raise ValidationError(
+                    f"The selected warehouse ({order.warehouse_id.name}) is not valid for all products in this order. "
+                    "Please select a warehouse that all products can be sourced from."
+                )
+    ```
+
+  - This ensures:
+    - All products in the order share at least one common warehouse.
+    - The chosen `warehouse_id` is part of that common set.
+  - Applies on every save or modification of order lines.
+  - Restart Odoo and upgrade the **Sale Stock** module.
+  - After implementation, sales orders are guaranteed to be logistically valid and sourceable from a single warehouse.
+
+---

@@ -23,3 +23,23 @@ This section documents solutions for system-related issues spanning operating sy
   - **Note**: Setting threshold to `0` disables lockout; use cautiously in secure environments.
 
 ---
+
+## UPS (ECO-FLOW E980) Brief AC Output Interruption After Power Fluctuation
+
+- **Issue**: The UPS briefly cuts AC output (~3–4 seconds) shortly after a power fluctuation or grid recovery, potentially disrupting connected equipment despite being in backup mode.
+- **Solution**: Apply firmware updates and adjust power settings to maintain uninterrupted output.
+  - **Step 1**: Update device firmware to latest stable version:
+    - Recommended versions: `V1.0.1.200` or `V1.0.2.60`
+    - Ensures improved power switching logic and stability during grid transitions.
+  - **Step 2**: Enable "AC Always On" mode:
+    - Navigate to: **Settings > Output > AC always on**
+    - Set to **Enabled**
+    - Ensures AC output resumes automatically after power-on or fluctuation.
+    - _Note_: Slight increase in idle power consumption.
+  - **Step 3**: Disable auto timeouts:
+    - **Settings > Auto timeout > Device timeout > Never**
+    - **Settings > Auto timeout > AC timeout > Never**
+    - Prevents unintended shutdowns after periods of inactivity.
+  - After applying these settings, the UPS maintains consistent AC output during and after power fluctuations, minimizing disruption to connected devices.
+
+---
