@@ -528,3 +528,197 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After implementation, new quotations have a sensible expiration default, reducing data entry and improving consistency.
 
 ---
+
+## Fixed User Partner Code Validation in XML Generation
+
+- **Issue**: The `create_xml` method incorrectly checked `user.partner_code`, which does not exist on the `res.users` model, causing false rejections during XML generation even when the linked partner had a valid `partner_code`.
+- **Solution**: Correctly reference the `partner_code` via the `partner_id` relationship.
+  - In `account/models/account_invoice.py`, update the validation in `create_xml`:
+    ```python
+    user = self.env.user
+    if not user.partner_id.partner_code:
+        raise UserError('User not allowed to print receipt')
+    ```
+  - This ensures the check evaluates `partner_code` on the related `res.partner` record, not the user.
+  - Restart the Odoo service and upgrade the **Sale** module.
+  - After fix, users with a properly configured partner record can generate XMLs without unnecessary access errors.
+
+---
+
+## Added Explicit Return in `action_invoice_open` to Prevent XML-RPC Marshalling Errors
+
+- **Issue**: The overridden `action_invoice_open` method in `account_invoice.py` did not return a value in all execution paths, causing `None` to be returned. This triggered XML-RPC marshalling errors when called remotely, as `None` cannot be serialized unless `allow_none` is enabled.
+- **Solution**: Ensure the method always returns a valid value by adding `return True` at the end.
+  - In `account/models/account_invoice.py`, update the method:
+    ```python
+    def action_invoice_open(self):
+        # existing logic...
+        self.create_xml()
+        return True  # Ensure non-null return for XML-RPC compatibility
+    ```
+  - This guarantees a truthy response is sent to the client, preventing marshalling failures in external integrations.
+  - Restart the Odoo service and upgrade the **Sale** module.
+  - After fix, remote calls to validate invoices via XML-RPC will succeed without serialization errors.
+
+---
+
+## Added `get_current_balance` Method for RPC-Compatible Partner Balance Retrieval
+
+- **Issue**: The existing `_get_curent_balance` method does not return a value (it assigns to instance variables), making it unusable via XML-RPC or external API calls that require serializable responses.
+- **Solution**: Introduce a public `get_current_balance` method that computes and returns a dictionary of partner IDs (as strings) mapped to their current balances, suitable for remote integration.
+- **Note**: This is literally a duplicate of the \_get_current_balance method but with minor return and name related changes
+
+  - In `account/models/partner.py`, add:
+
+    ```python
+    @api.multi
+    def get_current_balance(self):
+        result = {}
+        for partner in self:
+            if partner.customer:
+                # Compute balance for customers
+                initial_balance = partner.inital_balance or 0.0
+                total_paid = 0.0
+                total_reverse = 0.0
+
+                # Sum posted bank deposits (BKDP)
+                move_det = self.env['account.move'].search([
+                    ('ref', 'like', 'BKDP%'),
+                    ('partner', '=', partner.id),
+                    ('state', '=', 'posted')
+                ])
+                for move in move_det:
+                    total_paid += move.amount_val
+                    reverse_name = "reversal of: " + move.name
+                    reversal = self.env['account.move'].search([
+                        ('ref', '=', reverse_name),
+                        ('partner', '=', partner.id),
+                        ('state', '=', 'posted')
+                    ], limit=1)
+                    if reversal:
+                        total_reverse += reversal.amount_val
+
+                total_paid -= total_reverse
+                total_invo = total_paid - partner.total_invoiced
+                current_total_balance = total_invo + initial_balance
+                result[str(partner.id)] = current_total_balance
+
+            elif partner.supplier:
+                # Compute balance for suppliers (simplified logic)
+                total_trade_debitor_debit = 0.0
+                total_trade_debitor_credit = 0.0
+                total_trade_creditor_debit = 0.0
+                total_trade_creditor_credit = 0.0
+
+                # Use partner's receivable/payable accounts
+                trade_dabitor = partner.property_account_receivable_id
+                trade_creditor = partner.property_account_payable_id
+
+                account_moves = self.env['account.move'].search([('partner', '=', partner.id)])
+                for move in account_moves:
+                    # Sum receivable account activity
+                    lines = self.env['account.move.line'].search([
+                        ('move_id', '=', move.id),
+                        ('account_id', '=', trade_dabitor.id)
+                    ])
+                    for line in lines:
+                        total_trade_debitor_debit += line.debit
+                        total_trade_debitor_credit += line.credit
+
+                    # Sum payable account activity
+                    lines = self.env['account.move.line'].search([
+                        ('move_id', '=', move.id),
+                        ('account_id', '=', trade_creditor.id)
+                    ])
+                    for line in lines:
+                        total_trade_creditor_credit += line.credit
+                        total_trade_creditor_debit += line.debit
+
+                total_balance = (
+                    partner.inital_balance +
+                    total_trade_debitor_debit - total_trade_debitor_credit +
+                    total_trade_creditor_credit - total_trade_creditor_debit
+                )
+                result[str(partner.id)] = total_balance
+            else:
+                result[str(partner.id)] = 0.0
+        return result
+    ```
+
+  - This method:
+    - Returns a JSON-serializable dictionary.
+    - Can be safely called via XML-RPC or REST API.
+    - Handles both customer and supplier balance logic.
+  - Restart the Odoo service and upgrade the **Account** module.
+  - After deployment, external systems can retrieve partner balances programmatically.
+
+---
+
+## Restrict Warehouse Dropdown & Enforce Single-Warehouse Source per Sales Order
+
+- **Issue**: The **Warehouse** dropdown in sales orders displays all warehouses, even when order lines contain products assigned to different or non-overlapping warehouses. This allows creation of logistically invalid orders that cannot be fulfilled from a single source.
+- **Solution**: Dynamically filter the warehouse selection to only show common warehouses across all ordered products and enforce a single-warehouse constraint on confirmation.
+
+  - **Step 1**: Update `warehouse_id` field in `sale_stock/models/sale_order.py`:
+    ```python
+    warehouse_id = fields.Many2one(
+        'stock.warehouse',
+        string='Warehouse',
+        required=True,
+        readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        domain=[]  # Populated dynamically via onchange
+    )
+    ```
+  - **Step 2**: Add dynamic domain filter based on product descriptors:
+
+    ```python
+    @api.onchange('order_line')
+    def _onchange_order_line_filter_warehouses_intersection(self):
+        product_template_ids = self.order_line.mapped('product_id.product_tmpl_id.id')
+        if not product_template_ids:
+            return {'domain': {'warehouse_id': [('id', '=', False)]}}
+
+        warehouse_sets = []
+        for tmpl_id in product_template_ids:
+            descriptors = self.env['product.descriptor'].search([
+                ('product_temp', '=', tmpl_id),
+                ('productWarehouseId', '!=', False),
+                ('productWarehouseId', '!=', '')
+            ])
+            warehouses = {d.warehouse_id.id for d in descriptors if d.warehouse_id}
+            if warehouses:
+                warehouse_sets.append(warehouses)
+
+        if not warehouse_sets:
+            return {'domain': {'warehouse_id': [('id', '=', False)]}}
+
+        common_warehouses = set.intersection(*warehouse_sets)
+        return {'domain': {'warehouse_id': [('id', 'in', list(common_warehouses))]}}
+    ```
+
+  - **Step 3**: Add validation to block multi-warehouse orders:
+    ```python
+    @api.constrains('order_line')
+    def _check_single_warehouse_source(self):
+        for order in self:
+            product_template_ids = order.order_line.mapped('product_id.product_tmpl_id.id')
+            descriptors = self.env['product.descriptor'].search([
+                ('product_temp', 'in', product_template_ids),
+                ('productWarehouseId', '!=', False),
+                ('productWarehouseId', '!=', '')
+            ])
+            warehouse_ids = descriptors.mapped('warehouse_id.id')
+            if len(set(warehouse_ids)) > 1:
+                raise ValidationError(
+                    "Sales Order cannot include products from multiple warehouses. "
+                    "Please split them into separate orders."
+                )
+    ```
+  - Restart the Odoo service and upgrade the **Sale Stock** module.
+  - After implementation:
+    - The **Warehouse** dropdown only shows warehouses common to all products.
+    - Attempting to confirm an order with mixed warehouse sources raises a clear error.
+  - Ensures fulfillment feasibility and aligns with operational constraints.
+
+---

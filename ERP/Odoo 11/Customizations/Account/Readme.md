@@ -141,3 +141,20 @@ This section covers customizations to Odoo 11’s accounting module, including i
   - After implementation, selecting a customer automatically populates **Pricelist** and **Location**, eliminating manual input and ensuring accuracy.
 
 ---
+
+## Updated Product Template Field Defaults to Prevent Accidental Sellability
+
+- **Issue**: New products were automatically marked as "Can be Sold" (`sale_ok = True` by default), leading to thousands of unintended sellable products and data pollution in pricing and catalogs.
+- **Solution**: Change default values to ensure products are not sellable by default, while enabling issuance (internal use) by default.
+  - In `product/models/product_template.py`, update the field definitions:
+    ```python
+    sale_ok = fields.Boolean('Can be Sold', default=False)
+    is_issuable = fields.Boolean('Can be Issue', default=True)
+    ```
+  - This ensures:
+    - **"Can be Sold"** is **off** by default — users must explicitly enable it.
+    - **"Can be Issue"** is **on** by default — supporting internal inventory operations.
+  - Restart the Odoo service and upgrade the **Accounting** module.
+  - After update, new products are no longer mistakenly exposed to sales channels, improving data accuracy and reducing cleanup effort.
+
+---

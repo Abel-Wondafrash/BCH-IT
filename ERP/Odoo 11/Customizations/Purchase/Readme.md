@@ -46,3 +46,50 @@ This section details customizations to the Odoo 11 purchase module, including se
   - After upgrade, all purchase requests display full submission and approval audit trail directly in the form, enhancing accountability and reporting.
 
 ---
+
+## Added Sequence-Based Naming for Purchase Requests
+
+- **Issue**: Purchase Requests used generic names or internal IDs, reducing readability and traceability in reports and communication.
+- **Solution**: Implement a sequence to generate unique, human-readable request numbers (e.g., `PUR-00001`) on creation.
+
+  - In `purchase/models/purchase.py`, update the `PurchaseRequest` model:
+
+    ```python
+    _rec_name = "name"
+
+    name = fields.Char(
+        string="Request Number",
+        required=True,
+        copy=False,
+        default='New'
+    )
+    ```
+
+    - Override `create()` to assign sequence:
+
+    ```python
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('purchase.request') or 'New'
+        return super(PurchaseRequest, self).create(vals)
+    ```
+
+  - Update reports (`purchase/report/purchase_request.xml`) to display `name` instead of `id`:
+    ```xml
+    <h2>Purchase Request - <span t-field="o.name"/></h2>
+    ```
+  - Update tree view (`purchase/views/purchase_views.xml`) to show `name` and additional fields:
+    ```xml
+    <field name="name"/>
+    <field name="branch_2"/>
+    <field name="date_order"/>
+    <field name="create_uid2"/>
+    <field name="category_type"/>
+    <field name="grand_total_expected_price"/>
+    <field name="state"/>
+    ```
+  - Restart the Odoo service and upgrade the **Purchase Management** module.
+  - After upgrade, all new Purchase Requests are automatically assigned a sequence-based number, improving document clarity and tracking.
+
+---
