@@ -316,3 +316,18 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
   - **Note**: Pricelist must be set **before** adding products to ensure correct pricing is loaded.
 
 ---
+
+## Create or Update Sales Location with Associated Pricelist
+
+- **Issue**: Sales locations must be explicitly linked to a pricelist to enable automatic pricing in quotations, but the association is not intuitive or documented.
+- **Solution**: Use the Sales Locations interface to create new locations or update existing ones with a default pricelist.
+  - Go to **Sales > Orders > Sales Locations > Manage Locations**.
+  - Click **Create** to add a new location or **Edit** an existing one.
+  - Fill in the following fields:
+    - **Sale Location**: Name of the location (e.g., Addis Ababa, Dire Dawa)
+    - **Description**: Optional details about the location
+    - **Default Pricelist**: Select the pricelist to apply automatically when this location is chosen in a quotation
+  - Click **Save**.
+  - Once saved, selecting this location in a sales order will automatically apply the linked pricelist, ensuring correct regional pricing.
+
+---

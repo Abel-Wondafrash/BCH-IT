@@ -239,3 +239,172 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After upgrade, users **must** fill in **Payment Terms**, **Plate Number**, and **Location** before saving or confirming a quotation, ensuring completeness for downstream operations.
 
 ---
+
+## Relocate "Location" Field in Quotation Form to Follow "Sales Type"
+
+- **Issue**: The **Location** field is buried in the _Other Information_ notebook tab of the quotation form, making it easy to overlook despite being a required field for operational fulfillment.
+- **Solution**: Move the **Location** field to a prominent position immediately after **Sales Type** in the main form for improved visibility and workflow compliance.
+  - Edit `sales_location/views/sale_views.xml` and add:
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+      <data>
+        <!-- Inherit Sales Order Form View -->
+        <record id="view_order_form_inherit_sales_location" model="ir.ui.view">
+          <field name="name">sale.order.form.inherit.sales.location</field>
+          <field name="model">sale.order</field>
+          <field name="inherit_id" ref="sale.view_order_form"/>
+          <field name="arch" type="xml">
+            <!-- Insert location field right after sales_type -->
+            <xpath expr="//field[@name='sales_type']" position="after">
+              <field name="location"/>
+            </xpath>
+          </field>
+        </record>
+      </data>
+    </odoo>
+    ```
+  - Save the file.
+  - Restart the Odoo service.
+  - Upgrade the **sales_location** module via **Apps > sales_location > Upgrade**.
+  - After upgrade, the **Location** field appears directly after **Sales Type**, ensuring earlier user input and reducing missed entries.
+
+---
+
+## Automatically Update Order Line Prices When Pricelist Changes in Quotations
+
+- **Issue**: Changing the pricelist on a quotation does not automatically update existing order line prices, forcing sales users to manually re-add products to apply correct regional or customer-specific pricing.
+- **Solution**: Implement an `@onchange` method to dynamically recompute and apply prices from the selected pricelist to all order lines.
+  - Add the following method to the `sale.order` model in the custom module:
+    ```python
+    @api.multi
+    @api.onchange('pricelist_id')
+    def _onchange_pricelist_update_order_lines(self):
+        for order in self:
+            if not order.pricelist_id:
+                continue  # Skip if no pricelist set
+            for line in order.order_line:
+                if not line.product_id:
+                    continue  # Skip lines without a product
+                try:
+                    # Get updated price using the new pricelist
+                    price = order.pricelist_id.get_product_price(
+                        line.product_id,
+                        line.product_uom_qty,
+                        order.partner_id
+                    )
+                    line.price_unit = price
+                except Exception as e:
+                    raise UserError(
+                        _("Failed to update price for product '%s'.\n\nError: %s") % (
+                            line.product_id.display_name,
+                            str(e)
+                        )
+                    )
+    ```
+  - This ensures that when a user changes the **Pricelist** field, all existing order lines are recalculated using the correct pricing rules (e.g., regional, volume-based).
+  - Restart the Odoo service and upgrade the relevant module (e.g., `sale` or custom pricing module).
+  - After implementation, switching pricelists will immediately reflect accurate prices across all lines without requiring product re-entry.
+
+---
+
+## Auto-Fill Pricelist Based on Selected Location in Quotations
+
+- **Issue**: Sales users must manually select the correct pricelist after choosing a location, increasing the risk of pricing errors and reducing efficiency.
+- **Solution**: Automatically set the **Pricelist** field based on the selected **Location**, and make it read-only to enforce consistency.
+  - **Step 1**: Extend the `sales_location` model to include a default pricelist on location:
+    In `sales_location/models/sales_location.py`, add:
+    ```python
+    pricelist_id = fields.Many2one('product.pricelist', string="Default Pricelist")
+    ```
+  - **Step 2**: Implement auto-fill logic in `sale.py`:
+    In `sales_location/models/sale.py`, add:
+    ```python
+    @api.onchange('location')
+    def _onchange_location_set_pricelist(self):
+        if self.location and self.location.pricelist_id:
+            self.pricelist_id = self.location.pricelist_id
+    ```
+  - **Step 3**: Make the **Pricelist** field read-only in the form view (optional, for enforcement):
+    Update the form view via XML:
+    ```xml
+    <field name="pricelist_id" readonly="1"/>
+    ```
+  - Restart the Odoo service and upgrade the **sales_location** module.
+  - After setup, selecting a **Location** will automatically populate the **Pricelist**, ensuring accurate, location-specific pricing without manual intervention.
+
+---
+
+## Add Menu and Action to Manage Sales Locations with Required Pricelist
+
+- **Issue**: There is no direct UI access to manage sales locations, and the critical `pricelist_id` field is not enforced, leading to incomplete configurations and pricing failures.
+- **Solution**: Create a dedicated menu and action to manage locations, and enforce pricelist assignment.
+
+  - **Step 1**: Create `sale_locations/views/sale_locations_view.xml`:
+
+    ```xml
+    <odoo>
+      <!-- Tree View -->
+      <record id="view_sale_locations_tree" model="ir.ui.view">
+        <field name="name">sale.locations.tree</field>
+        <field name="model">sale.locations</field>
+        <field name="arch" type="xml">
+          <tree string="Sales Locations">
+            <field name="name"/>
+            <field name="description"/>
+            <field name="is_rural"/>
+            <field name="pricelist_id"/>
+          </tree>
+        </field>
+      </record>
+
+      <!-- Form View -->
+      <record id="view_sale_locations_form" model="ir.ui.view">
+        <field name="name">sale.locations.form</field>
+        <field name="model">sale.locations</field>
+        <field name="arch" type="xml">
+          <form string="Sales Location">
+            <sheet>
+              <group>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="is_rural"/>
+                <field name="pricelist_id"/>
+              </group>
+            </sheet>
+          </form>
+        </field>
+      </record>
+
+      <!-- Action -->
+      <record id="action_sales_locations" model="ir.actions.act_window">
+        <field name="name">Sales Locations</field>
+        <field name="res_model">sale.locations</field>
+        <field name="view_mode">tree,form</field>
+      </record>
+
+      <!-- Menu Items -->
+      <menuitem id="menu_sales_location_root"
+                name="Sales Locations"
+                parent="sale.sale_order_menu"
+                sequence="30"/>
+      <menuitem id="menu_sales_locations"
+                name="Manage Locations"
+                parent="menu_sales_location_root"
+                action="action_sales_locations"
+                sequence="10"/>
+    </odoo>
+    ```
+
+  - **Step 2**: Make `pricelist_id` required in `sales_location/models/sales_location.py`:
+    ```python
+    pricelist_id = fields.Many2one(
+        'product.pricelist',
+        string="Default Pricelist",
+        required=True
+    )
+    ```
+  - **Step 3**: Restart the Odoo service and upgrade the **sales_location** module.
+  - After upgrade, users can access **Sales > Sales Locations > Manage Locations** to create and manage location records, with enforced pricelist assignment.
+
+---
