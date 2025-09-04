@@ -331,3 +331,17 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
   - Once saved, selecting this location in a sales order will automatically apply the linked pricelist, ensuring correct regional pricing.
 
 ---
+
+## Automatically Apply Partner-Specific Payment Terms in Quotations
+
+- **Issue**: Quotations do not automatically reflect the correct payment terms for a customer, leading to inconsistencies in invoicing and cash flow expectations.
+- **Solution**: Set the desired payment terms on the customer record; Odoo will automatically propagate them to new quotations.
+  - Go to **Sales > Customers** and select the partner.
+  - Click **Edit**.
+  - In the **Invoicing** tab, locate **Customer Payment Terms**.
+  - Select the appropriate term (e.g., _Immediate Payment_, _15 Days_, etc.).
+  - Click **Save**.
+  - When creating a new quotation for this customer, the **Payment Terms** field will be automatically populated based on the partner’s configuration.
+  - Ensures consistent and accurate payment terms across all sales documents for the customer.
+
+---

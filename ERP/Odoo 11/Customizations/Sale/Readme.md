@@ -408,3 +408,72 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After upgrade, users can access **Sales > Sales Locations > Manage Locations** to create and manage location records, with enforced pricelist assignment.
 
 ---
+
+## Removed Stock Availability Warning Modal in Sales Orders
+
+- **Issue**: The modal _"You plan to sell X but only have Y available in warehouse Z"_ appears on every order line, requiring unnecessary confirmation clicks. Sales and marketing operate on forward commitments, not real-time stock, making the prompt redundant and inefficient.
+- **Solution**: Disable the availability warning by commenting out the `@api.onchange` decorator and method call for `_onchange_product_id_check_availability`.
+  - Edit `sale_stock/models/sale_order.py`.
+  - Locate the method `_onchange_product_id_check_availability`.
+  - **Step 1**: Comment out the `@api.onchange` decorator:
+    ```python
+    # @api.onchange('product_id', 'product_uom_qty', 'product_uom', 'warehouse_id')
+    def _onchange_product_id_check_availability(self):
+        # Method body remains, but not triggered on change
+    ```
+  - **Step 2**: Comment out the method call in the same file (if invoked elsewhere):
+    ```python
+    # self._onchange_product_id_check_availability()
+    ```
+  - Restart the Odoo service and upgrade the **Sale** module.
+  - After deployment, users can add products to quotations and orders without interruption, regardless of current stock levels — aligning with business workflow.
+
+---
+
+## Removed Unused Batch Number Field and Input Prompt in Sales Order Lines
+
+- **Issue**: The **Batch Number** field (`batch_no`) was marked as required but used inconsistently—sales teams entered arbitrary values to bypass validation. The field appeared in both the order line creation form and list view despite having no operational or traceability purpose.
+- **Solution**: Remove the required constraint and hide the field from all sales order line interfaces.
+  - **Step 1**: Update the model in `sale/models/sale.py`:
+    ```python
+    batch_no = fields.Char('Batch Number')  # Removed required=True
+    ```
+  - **Step 2**: Hide the field in the form views via `sale/views/sale_views.xml`:
+    - In the **Order Lines notebook section**:
+      ```xml
+      <field name="batch_no" invisible="1"/>
+      ```
+    - In the **Create Order Lines** popup or form:
+      ```xml
+      <field name="batch_no" invisible="1"/>
+      ```
+  - **Step 3**: Restart the Odoo service and upgrade the **Sale** module.
+  - After deployment, the `batch_no` field is no longer visible or enforced, eliminating unnecessary input and streamlining the sales workflow without affecting data integrity.
+
+---
+
+## Include ProductWarehouseId in SOV XML for Consistent Cross-System Product Identification
+
+- **Issue**: The SOV XML uses generic product codes that do not align with warehouse-specific identifiers used in external systems (CNET, Peachtree), leading to mismatches during import and reconciliation.
+- **Solution**: Replace the default product code in the XML with `productWarehouseId` — a warehouse-specific code from the `product.descriptor` model — falling back to template code if not found.
+  - In `sale/models/sale.py`, update the code generation logic:
+    ```python
+    product = search_result_order_line.product_id
+    sale_order = search_result_order_line.order_id
+    product_descriptor = self.env['product.descriptor'].search([
+        ('product_temp', '=', product.product_tmpl_id.id),
+        ('warehouse_id', '=', sale_order.warehouse_id.id)
+    ], limit=1)
+    _logger.info("Product: %s, Template: %s, Warehouse: %s, Descriptor: %s, Code: %s",
+                 product.name, product.product_tmpl_id.name, sale_order.warehouse_id.name,
+                 product_descriptor, product_descriptor.productWarehouseId if product_descriptor else 'None')
+    code_value = product_descriptor.productWarehouseId if product_descriptor else product.product_tmpl_id.code or ''
+    childOfproduct = root.createElement('code')
+    childOfproduct.appendChild(root.createTextNode(str(code_value)))
+    fourth_root_child.appendChild(childOfproduct)
+    ```
+  - This ensures the `<code>` tag in the XML reflects the correct warehouse-specific product ID as defined in `product.descriptor`.
+  - Restart the Odoo service and upgrade the **Sale** module.
+  - After update, generated SOV XMLs will contain accurate `ProductWarehouseId`, ensuring seamless integration with Finance systems.
+
+---

@@ -251,3 +251,73 @@ This section contains SQL queries used to manage and troubleshoot Odoo 11 databa
   - **Note**: A similar override was found for _Bottle handle_ — verify and clean as needed.
 
 ---
+
+## Batch Set Payment Terms for Partners Missing Payment Terms Configuration
+
+- **Issue**: Many customers lack configured payment terms, causing default or incorrect terms to be applied in quotations and invoices.
+- **Solution**: Identify partners without payment terms and assign them in bulk using direct database operations.
+
+  - **Step 1**: Find partners missing payment terms:
+    ```sql
+    SELECT
+        p.id AS partner_id,
+        p.name AS partner_name
+    FROM res_partner p
+    WHERE p.customer = TRUE
+      AND p.id NOT IN (
+        SELECT CAST(SUBSTRING(ip.res_id FROM 'res\.partner,(\d+)') AS INTEGER)
+        FROM ir_property ip
+        WHERE ip.name = 'property_payment_term_id'
+          AND ip.type = 'many2one'
+          AND ip.value_reference ~ '^account\.payment\.term,\d+$'
+          AND ip.res_id ~ '^res\.partner,\d+$'
+      );
+    ```
+  - **Step 2**: List available payment terms and note the target `id`:
+    ```sql
+    SELECT id, name FROM account_payment_term ORDER BY name;
+    ```
+  - **Step 3**: Create helper function to assign payment term:
+
+    ```sql
+    CREATE OR REPLACE FUNCTION set_payment_term_for_partner(partner_id INTEGER)
+    RETURNS TEXT AS $$
+    DECLARE
+        field_id INTEGER;
+        payment_term CONSTANT TEXT := 'account.payment.term,1'; -- Change '1' to desired term ID
+    BEGIN
+        -- Get fields_id for property_payment_term_id
+        SELECT id INTO field_id
+        FROM ir_model_fields
+        WHERE model = 'res.partner' AND name = 'property_payment_term_id';
+
+        IF field_id IS NULL THEN
+            RAISE EXCEPTION 'Field property_payment_term_id not found in ir_model_fields';
+        END IF;
+
+        -- Insert property record (skip if exists)
+        INSERT INTO ir_property (
+            name, type, res_id, company_id, value_reference,
+            fields_id, create_uid, create_date, write_uid, write_date
+        )
+        VALUES (
+            'property_payment_term_id', 'many2one', 'res.partner,' || partner_id::TEXT,
+            NULL, payment_term, field_id, 1, NOW(), 1, NOW()
+        )
+        ON CONFLICT DO NOTHING;
+
+        RETURN 'Payment term set for partner ID ' || partner_id;
+    END;
+    $$ LANGUAGE plpgsql;
+    ```
+
+  - **Step 4**: Apply to target partners:
+    ```sql
+    SELECT set_payment_term_for_partner(id)
+    FROM res_partner
+    WHERE id IN (1679, 1697, ...); -- Replace with actual partner IDs
+    ```
+  - **Step 5**: Run `COMMIT;` to finalize changes.
+  - After execution, new quotations for these partners will automatically use the assigned payment terms.
+
+---

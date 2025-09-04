@@ -62,3 +62,24 @@ This section covers customizations to the Odoo 11 HR module, including leave req
 ![Record Rules](image-5.png)
 
 ---
+
+## Restricted Creation and Editing of Leave Types in Leave Request Form
+
+- **Issue**: Users could accidentally create or edit leave types directly from the **Leave Type** dropdown in the leave request form, leading to inconsistent or invalid entries.
+- **Solution**: Disable in-line creation and editing options for `holiday_status_id` to enforce use of predefined, centrally managed leave types.
+  - Edit `hr_holidays/views/hr_holidays_views.xml`.
+  - Locate the `holiday_status_id` field and add restrictions:
+    ```xml
+    <field name="holiday_status_id"
+           context="{'employee_id': employee_id}"
+           options="{'no_create': True, 'no_create_edit': True}"/>
+    ```
+  - This prevents:
+    - **Create**: Adding new leave types from the dropdown.
+    - **Create and Edit**: Opening the quick edit/create dialog.
+  - Proper management of leave types remains available under:
+    - **Human Resources > Leaves > Configuration**
+  - Restart the Odoo service and upgrade the **Leave Management** (`hr_holidays`) module.
+  - After upgrade, only existing leave types can be selected, ensuring data integrity and standardized leave policies.
+
+---

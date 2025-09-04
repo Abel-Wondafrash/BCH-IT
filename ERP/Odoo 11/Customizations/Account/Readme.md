@@ -52,3 +52,22 @@ This section covers customizations to Odoo 11’s accounting module, including i
   - Result: Cleaner organization, faster file access, and easier daily backup isolation.
 
 ---
+
+## Enforce Required Customer Payment Terms on Partner Save
+
+- **Issue**: Partners can be saved without a configured Customer Payment Term, leading to missing or incorrect terms in quotations and invoices.
+- **Solution**: Add a model constraint to enforce that `property_payment_term_id` is set before saving a customer record.
+  - Edit `account/models/partner.py` and add the following constraint:
+    ```python
+    @api.constrains('property_payment_term_id')
+    def _check_property_payment_term(self):
+        for record in self:
+            payment_term = record.sudo().with_context(force_company=record.company_id.id).property_payment_term_id
+            if not payment_term:
+                raise ValidationError("Customer Payment Terms must be set.")
+    ```
+  - This ensures that any attempt to save a partner (customer) without a defined payment term will be blocked with a clear error message.
+  - Restart the Odoo service and upgrade the **Accounting** module.
+  - After activation, users must select a payment term before saving a customer, improving data consistency and downstream accuracy in sales and invoicing.
+
+---
