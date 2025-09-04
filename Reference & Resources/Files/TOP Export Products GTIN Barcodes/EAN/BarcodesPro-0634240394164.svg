@@ -1,0 +1,26 @@
+<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="199.5" height="138" viewBox="0 0 133 92"><g><rect x="0" y="0" width="133" height="92" fill="white"/><defs>
+		<linearGradient id="style0" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0%" stop-color="#000"/>
+			<stop offset="100%" stop-color="#000"/>
+		</linearGradient>
+		<linearGradient id="style1" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0%" stop-color="#00379c"/>
+			<stop offset="100%" stop-color="#00379c"/>
+		</linearGradient>
+		<linearGradient id="style2" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0%" stop-color="#008000"/>
+			<stop offset="100%" stop-color="#008000"/>
+		</linearGradient>
+		<linearGradient id="style3" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0%" stop-color="#ae00ff"/>
+			<stop offset="100%" stop-color="#009dff"/>
+		</linearGradient>
+		<linearGradient id="style4" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0%" stop-color="#d85bc6"/>
+			<stop offset="100%" stop-color="#5c4cff"/>
+		</linearGradient>
+		<linearGradient id="style5" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0%" stop-color="#00c400"/>
+			<stop offset="100%" stop-color="#00612a"/>
+		</linearGradient>
+	</defs><g transform="translate(10 10)"><g><text x="3" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">0</text></g><g><rect x="9" y="0" width="1" height="72" fill="url(#style0)"/><rect x="11" y="0" width="1" height="72" fill="url(#style0)"/></g><g><rect x="13" y="0" width="1" height="67" fill="url(#style0)"/><rect x="15" y="0" width="4" height="67" fill="url(#style0)"/><text x="18" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">6</text></g><g><rect x="20" y="0" width="4" height="67" fill="url(#style0)"/><rect x="25" y="0" width="1" height="67" fill="url(#style0)"/><text x="24" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">3</text></g><g><rect x="27" y="0" width="1" height="67" fill="url(#style0)"/><rect x="31" y="0" width="2" height="67" fill="url(#style0)"/><text x="30" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">4</text></g><g><rect x="35" y="0" width="1" height="67" fill="url(#style0)"/><rect x="38" y="0" width="2" height="67" fill="url(#style0)"/><text x="36" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">2</text></g><g><rect x="41" y="0" width="1" height="67" fill="url(#style0)"/><rect x="45" y="0" width="2" height="67" fill="url(#style0)"/><text x="42" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">4</text></g><g><rect x="50" y="0" width="2" height="67" fill="url(#style0)"/><rect x="53" y="0" width="1" height="67" fill="url(#style0)"/><text x="48" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">0</text></g><g><rect x="55" y="0" width="1" height="72" fill="url(#style0)"/><rect x="57" y="0" width="1" height="72" fill="url(#style0)"/></g><g><rect x="59" y="0" width="1" height="67" fill="url(#style0)"/><rect x="64" y="0" width="1" height="67" fill="url(#style0)"/><text x="65" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">3</text></g><g><rect x="66" y="0" width="3" height="67" fill="url(#style0)"/><rect x="70" y="0" width="1" height="67" fill="url(#style0)"/><text x="71" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">9</text></g><g><rect x="73" y="0" width="1" height="67" fill="url(#style0)"/><rect x="75" y="0" width="3" height="67" fill="url(#style0)"/><text x="77" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">4</text></g><g><rect x="80" y="0" width="2" height="67" fill="url(#style0)"/><rect x="84" y="0" width="2" height="67" fill="url(#style0)"/><text x="83" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">1</text></g><g><rect x="87" y="0" width="1" height="67" fill="url(#style0)"/><rect x="89" y="0" width="1" height="67" fill="url(#style0)"/><text x="89" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">6</text></g><g><rect x="94" y="0" width="1" height="67" fill="url(#style0)"/><rect x="96" y="0" width="3" height="67" fill="url(#style0)"/><text x="95" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">4</text></g><g><rect x="101" y="0" width="1" height="72" fill="url(#style0)"/><rect x="103" y="0" width="1" height="72" fill="url(#style0)"/></g><g><text x="110" y="77" text-anchor="middle" font-family="monospace" font-size="10" fill="black">&gt;</text></g></g></g></svg>

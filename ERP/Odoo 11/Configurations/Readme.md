@@ -287,3 +287,32 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
   - **Step 7**: Save changes; menu items will now only appear for users with the assigned groups.
 
 ---
+
+## Enable Multiple Sales Prices by Region via Pricelist Selection
+
+- **Issue**: Sales teams cannot apply region-specific pricing (e.g., Addis Ababa vs. other regions), leading to incorrect quotes and margin inconsistencies.
+- **Solution**: Configure and use regional pricelists to enable location-based pricing with manual selection at quotation creation.
+  - **Step 1**: Enable advanced pricing:
+    - Go to **Sales > Configuration > Settings**.
+    - Check **Multiple Sales Prices per Product**.
+    - Click **Save**.
+  - **Step 2**: Create regional pricelists:
+    - Navigate to **Sales > Catalog > Pricelists > Create**.
+    - Set **Name** (e.g., "Ethiopia - Addis Ababa", "Ethiopia - Regions").
+    - Leave **Country Groups** blank to allow manual assignment.
+  - **Step 3**: Define price rules:
+    - In **Pricelist Items**, click **Add an item**.
+    - Set:
+      - **Apply On**: Product
+      - **Product**: Select target product (e.g., _Steel Nail – 5 CM_)
+      - **Compute Price**: Fixed Price
+      - **Fixed Price**: Enter region-specific amount
+    - Click **Save**.
+  - **Step 4**: Use in quotations:
+    - When creating a new quotation (**Sales > Orders > Create**):
+      1. Select the **Customer**.
+      2. Manually set the **Pricelist** field to the appropriate regional pricelist.
+      3. Add order lines — prices will auto-apply based on the selected pricelist.
+  - **Note**: Pricelist must be set **before** adding products to ensure correct pricing is loaded.
+
+---

@@ -125,3 +125,129 @@ This section contains SQL queries used to manage and troubleshoot Odoo 11 databa
   - **Warning**: Only use on **fully processed orders** where standard cancellation is blocked. **`COMMIT;` is required** for changes to persist. Use with extreme caution — bypasses Odoo business logic and constraints.
 
 ---
+
+## Force Uncancel Sales Order and Restore All Associated Records to Active States
+
+- **Issue**: A sales order was forcibly cancelled using `cancel_sales_order()`, but needs to be reversed due to correction or reversal of business decision. Standard Odoo does not support restoring fully cancelled and posted transactions.
+- **Solution**: Use a PostgreSQL function to restore the sales order and all related records to their original operational states.
+
+  - **Function**:
+
+    ```sql
+    CREATE OR REPLACE FUNCTION uncancel_sales_order(so_name TEXT)
+    RETURNS TABLE(table_name TEXT, rows_affected BIGINT) AS $$
+    DECLARE
+        v_so_id INT;
+        v_invoice_id INT;
+        v_picking_id INT;
+    BEGIN
+        -- Get Sales Order ID
+        SELECT id INTO v_so_id FROM sale_order WHERE name = so_name;
+        IF v_so_id IS NULL THEN
+            RAISE NOTICE 'Sales Order % not found.', so_name;
+            RETURN;
+        END IF;
+
+        -- Step 1: Restore Invoices
+        FOR v_invoice_id IN
+            SELECT ai.id
+            FROM account_invoice ai
+            JOIN account_invoice_line ail ON ail.invoice_id = ai.id
+            WHERE ail.id IN (
+                SELECT invoice_line_id
+                FROM sale_order_line_invoice_rel
+                WHERE order_line_id IN (
+                    SELECT id FROM sale_order_line WHERE order_id = v_so_id
+                )
+            )
+        LOOP
+            UPDATE account_invoice SET state = 'paid' WHERE id = v_invoice_id;
+            GET DIAGNOSTICS rows_affected = ROW_COUNT;
+            table_name := 'account_invoice';
+            IF rows_affected > 0 THEN RETURN NEXT; END IF;
+
+            -- Restore journal entry
+            UPDATE account_move
+            SET state = 'posted'
+            WHERE id = (SELECT move_id FROM account_invoice WHERE id = v_invoice_id);
+            GET DIAGNOSTICS rows_affected = ROW_COUNT;
+            table_name := 'account_move';
+            IF rows_affected > 0 THEN RETURN NEXT; END IF;
+        END LOOP;
+
+        -- Step 2: Restore Delivery Orders
+        FOR v_picking_id IN
+            SELECT id FROM stock_picking WHERE origin = so_name
+        LOOP
+            UPDATE stock_picking SET state = 'done' WHERE id = v_picking_id;
+            GET DIAGNOSTICS rows_affected = ROW_COUNT;
+            table_name := 'stock_picking';
+            IF rows_affected > 0 THEN RETURN NEXT; END IF;
+
+            UPDATE stock_move SET state = 'done' WHERE picking_id = v_picking_id;
+            GET DIAGNOSTICS rows_affected = ROW_COUNT;
+            table_name := 'stock_move';
+            IF rows_affected > 0 THEN RETURN NEXT; END IF;
+        END LOOP;
+
+        -- Step 3: Restore Sales Order Lines
+        UPDATE sale_order_line SET state = 'confirmed' WHERE order_id = v_so_id;
+        GET DIAGNOSTICS rows_affected = ROW_COUNT;
+        table_name := 'sale_order_line';
+        IF rows_affected > 0 THEN RETURN NEXT; END IF;
+
+        -- Step 4: Restore Sales Order
+        UPDATE sale_order SET state = 'sent' WHERE id = v_so_id;
+        GET DIAGNOSTICS rows_affected = ROW_COUNT;
+        table_name := 'sale_order';
+        IF rows_affected > 0 THEN RETURN NEXT; END IF;
+
+        RETURN;
+    END;
+    $$ LANGUAGE plpgsql;
+    ```
+
+  - **Usage**:
+    ```sql
+    SELECT * FROM uncancel_sales_order('SOV-51483');
+    COMMIT;
+    ```
+  - **States Restored**:
+    - `sale_order` → `'sent'`
+    - `account_invoice` → `'paid'`
+    - `account_move` → `'posted'`
+    - `stock_picking` → `'done'`
+    - `stock_move` → `'done'`
+    - `sale_order_line` → `'confirmed'`
+  - **Warning**: Only use on orders previously cancelled via `cancel_sales_order`. **`COMMIT;` is required** for persistence. This bypasses Odoo's audit trail — use only as last resort and with full backup.
+
+---
+
+## Incorrect Sales Price Due to Fixed Pricelist Rule Override for Specific Product
+
+- **Issue**: Sales order lines for _Steel Nail – 5 CM_ display an incorrect unit price (`407.67`) instead of the expected list price (`113.044`), while similar products are unaffected. The discrepancy is caused by a hidden fixed-price pricelist rule.
+- **Solution**: Identify and remove the overriding pricelist rule from the database.
+  - **Step 1**: Locate the product template ID:
+    ```sql
+    SELECT id FROM product_template WHERE name = 'Steel Nail - 5 CM';
+    ```
+  - **Step 2**: Find the offending pricelist rule:
+    ```sql
+    SELECT * FROM product_pricelist_item
+    WHERE product_tmpl_id = (
+        SELECT id FROM product_template WHERE name = 'Steel Nail - 5 CM'
+    );
+    ```
+  - **Step 3**: Confirm the rule has:
+    - `compute_price = 'fixed'`
+    - `fixed_price` set to the incorrect value (e.g., `407.67`)
+    - Optional: Check if `date_start`/`date_end` makes it still active.
+  - **Step 4**: Delete the rule:
+    ```sql
+    DELETE FROM product_pricelist_item WHERE id = <offending_rule_id>;
+    ```
+  - **Step 5**: Run `COMMIT;` to apply changes.
+  - After deletion, the product will fall back to the correct list price from its pricelist or product configuration.
+  - **Note**: A similar override was found for _Bottle handle_ — verify and clean as needed.
+
+---
