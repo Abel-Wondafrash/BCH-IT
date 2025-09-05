@@ -321,3 +321,68 @@ This section contains SQL queries used to manage and troubleshoot Odoo 11 databa
   - After execution, new quotations for these partners will automatically use the assigned payment terms.
 
 ---
+
+## "There is No Invoiceable Line" Error Due to Inconsistent Invoice Status in Sale Order
+
+- **Issue**: Users encounter _"There is no invoiceable line"_ when attempting to invoice a confirmed sale order, despite valid order lines and no prior invoices. The **Invoices** smart button is missing, and order lines show `qty_to_invoice = 0` and `invoice_status = 'no'`, even though `product_uom_qty > 0`.
+- **Cause**: Data inconsistency in `sale_order_line` records, often caused by interrupted workflows (e.g., power loss during confirmation) or manual state manipulation.
+- **Solution**: Verify and repair invoiceable state using a targeted PostgreSQL function.
+
+  - **Step 1**: Diagnose the issue:
+    ```sql
+    SELECT
+        so.name AS order_name,
+        so.state AS order_state,
+        so.invoice_status AS order_invoice_status,
+        sol.id AS line_id,
+        sol.state AS line_state,
+        sol.product_uom_qty,
+        sol.qty_invoiced,
+        sol.qty_to_invoice,
+        sol.invoice_status AS line_invoice_status,
+        CASE
+            WHEN sol.qty_to_invoice = 0 AND sol.product_uom_qty > 0 AND sol.qty_invoiced = 0 THEN 'WILL FIX'
+            ELSE 'OK or ALREADY FIXED'
+        END AS expected_action
+    FROM sale_order so
+    JOIN sale_order_line sol ON sol.order_id = so.id
+    WHERE so.name = '<SOV-NUMBER>';
+    ```
+    ⚠️ Only proceed if the result includes lines with `expected_action = 'WILL FIX'`.
+  - **Step 2**: Apply fix via function:
+
+    ```sql
+    CREATE OR REPLACE FUNCTION make_order_invoiceable(order_name TEXT)
+    RETURNS void AS $$
+    BEGIN
+        -- Ensure order and lines are in 'sale' state
+        UPDATE sale_order
+        SET state = 'sale'
+        WHERE name = order_name;
+
+        UPDATE sale_order_line
+        SET state = 'sale'
+        WHERE order_id = (SELECT id FROM sale_order WHERE name = order_name);
+
+        -- Set lines to be invoiceable
+        UPDATE sale_order_line
+        SET invoice_status = 'to invoice'
+        WHERE order_id = (SELECT id FROM sale_order WHERE name = order_name);
+
+        -- Restore qty_to_invoice based on ordered quantity
+        UPDATE sale_order_line
+        SET qty_to_invoice = product_uom_qty
+        WHERE order_id = (SELECT id FROM sale_order WHERE name = order_name);
+    END;
+    $$ LANGUAGE plpgsql;
+    ```
+
+  - **Step 3**: Execute and commit:
+    ```sql
+    SELECT make_order_invoiceable('<SOV-NUMBER>');
+    COMMIT;
+    ```
+  - **Step 4**: Return to the sale order in Odoo, click **Create Invoice > Create Invoice**, then validate the invoice.
+  - This restores correct invoiceability without creating duplicate or phantom invoices.
+
+---
