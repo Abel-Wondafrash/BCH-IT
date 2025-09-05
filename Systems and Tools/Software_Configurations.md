@@ -19,3 +19,13 @@ This section documents setup and configuration procedures for software applicati
   - Click **Register** to activate the software.
 
 ---
+
+## Asure ID License Activation via Online Method
+
+- **Issue**: Asure ID software requires a valid license to unlock full functionality, but remains restricted until activation.
+- **Solution**: Activate the license online through the built-in licensing tool.
+  - Go to **File > Options > Licensing > License Key**.
+  - Click **Activate Online**.
+  - Ensure the machine has internet connectivity.
+
+---
