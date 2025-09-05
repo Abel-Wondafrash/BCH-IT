@@ -1,4 +1,4 @@
-# Industrial Machine Software
+# Production & Machines
 
 This section documents software solutions, installation guides, and configurations for industrial machinery, including tools and utilities for managing and operating equipment in manufacturing and production environments.
 

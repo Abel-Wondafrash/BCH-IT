@@ -345,3 +345,34 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
   - Ensures consistent and accurate payment terms across all sales documents for the customer.
 
 ---
+
+## Created User-Friendly Sequences for Purchase and Payment Requests
+
+- **Issue**: Purchase and payment requests use internal database IDs as references, which are not user-friendly, lack context, and hinder traceability in communication and reporting.
+- **Solution**: Implement human-readable sequences with prefixes `PUR-` and `PYR-` for clear identification.
+  - **Step 1**: Activate **Developer Mode**.
+  - **Step 2**: Go to **Settings > Technical > Sequences & Identifiers > Sequences**.
+  - **Step 3**: Create new sequence for **Purchase Request**:
+    - **Name**: Purchase Request
+    - **Sequence Code**: `purchase.request`
+    - **Prefix**: `PUR-`
+    - **Sequence Size**: `5`
+    - **Next Number**: `1`
+    - **Step**: `1`
+  - **Step 4**: Create new sequence for **Payment Request**:
+    - **Name**: Payment Request
+    - **Sequence Code**: `payment.request`
+    - **Prefix**: `PYR-`
+    - **Sequence Size**: `5`
+    - **Next Number**: `1`
+    - **Step**: `1`
+  - Ensure the corresponding models use these sequences in their `create()` methods or via XML reference.
+  - After setup, new requests will be numbered as `PUR-00001`, `PYR-00001`, etc., improving clarity and document tracking.
+
+---
+
+## Setup Automatic Backup in Odoo
+
+- [Tutorial Video](https://www.youtube.com/watch?v=-29T309lw5U)
+
+---
