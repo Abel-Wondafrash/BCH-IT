@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="view_fleet_vehicle_log_services_form_inherit" model="ir.ui.view">
+            <field name="name">fleet.vehicle.log.services.form.inherit</field>
+            <field name="model">fleet.vehicle.log.services</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_form"/>
+            <field name="arch" type="xml">
+                <!-- Insert Quantity after cost_subtype_id -->
+                <xpath expr="//field[@name='cost_ids']/tree/field[@name='cost_subtype_id']" position="after">
+                    <field name="quantity"/>
+                </xpath>
+                <!-- Insert Total after amount -->
+                <xpath expr="//field[@name='cost_ids']/tree/field[@name='amount']" position="after">
+                    <field name="total" sum="Total" string="Total Indicative Cost"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
