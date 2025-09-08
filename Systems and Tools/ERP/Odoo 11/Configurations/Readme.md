@@ -376,3 +376,24 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
 - [Tutorial Video](https://www.youtube.com/watch?v=-29T309lw5U)
 
 ---
+
+## Bulk Update `res_partner` Initial Balances in Odoo
+
+**[This](https://docs.google.com/spreadsheets/d/1ohVzd0woPhkMUe9Pqgz8GaS5mukNPMGvil8_dP5ZKzA/edit?usp=sharing)** Google Sheets template allows you to **instantly generate SQL `UPDATE` statements** for setting the `inital_balance` of partners in Odoo.
+
+### How it Works
+
+1. Fill in **Column A** with `partner_code`.
+2. Fill in **Column C** with `current_balance`.
+3. The **ARRAYFORMULA** automatically generates the corresponding SQL `UPDATE` statements in another column.
+4. Copy the generated queries and run them in your Odoo database.
+
+### Formula Used
+
+```excel
+=ARRAYFORMULA(
+  IF(A2:A="","",
+    "UPDATE res_partner SET inital_balance = " & C2:C & " WHERE partner_code = '" & A2:A & "';"
+  )
+)
+```
