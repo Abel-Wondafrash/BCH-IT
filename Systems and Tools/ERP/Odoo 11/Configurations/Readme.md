@@ -397,3 +397,36 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
   )
 )
 ```
+
+## 🚨 Database Cleanup Script (Year-End Reset)
+
+**⚠️ WARNING – READ THIS FIRST ⚠️**  
+This script **irreversibly deletes transactional data** (sales, purchases, payments, accounting, inventory, HR, CRM, quality, fleet, etc.).
+
+- ✅ Always **backup your database** before running.
+- ✅ Double-check that you are connected to the **correct target database** (e.g., `T19` instead of production).
+- ✅ Run in a safe environment (staging/test) before applying to production.
+- ❌ Do not run casually — this is meant for **planned year-end resets** only.
+
+### Purpose
+
+- Wipe old transactional records while preserving master data (partners, products, configurations).
+- Reset important sequences (sale orders, invoices, stock pickings, production orders, payments, etc.).
+- Optimize the database via **VACUUM** and **REINDEX**.
+
+### Benefits
+
+- Ensures a **lean, fast, and purposeful database** at the start of the new year.
+- Avoids carrying forward unnecessary clutter.
+- Provides a **repeatable, auditable process** for annual cleanup.
+
+### Usage
+
+1. Backup your database.
+2. Confirm you are connected to the **intended database** (e.g., `T19`).
+3. Open the `.txt` file containing the SQL script.
+4. Execute it in your PostgreSQL console.
+
+👉 [View the cleanup script](./Files/transactional_data_nuke_script.txt)
+
+---

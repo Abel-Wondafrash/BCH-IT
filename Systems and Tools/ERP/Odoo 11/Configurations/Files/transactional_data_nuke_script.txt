@@ -1,0 +1,238 @@
+BEGIN;
+SET session_replication_role = replica;
+
+DO $$
+DECLARE
+    tbl TEXT;
+BEGIN
+    -- SALES
+    FOREACH tbl IN ARRAY ARRAY[
+        'sale_order_line',
+        'sale_order'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- INVENTORY / STOCK
+    FOREACH tbl IN ARRAY ARRAY[
+        'stock_inventory_line',
+        'stock_inventory',
+        'stock_move_line',
+        'stock_move',
+        'stock_picking',
+        'stock_quant',
+        'stock_scrap'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- ACCOUNTING / FINANCE
+    FOREACH tbl IN ARRAY ARRAY[
+        'account_payment',
+        'account_invoice_line',
+        'account_invoice',
+        'account_move_line',
+        'account_move'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- MANUFACTURING
+    FOREACH tbl IN ARRAY ARRAY[
+        'mrp_workorder',
+        'mrp_production',
+        'procurement_group'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- CRM & MAIL
+    FOREACH tbl IN ARRAY ARRAY[
+        'crm_lead',
+        'mail_message',
+        'mail_followers',
+        'mail_activity'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- ATTACHMENTS (skip critical ones like module icons, logos)
+    IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = 'ir_attachment') THEN
+        DELETE FROM ir_attachment
+        WHERE res_model NOT IN ('ir.module.module', 'res.company');
+        RAISE NOTICE '- Deleted non-critical attachments from ir_attachment';
+    ELSE
+        RAISE NOTICE 'x Table not found: ir_attachment';
+    END IF;
+
+    -- HR
+    FOREACH tbl IN ARRAY ARRAY[
+        'hr_appraisal_parameter',
+        'hr_appraisal',
+        'hr_holidays_summary_employee',
+        'hr_holidays_summary_dept',
+        'hr_holidays',
+        'hr_attendance',
+        'hr_applicant_hr_applicant_category_rel',
+        'hr_applicant_category',
+        'hr_recruitment_note',
+        'hr_applicant',
+        'hr_job_adverte',
+        'hr_recruitment_request',
+        'hr_recruitment_source',
+        'hr_recruitment_stage',
+        'hr_recruitment_degree',
+        'hr_ot_holiday_detail',
+        'hr_ot_holiday',
+        'hr_ot_detail',
+        'hr_ot_group',
+        'hr_ot',
+        'hr_employee_shift_allocation',
+        'hr_shift_allocation',
+        'hr_shift_assign',
+        'hr_payroll_shift_detail',
+        'hr_payroll_shift',
+        'hr_payroll_overtime',
+        'hr_employee_family',
+        'hr_emergency_contact'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- QUALITY
+    FOREACH tbl IN ARRAY ARRAY[
+        'quality_alert'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- PURCHASES
+    FOREACH tbl IN ARRAY ARRAY[
+        'purchase_order_line1',
+        'purchase_order_line',
+        'purchase_order',
+        'purchase_request',
+        'purchase_request_category',
+        'purchase_order_confirm_approve',
+        'purchase_reqest_confirm_submit',
+        'purchase_order_stock_picking_rel',
+        'purchase_budget_items',
+        'purchase_budget'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- PAYMENTS
+    FOREACH tbl IN ARRAY ARRAY[
+        'payment_request',
+        'payment_request_confirm_approve',
+        'payment_request_export_wizard',
+        'payment_request_post'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+
+    -- FLEET
+    FOREACH tbl IN ARRAY ARRAY[
+        'fleet_service_type',
+        'fleet_vehicle',
+        'fleet_vehicle_cost',
+        'fleet_vehicle_log_contract',
+        'fleet_vehicle_log_fuel',
+        'fleet_vehicle_log_services',
+        'fleet_vehicle_model',
+        'fleet_vehicle_model_brand',
+        'fleet_vehicle_model_vendors',
+        'fleet_vehicle_odometer',
+        'fleet_vehicle_state',
+        'fleet_vehicle_tag',
+        'fleet_vehicle_vehicle_tag_rel'
+    ]
+    LOOP
+        IF EXISTS (SELECT 1 FROM pg_tables WHERE tablename = tbl) THEN
+            EXECUTE format('DELETE FROM %I;', tbl);
+            RAISE NOTICE '- Deleted from %', tbl;
+        ELSE
+            RAISE NOTICE 'x Table not found: %', tbl;
+        END IF;
+    END LOOP;
+END$$;
+
+-- ===========================
+-- RESET SEQUENCES
+-- ===========================
+UPDATE ir_sequence
+SET number_next = 1
+WHERE code IN (
+    'sale.order',
+    'account.invoice',
+    'stock.picking',
+    'mrp.production',
+    'account.payment',
+    'purchase.order',
+    'payment.request'
+);
+
+SET session_replication_role = origin;
+COMMIT;
+
+-- ===========================
+-- OPTIMIZE DB
+-- ===========================
+VACUUM FULL;
+REINDEX DATABASE "T19";
+ANALYZE;
