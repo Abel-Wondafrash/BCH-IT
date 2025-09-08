@@ -1,3 +1,31 @@
+/*
+============================================================
+ 🚨  D A T A B A S E   C L E A N U P   S C R I P T  🚨
+============================================================
+
+ ⚠️  WARNING – READ BEFORE RUNNING ⚠️
+
+ This script irreversibly deletes transactional data 
+ (Sales, Purchases, Payments, Accounting, Inventory, 
+ HR, CRM, Quality, Fleet, etc.).
+
+ 1. ✅ Always BACK UP your database before running.
+ 2. ✅ Ensure you are connected to the CORRECT database 
+    (e.g., T19, not production).
+ 3. ✅ Test in a staging/safe environment first.
+ 4. ❌ Do NOT run casually – this is intended only for 
+    planned year-end resets.
+
+ Purpose:
+ --------
+ - Reset transactional tables while keeping master data 
+   (partners, products, configurations).
+ - Reset key sequences (sales, invoices, pickings, etc.).
+ - Optimize database performance with VACUUM + REINDEX.
+
+============================================================
+*/
+
 BEGIN;
 SET session_replication_role = replica;
 
