@@ -430,3 +430,15 @@ This script **irreversibly deletes transactional data** (sales, purchases, payme
 👉 [View the cleanup script](./Files/transactional_data_nuke_script.txt)
 
 ---
+
+# Odoo ERP Access Rights Matrix
+
+This repository contains the **Odoo ERP Access Rights Matrix**, a structured reference of how access rights are granted across departments.
+
+## Structure
+
+- Each **worksheet** in the Excel file represents a **department** (e.g. Finance, Procurement, HR, Sales, Manufacturing, etc.), arranged alphabetically.
+
+📂 **[`Odoo ERP Access Rights Matrix`](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing)**
+
+---
