@@ -386,3 +386,29 @@ This section contains SQL queries used to manage and troubleshoot Odoo 11 databa
   - This restores correct invoiceability without creating duplicate or phantom invoices.
 
 ---
+
+## Find User Group Access Status for a Specific User
+
+- **Purpose**: Lists all groups in the system along with whether a specified user has been granted access to each group. Groups are categorized by their module category (or labeled "Other" if uncategorized), and results are ordered by category and group name for easy review.
+- **Use Case**: Audit user permissions, verify group assignments during onboarding/offboarding, or troubleshoot access issues by confirming which groups a user belongs to.
+- **SQL Query**:
+  ```sql
+  SELECT
+      u.login AS "User Login",
+      COALESCE(c.name, 'Other') AS "Category",
+      g.name AS "Group Name",
+      COALESCE(c.name, 'Other') || ' / ' || g.name AS "Full Group Name",
+      CASE WHEN gu.uid IS NOT NULL THEN 1 ELSE 0 END AS "Has Access"
+  FROM res_groups g
+  LEFT JOIN ir_module_category c ON g.category_id = c.id
+  CROSS JOIN res_users u
+  LEFT JOIN res_groups_users_rel gu
+        ON g.id = gu.gid
+        AND gu.uid = u.id
+  WHERE u.login = 'user.name.here'
+  ORDER BY c.name, g.name;
+  ```
+
+**Output:** Returns one row per group, showing the user’s login, group category, group name, combined full group name, and a binary flag (1/0) indicating whether the user is assigned to that group — useful for permission mapping and access reconciliation.
+
+---
