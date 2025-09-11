@@ -445,4 +445,42 @@ This repository contains the **Odoo ERP Access Rights Matrix**, a structured ref
 
 ## Annual Closing & Opening Procedures
 
+This guide outlines the yearly process for closing out the old fiscal period and opening the new one in Odoo. Use this text reference alongside the video walkthroughs linked.
+
+---
+
+## Steps
+
+1. **Clone Database**
+
+   - Duplicate a known working database.
+   - Verify that it opens and functions correctly.
+
+2. **Clear Transactional Data**
+
+   - Use pgAdmin to select THE CORRECT DB and run SQL queries to remove last year’s transactional records.
+   - Use Odoo’s UI to confirm data clearance.
+
+3. **Set Opening Balances**
+
+   - Enter initial balances for all partners (customers, vendors) having obtained figures from Finance
+
+4. **Reset Identifiers & Sequences**
+
+   - Update sequence numbers (invoices, vouchers, etc.) to start fresh.
+
+5. **Setup and Configure Auto-Backup**
+
+   - Ensure DB name and backup path are correct.
+   - Update scheduling settings for the new period.
+
+6. **Adjust Inventory**
+
+   - Create inventory adjustment entries.
+   - Start and validate adjustments.
+
+7. **Assign Access Rights**
+   - Review [this](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing) Access Rights Matrix.
+   - Ensure correct permissions for users going into the new period. Archive/Deactivate (DO NOT DELETE) inactive users.
+
 ---
