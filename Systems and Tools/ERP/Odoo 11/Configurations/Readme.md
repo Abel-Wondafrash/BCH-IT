@@ -453,29 +453,35 @@ This guide outlines the yearly process for closing out the old fiscal period and
 
 1. **Clone Database**
 
+   - Video guide [here](https://youtu.be/aGOfS9IhpIw)
    - Duplicate a known working database.
    - Verify that it opens and functions correctly.
 
 2. **Clear Transactional Data**
 
+   - Video guide [here](https://youtu.be/WSdBXVc7XHg)
    - Use pgAdmin to select THE CORRECT DB and run SQL queries to remove last year’s transactional records.
    - Use Odoo’s UI to confirm data clearance.
 
 3. **Set Opening Balances**
 
+   - Video guide [here](https://youtu.be/2lW49ASvIKM) | Google Sheets formula [here](https://docs.google.com/spreadsheets/d/1ohVzd0woPhkMUe9Pqgz8GaS5mukNPMGvil8_dP5ZKzA/edit?usp=sharing)
    - Enter initial balances for all partners (customers, vendors) having obtained figures from Finance
 
 4. **Reset Identifiers & Sequences**
 
+   - Video guide [here](https://youtu.be/h3o0tAHh58Q)
    - Update sequence numbers (invoices, vouchers, etc.) to start fresh.
 
 5. **Setup and Configure Auto-Backup**
 
+   - Video guide [here](https://youtu.be/X_ZU2EnMgWg)
    - Ensure DB name and backup path are correct.
    - Update scheduling settings for the new period.
 
 6. **Adjust Inventory**
 
+   - Video guide [here](https://youtu.be/J0VW9aI1gwo)
    - Create inventory adjustment entries.
    - Start and validate adjustments.
 
