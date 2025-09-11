@@ -4,79 +4,77 @@ A comprehensive reference of Automation Works, IT Systems, and supporting proces
 
 ---
 
-## 🟦 Objective
-
-Provide a centralized reference of Automation Works, IT Systems, and supporting processes to ensure seamless continuity and resilience during staff transitions.
+Please read the details of this BCH over at [Google Sheets](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.gknsv4hxkm6h)
 
 ---
 
-## 🟦 Primary Goal
+## 🚨 Emergency Guide
 
-Minimize operational disruption, reduce knowledge loss, and maintain critical system uptime during personnel changes.
+This guide provides quick-reference procedures for handling critical IT and automation emergencies.
+If unsure what to do or need help, please check this escalation matrix.
+→ **Level 1 (Low):** minor, single-user issue, infrastructure related
 
----
+- IT Support → System Admin → IT Manager → IT Director
 
-## 🟦 Secondary Goal
+→ **Level 2 (Mid):** system service down, a department or multiple users affected
 
-Facilitate effective knowledge transfer to existing IT and Automation staff, enabling them to manage systems confidently and independently.
+- System Admin → IT Manager → IT Director → Vendor
 
----
+→ **Level 3 (High):** critical system down
 
-## 🟦 Scope
+- IT Manager → IT Director → Vendor → Executive Leadership
 
-- Critical systems and infrastructure
-- Workflow automations and IT processes
-- Vendors and support contacts
-- Ongoing projects and pending work
-- Key responsibilities,
-- SOPs,
-- Tribal knowledge, and lessons learned
+### Contacts of: [TOP Staff](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.p5r7sz95ao4n) | [External (Partners & Vendors)](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.csmeknmtdzmk)
 
 ---
 
-## 🟦 Audience
+## 1. Database Emergencies
 
-- Leadership
-- IT and Automation team members
-- Personnel responsible for maintaining operational continuity
+### Corrupted Odoo Database
 
----
+- **Issue:** Database corruption - symptoms may include 500 Server error, erroneous modules, +
+- **Solution:** Watch this guide to restore the most recent working backup
 
-## 🟦 How to Use
+### Database Won't Backup at all or Change Backup Schedule
 
-- Use this repository as the **documentation hub**.
-- The **Google Sheets Handbook** serves as the **index of all entries**.
-- Each section in the Table of Contents below links back to detailed documents in Google Docs or here in GitHub.
-- Quick-start survival notes can be found under **Handover & Onboarding**.
+- **Issue:** A database won't backup entirely or want to change the schedule
+- **Solution:** Watch this guide to setup backup system and configure it like this
 
----
+### Database Won’t Backup Correctly
 
-## 🟦 Recommendations to Readers
+- **Issue:** Backup fails or produces incomplete files
+- **Solution:** Check storage space and permissions
 
-- Review each tab carefully before adding new entries.
-- Check for **duplicates or similar entries** before submitting new/missing information.
-- Provide **clear context, system names, and dates** for any additions.
-- When updating an entry, **retain the previous version** and indicate the new information so the history of changes is preserved.
-- If adding **“Tribal Knowledge” or Lessons Learned**, link it to the relevant system/process so it’s actionable.
-- Suggestions for improving existing procedures or clarifying ambiguous entries are encouraged.
-- **Contributions should always strengthen continuity, reduce knowledge gaps, and improve team efficiency.**
+### Other Critical Issues
+
+- Find details [here (system issues)](./Systems%20and%20Tools/System%20Errors%20and%20Fixes.md) and [here (CNET issues)](./Systems%20and%20Tools/ERP/CNET/Errors_and_Fixes.md) and [here (machines)](/Production%20&%20Machines/Readme.md) or search for keywords in this repo.
 
 ---
 
-## 🟦 Table of Contents (Tabs)
+## 2. Server & Service Failures
 
-- [Overview](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.gknsv4hxkm6h)
-- [Automation Systems](#)
-- [IT Systems](#)
-- [Processes & Workflows](#)
-- [Vendors & Contacts](#)
-- [Projects & Pending Work](#)
-- [Handover & Onboarding](#)
-- [Reference & Resources](#)
-- [Tribal Knowledge](#)
-- [Contacts – TOP Staff](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.p5r7sz95ao4n)
-- [Contacts – Vendors](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.csmeknmtdzmk)
+### Persistent Error 500 (Server Error)
 
-_(Each item will link to the corresponding Google Doc or internal resource.)_
+- **Issue:** Odoo or web service throws persistent Error 500.
+- **Possible Causes:** Corrupted modules, bad configs, database issues, syntax error in code.
+- **Solution:** Restart webpage, Restart Odoo service, check logs, restore recent working state, or investigate recent changes in code.
+
+### Critical Services Won’t Start
+
+- **Issue:** One or more services fail to start.
+- **Solution:** Verify dependencies, permissions, and configs. Restart services or restart manually.
+
+---
+
+## 3. File System / Storage Issues
+
+### Corrupted or Compromised File Systems
+
+- **Issue:** File system errors or compromise detected.
+- **Solution:** Run repair tools (fsck/chkdsk), restore from backup (Windows Image Backup) if needed.
+
+### Server Disk Full _(to be detailed)_
+
+- Follow instructions laid out [here (1. System Health & Monitoring)](./Systems%20and%20Tools/Processes%20&%20Workflows.md)
 
 ---

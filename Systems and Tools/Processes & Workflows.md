@@ -83,24 +83,23 @@ This SOP covers systems, applications, and support tools used to maintain busine
 ### Occasional / On-Demand
 
 - Maintain user accounts and access rights (make use of this [Departmental Access Rights Matrix](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing))
-- Maintain contacts (customer, vendor, employee).
-- Setup salesperson in **Loj SO Engine**.
-- Maintain sellable items creation.
-- Update sales locations and pricelists.
-- Maintain units of measure.
-- Maintain company branches.
-- ID generation & printing.
-- Repair / installation support (phones, laptops, chargers, etc.).
+- Maintain contacts (customer, vendor, employee)
+- Setup salesperson in Loj SO Engine
+- Maintain sellable items creation
+- Update sales locations and pricelists
+- Maintain units of measure
+- Maintain company branches
+- ID generation & printing
 
 ---
 
 ## 🟦 Annual Operations
 
 - **Fiscal Year Closing & Opening**
-  - Execute SQL scripts.
-  - Perform Odoo UI & tool updates.
-  - Reconcile and archive with Google Sheets.
-  - Validate new year setup on **Testbed** before applying to production.
+  - Execute SQL scripts
+  - Perform Odoo UI & tool updates
+  - Reconcile and archive with Google Sheets
+  - Validate new year setup on **Testbed** before applying to production
 
 ---
 

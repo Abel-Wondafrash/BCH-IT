@@ -442,3 +442,7 @@ This repository contains the **Odoo ERP Access Rights Matrix**, a structured ref
 📂 **[`Odoo ERP Access Rights Matrix`](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing)**
 
 ---
+
+## Annual Closing & Opening Procedures
+
+---
