@@ -82,14 +82,37 @@ This SOP covers systems, applications, and support tools used to maintain busine
 
 ### Occasional / On-Demand
 
-- Maintain user accounts and access rights (make use of this [Departmental Access Rights Matrix](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing))
-- Maintain contacts (customer, vendor, employee)
-- Setup salesperson in Loj SO Engine
-- Maintain sellable items creation
-- Update sales locations and pricelists
-- Maintain units of measure
-- Maintain company branches
-- ID generation & printing
+#### Maintain user accounts and access rights
+
+- make use of this [Departmental Access Rights Matrix](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing)
+
+#### Maintain contacts (customer, vendor, employee)
+
+-
+
+#### Setup salesperson in Loj SO Engine
+
+-
+
+#### Maintain sellable items creation
+
+-
+
+#### Update sales locations and pricelists
+
+-
+
+#### Maintain units of measure
+
+-
+
+#### Maintain company branches
+
+-
+
+#### ID generation & printing
+
+-
 
 ---
 
