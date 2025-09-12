@@ -12,6 +12,7 @@ Please read the details of this BCH over at [Google Sheets](https://docs.google.
 
 This guide provides quick-reference procedures for handling critical IT and automation emergencies.
 If unsure what to do or need help, please check this escalation matrix.
+
 → **Level 1 (Low):** minor, single-user issue, infrastructure related
 
 - IT Support → System Admin → IT Manager → IT Director
