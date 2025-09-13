@@ -373,7 +373,7 @@ This section outlines system-wide configurations for Odoo 11, covering user inte
 
 ## Setup Automatic Backup in Odoo
 
-- [Tutorial Video](https://www.youtube.com/watch?v=-29T309lw5U)
+- [Video guide](https://youtu.be/X_ZU2EnMgWg)
 
 ---
 

@@ -34,12 +34,12 @@ If unsure what to do or need help, please check this escalation matrix.
 ### Corrupted Odoo Database
 
 - **Issue:** Database corruption - symptoms may include 500 Server error, erroneous modules, +
-- **Solution:** Watch this guide to restore the most recent working backup
+- **Solution:** Watch [this](https://youtu.be/aGOfS9IhpIw) guide to restore the most recent working backup
 
 ### Database Won't Backup at all or Change Backup Schedule
 
 - **Issue:** A database won't backup entirely or want to change the schedule
-- **Solution:** Watch this guide to setup backup system and configure it like this
+- **Solution:** Watch [this](https://youtu.be/X_ZU2EnMgWg) guide to setup backup system and configure it
 
 ### Database Won’t Backup Correctly
 

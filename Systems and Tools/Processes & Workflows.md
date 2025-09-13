@@ -103,11 +103,11 @@ This SOP covers systems, applications, and support tools used to maintain busine
 ##### Maintain Loj SO Engine (Issuers)
 
 - Convert image into vector digital signature | Video guide [here](https://youtu.be/lkRKYHP1fLg)
-- Add Issuers' Digital Signatures to SO Engine [here](to upload) Odoo - Add Issuers' Digital Signatures to SO Engine
+- Add Issuers' Digital Signatures to SO Engine [here](https://youtu.be/sE7V-jnQYKo)
 
 ##### Maintain sellable items creation
 
-- Video guide [here](to upload) Odoo - Maintain Sellable Product.mp4
+- Video guide [here](https://youtu.be/GOucVCyTxwM)
 - Important Note:
   - _Product Name_ should be succinct, descriptive, and search optimized
   - _Shorthand Name_ should be less than 15 characters (absolute max). Leaving it blank will default to full _Product Name_ in Loj Insight's report.
@@ -128,23 +128,23 @@ This SOP covers systems, applications, and support tools used to maintain busine
 
 ##### Maintain sales pricelist
 
-- Video guide [here](to upload) Odoo - Maintain Sales Pricelist.mp4
+- Video guide [here](https://youtu.be/zwxdr9eytnA)
 - Note: as long as _Location_ is tied with _Pricelist_, it is recommended to use the same name for both _Location_ & _Pricelist_
 
 ##### Maintain sales locations
 
-- Video guide [here](to upload) Odoo - Maintain Sales Locations.mp4
+- Video guide [here](https://youtu.be/7NBnkiCJJBM)
 - Note: as long as _Location_ is tied with _Pricelist_, it is recommended to use the same name for both _Location_ & _Pricelist_
 
 ##### Maintain Unit of Measure (UoM) and UoM Categories
 
-- Video guide [here](to upload) Odoo - Maintain UoM and UoM Categories.mp4
+- Video guide [here](https://youtu.be/hzYZWPO_XcA)
 - For consistency, please use lowercase for UoM naming
 
-##### Maintain company branches
+##### Maintain company branches / locations
 
-- Video guide [here](to upload) Odoo - Maintain Company Locations.mp4
+- Inventory > Configurations > Warehouse Management > Locations > Create
 
 ##### ID generation & printing
 
-- Video guide [here](to upload) TOP ID - Generation, Entry, & Printing.mp4
+- Video guide [here](https://youtu.be/4cB1t63SZIQ)
