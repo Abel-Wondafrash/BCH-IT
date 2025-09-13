@@ -76,6 +76,6 @@ If unsure what to do or need help, please check this escalation matrix.
 
 ### Server Disk Full _(to be detailed)_
 
-- Follow instructions laid out [here](./Systems%20and%20Tools/Processes%20&%20Workflows.md) _(1. System Health & Monitoring)_
+- Follow instructions laid out [here](./Systems%20and%20Tools/Processes%20&%20Workflows.md#1-system-health--monitoring)
 
 ---
