@@ -71,3 +71,12 @@ Find details [here](./Loj%20Insights/)
 Note: Task Scheduler is used to run Loj Insights through a [script](./Loj%20Insights/script/run_loj_insights.bat)
 
 ---
+
+## TOP Insights
+
+TOP Insights is a manufacturing productivity system that captures real-time machine data from sensors installed on machines in production line and intelliently translates it into actionable insights to optimize operations and identify bottlenecks, using continuous monitoring and analytics to highlight inefficiencies and guide improvements.
+
+Find details [here](./TOP%20Insights/)
+Note: You'll need to extract [node_modules](./TOP%20Insights/Code/ti-server/node_modules.zip) before use.
+
+---
