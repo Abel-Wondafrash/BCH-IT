@@ -108,3 +108,11 @@ Note: Don't assume the figures to be 100% accurate unless the input logs are jus
 Find details [here](./Fleet%20Fuel%20Log%20Analyzer/)
 
 ---
+
+## Recon
+
+Recon is an intelligent ledger reconciliation tool that automatically matches transactions between financial systems, highlights discrepancies, and provides a clear audit trail.
+
+Find details [here](./Recon/)
+
+---
