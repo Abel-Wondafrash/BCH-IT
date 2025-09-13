@@ -48,7 +48,7 @@ If unsure what to do or need help, please check this escalation matrix.
 
 ### Other Critical Issues
 
-- Find details [here (system issues)](./Systems%20and%20Tools/System%20Errors%20and%20Fixes.md) and [here (CNET issues)](./Systems%20and%20Tools/ERP/CNET/Errors_and_Fixes.md) and [here (machines)](/Production%20&%20Machines/Readme.md) or search for keywords in this repo.
+- Find details [here](./Systems%20and%20Tools/System%20Errors%20and%20Fixes.md) (system issues) and [here](./Systems%20and%20Tools/ERP/CNET/Errors_and_Fixes.md) (CNET issues) and [here](/Production%20&%20Machines/Readme.md) (machines) or search for keywords in this repo.
 
 ---
 
