@@ -1,0 +1,152 @@
+{
+  "plant_data": {
+    "datestamp": "Wed, Jul 31, 2024",
+    "site": "TOP 1",
+    "product": "2L WB",
+    "line": "L1"
+  },
+  "09-PLT": {
+    "details_ava": {
+      "runtime_c": 40,
+      "ava_loss": "16hr 48m 31s",
+      "ava_loss_c": 14,
+      "pln_stop": "1hr 59m 59s",
+      "pln_stop_c": 2,
+      "runtime": "7hr 11m 28s",
+      "unp_stop": "14hr 48m 31s",
+      "unp_stop_c": 12
+    },
+    "details_prf": {
+      "prf_loss_c": 40,
+      "net_runtime": "6hr 42m 52s",
+      "net_runtime_c": 0,
+      "slow_cycles_c": 27,
+      "prf_loss": "28m 36s",
+      "slow_cycles": "12m 33s",
+      "small_stops_c": 13,
+      "small_stops": "16m 03s"
+    },
+    "overviews": {
+      "prf": 0.9336991906166077,
+      "avl": 0.2996361255645752,
+      "qua": 1,
+      "oee": 0.27977001667022705
+    },
+    "details_qua": {
+      "good_c": 6120,
+      "qua_loss": "0ms",
+      "fully_productive_time": "6hr 42m 52s",
+      "fully_productive_time_c": 0,
+      "qua_loss_c": 0,
+      "reject_c": 0
+    }
+  },
+  "05-PKB": {
+    "details_ava": {
+      "runtime_c": 6298,
+      "ava_loss": "9hr 41m 34s",
+      "ava_loss_c": 36,
+      "pln_stop": "1hr 59m 59s",
+      "pln_stop_c": 2,
+      "runtime": "14hr 18m 25s",
+      "unp_stop": "7hr 41m 34s",
+      "unp_stop_c": 34
+    },
+    "details_prf": {
+      "prf_loss_c": 2675,
+      "net_runtime": "12hr 53m 03s",
+      "net_runtime_c": 3623,
+      "slow_cycles_c": 2553,
+      "prf_loss": "1hr 25m 21s",
+      "slow_cycles": "25s",
+      "small_stops_c": 122,
+      "small_stops": "1hr 24m 55s"
+    },
+    "overviews": {
+      "prf": 0.9005651473999023,
+      "avl": 0.5961273908615112,
+      "qua": 1,
+      "oee": 0.5368515253067017
+    },
+    "details_qua": {
+      "good_c": 37992,
+      "qua_loss": "0ms",
+      "fully_productive_time": "12hr 53m 03s",
+      "fully_productive_time_c": 3623,
+      "qua_loss_c": 0,
+      "reject_c": 0
+    }
+  },
+  "11-EYM": {
+    "details_ava": {
+      "runtime_c": 39949,
+      "ava_loss": "11hr 40m 09s",
+      "ava_loss_c": 18,
+      "pln_stop": "1hr 59m 59s",
+      "pln_stop_c": 2,
+      "runtime": "12hr 19m 50s",
+      "unp_stop": "9hr 40m 09s",
+      "unp_stop_c": 16
+    },
+    "details_prf": {
+      "prf_loss_c": 39565,
+      "net_runtime": "10hr 24m 49s",
+      "net_runtime_c": 384,
+      "slow_cycles_c": 39317,
+      "prf_loss": "1hr 55m 01s",
+      "slow_cycles": "34m 15s",
+      "small_stops_c": 248,
+      "small_stops": "1hr 20m 45s"
+    },
+    "overviews": {
+      "prf": 0.8445345759391785,
+      "avl": 0.5137822031974792,
+      "qua": 1,
+      "oee": 0.43390682339668274
+    },
+    "details_qua": {
+      "good_c": 39964,
+      "qua_loss": "0ms",
+      "fully_productive_time": "10hr 24m 49s",
+      "fully_productive_time_c": 384,
+      "qua_loss_c": 0,
+      "reject_c": 0
+    }
+  },
+  "02-BLW": {
+    "details_ava": {
+      "runtime_c": 40748,
+      "ava_loss": "12hr 13m 33s",
+      "ava_loss_c": 26,
+      "pln_stop": "1hr 59m 59s",
+      "pln_stop_c": 2,
+      "runtime": "11hr 46m 26s",
+      "unp_stop": "10hr 13m 33s",
+      "unp_stop_c": 24
+    },
+    "details_prf": {
+      "prf_loss_c": 15578,
+      "net_runtime": "11hr 20m 09s",
+      "net_runtime_c": 25170,
+      "slow_cycles_c": 15540,
+      "prf_loss": "26m 16s",
+      "slow_cycles": "1m 28s",
+      "small_stops_c": 38,
+      "small_stops": "24m 48s"
+    },
+    "overviews": {
+      "prf": 0.962802529335022,
+      "avl": 0.49058398604393005,
+      "qua": 1,
+      "oee": 0.4723355174064636
+    },
+    "details_qua": {
+      "good_c": 40772,
+      "qua_loss": "0ms",
+      "fully_productive_time": "11hr 20m 09s",
+      "fully_productive_time_c": 25170,
+      "qua_loss_c": 0,
+      "reject_c": 0
+    }
+  }
+}
