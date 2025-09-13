@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<!-- xml_listen_path: This is where Loj checks for new XMLs. Should be identical with: 'XML Location' in Odoo's Sales > Configuration > Settings -->
+<!-- dest_path (Destination Path): This is where generated SOVs are sent.
+								   This is likely a directory on a shared network whose sharing has been set to both READ and WRITE -->
+
+<LojServer>
+	<Preferences>
+		<xml_listen_path>S:\Loj\XMLs\Vouchers</xml_listen_path>
+		<xml_archive_path>C:\Users\Administrator\Documents\Loj\Loj_XA</xml_archive_path>
+		<log_root_path>C:\Users\Loj\Logs</log_root_path>
+		<c_log_root_path>C:\Users\Loj\Logs</c_log_root_path>
+		<dest_path>\\4631WY-X1\Loj SOVs</dest_path>
+		<!-- <selected_printer_name>\\TOPMARKETING-PC\Canon iR2520 UFRII LT (Copy 1)</selected_printer_name> -->
+		<!-- <selected_printer_name>\\DESKTOP-RKR1EBG\EPSON L3150 Series</selected_printer_name> -->
+		<selected_printer_name>PDF24</selected_printer_name>
+		<!-- <selected_printer_name>Canon iR2520 UFRII LT on HRM-PC (redirected 1)</selected_printer_name> -->
+		<!-- <selected_printer_name>HPCB56BF (HP LaserJet Pro 4003)</selected_printer_name> -->
+	</Preferences>
+</LojServer>
+
+<!-- \\DESKTOP-3NOSRI8\V-DEST -->

@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+
+<!-- Issuers: Are salespeople who are authorized to issue Sales Quotations and Sales Orders -->
+
+	<!-- name: Name of issuers EXACTLY as it appears in Odoo's Users 'Name' section. Example: Homer Simpson -->
+	<!-- sign_path: Digital Signature of issuers in the SVG format. Example: C:\Users\Loj\Digital Signatures\Homer Simpson.svg -->
+
+		<!-- The SVG profile has to be Version 1.0 and CSS Properties set to 'Style Attributes (Entity References)'. -->
+		<!-- Example tool for this: Adobe Illustrator > Save as > SVG > Save > Save Options > SVG Options window: -->
+			<!-- SVG Profiles: 'SVG 1.0' | CSS Properties: 'Style Attributes (Entity References)' -->
+
+<LojServer>
+	
+	<Issuers>
+		<name>Administrator</name>
+		<sign_path>C:\Users\Loj\Digital Signatures\Administrator.svg</sign_path>
+	</Issuers>
+	<Issuers>
+		<name>Barbra S.</name>
+		<sign_path>C:\Users\Loj\Digital Signatures\Barbra.svg</sign_path>
+	</Issuers>
+	<Issuers>
+		<name>Hiwot M.</name>
+		<sign_path>C:\Users\Loj\Digital Signatures\Hiwot.svg</sign_path>
+	</Issuers>
+	<Issuers>
+		<name>Kebene L.</name>
+		<sign_path>C:\Users\Loj\Digital Signatures\Kebene.svg</sign_path>
+	</Issuers>
+	<Issuers>
+		<name>Meseret T.</name>
+		<sign_path>C:\Users\Loj\Digital Signatures\Meseret.svg</sign_path>
+	</Issuers>
+
+</LojServer>

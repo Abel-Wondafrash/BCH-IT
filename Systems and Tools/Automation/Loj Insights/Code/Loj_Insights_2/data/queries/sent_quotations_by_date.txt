@@ -1,0 +1,38 @@
+SELECT 
+    so.name AS so_name,
+    so.amount_total AS invoice_total,
+    so.amount_untaxed AS invoice_subtotal,
+    so.amount_tax AS invoice_tax,
+
+    rp.name AS partner_name,
+    rp.partner_code AS partner_code,
+    sl.name AS location_name,
+    rp.vat AS tin,
+    rp.phone,
+
+    sw.name AS warehouse_name,
+    pt.name AS item_name,
+    pt.shorthand_name AS shorthand_name,
+    pu.name AS uom_sale_name,
+    sol.product_pack AS sales_quantity,
+    sol.product_uom_qty AS quantity,
+    sol.price_unit AS unit_price,
+    (sol.price_unit * COALESCE(pt.product_pack_qty, 1)) AS bundle_price,
+    sol.price_subtotal,
+    (sol.price_total - sol.price_subtotal) AS tax_amount,
+    sol.price_total,
+
+    user_partner.name AS username
+FROM sale_order so
+LEFT JOIN sale_locations sl ON so.location = sl.id
+JOIN res_partner rp ON so.partner_id = rp.id
+LEFT JOIN stock_warehouse sw ON so.warehouse_id = sw.id
+LEFT JOIN sale_order_line sol ON sol.order_id = so.id
+LEFT JOIN product_product pp ON sol.product_id = pp.id
+LEFT JOIN product_template pt ON pp.product_tmpl_id = pt.id
+LEFT JOIN product_uom pu ON pt.uom_sale_id = pu.id
+LEFT JOIN res_users ru ON so.create_uid = ru.id
+LEFT JOIN res_partner user_partner ON ru.partner_id = user_partner.id
+WHERE so.date_order::date = 
+  AND so.state = 'sent'
+ORDER BY so.name, sol.sequence, sol.id;
