@@ -80,3 +80,31 @@ Find details [here](./TOP%20Insights/)
 Note: You'll need to extract [node_modules](./TOP%20Insights/Code/ti-server/node_modules.zip) before use.
 
 ---
+
+## TOP CAM
+
+TOP CAM is a Cabinet Access Management SW & HW primarily intended to secure electrical cabinets.
+
+Find details [here](./TOP%20CAM/)
+
+---
+
+## AutoPal
+
+AutoPal is an automation solution for Hollow Steel Welder which makes use of manual mode switches (Forward, Reverse, Cut) to turn the operation to Automatic.
+
+Note: Should only be used if the gantry holding the cutter can move while the cutter can move up and down simultaneously.
+
+Find details [here](./AutoPal/)
+
+---
+
+## Fleet Fuel Log Analyzer
+
+Fleet Fuel Log Analyzer analyzes fuel log exported from MaYet systems to estimate probable fuel filling instances and sudden fuel drops.
+
+Note: Don't assume the figures to be 100% accurate unless the input logs are just as accurate.
+
+Find details [here](./Fleet%20Fuel%20Log%20Analyzer/)
+
+---
