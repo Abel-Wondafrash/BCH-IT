@@ -30,18 +30,18 @@ This section provides standardized specifications, configurations, and technical
 
 ---
 
-# IT Staff Performance Evaluation Framework (Qualitative)
+## IT Staff Performance Evaluation Framework (Qualitative)
 
 This repository contains the **IT Staff Performance Evaluation Framework**, a competency-based, qualitative approach for assessing IT staff performance across diverse roles.
 
-## Overview
+### Overview
 
 - Focuses on **five key competency areas**:  
   _Technical Skills, Problem Solving & Innovation, Work Ethics & Accountability, Communication & Collaboration, Continuous Learning & Development._
 - Uses a **1–5 Likert scale** to guide ratings, but emphasizes **observed behaviors, context, and evaluator judgment** over strict numerical scoring.
 - Designed to align with recognized HR and IT best practices (ISO 30414, ITIL, SHRM competency models).
 
-## Purpose
+### Purpose
 
 The framework ensures evaluations are:
 
@@ -49,7 +49,7 @@ The framework ensures evaluations are:
 - **Fair and Transparent** → encourages consistency across roles while respecting role-specific nuances.
 - **Development-Focused** → supports professional growth, continuous learning, and constructive feedback.
 
-## Scoring Guide
+### Scoring Guide
 
 The numeric scale is a **guidance tool** rather than a definitive measure:
 
@@ -61,10 +61,22 @@ The numeric scale is a **guidance tool** rather than a definitive measure:
 
 Evaluators are encouraged to add **written observations and context** to supplement the numeric score, ensuring richer feedback and actionable insights.
 
-## Documentation
+### Documentation
 
 The complete framework, including criteria, guidance notes, and evaluation templates, is available here:
 
 📂 **[`IT_Staff_Performance_Evaluation_Framework.docx`](https://docs.google.com/document/d/1JYdB3WYO7xijMQ_NdA2P3OuNW_3znxLGS7hZoMwYNJM/edit?usp=sharing)**
+
+---
+
+## Handheld Inkjet Printer Instruction Manual
+
+Find details [here](./Files/Handheld%20InkJet%20Printer/)
+
+---
+
+## EcoFlow E980 Warranty
+
+Find details [here](./Files/EcoFlow%20E980%20UPS/)
 
 ---

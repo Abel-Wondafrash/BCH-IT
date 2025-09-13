@@ -1,6 +1,6 @@
 # Business Continuity Handbook (BCH-IT)
 
-A comprehensive reference of Automation Works, IT Systems, and supporting processes designed to safeguard critical operations and ensure seamless business continuity during and after personnel transitions.
+A comprehensive reference of IT Systems and supporting processes designed to safeguard critical operations and ensure seamless business continuity during and after personnel transitions.
 
 ---
 
@@ -10,7 +10,7 @@ Please read the details of this BCH over at [Google Sheets](https://docs.google.
 
 ## 🚨 Emergency Guide
 
-This guide provides quick-reference procedures for handling critical IT and automation emergencies.
+This guide provides quick-reference procedures for handling critical IT emergencies.
 If unsure what to do or need help, please check this escalation matrix.
 
 → **Level 1 (Low):** minor, single-user issue, infrastructure related
