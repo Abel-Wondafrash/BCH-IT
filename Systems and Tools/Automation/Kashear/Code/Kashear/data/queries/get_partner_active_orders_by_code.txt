@@ -1,0 +1,62 @@
+WITH partner_orders AS (
+    -- All sale orders for the partner
+    SELECT
+        so.id AS sale_order_id,
+        so.name AS sale_order_name,
+        so.amount_total AS order_total,
+        so.state AS order_state,
+        rp.partner_code
+    FROM sale_order so
+    JOIN res_partner rp ON rp.id = so.partner_id
+    WHERE rp.partner_code = 
+),
+
+active_orders AS (
+    -- Only active sale orders
+    SELECT
+        sale_order_id,
+        sale_order_name,
+        order_total AS total,
+        order_state AS state,
+        partner_code
+    FROM partner_orders
+    WHERE order_state IN ('draft', 'confirm', 'sale')
+),
+
+active_invoices AS (
+    -- Invoices not paid, linked to any sale order
+    SELECT
+        po.sale_order_id,
+        po.sale_order_name,
+        inv.amount_total AS total,
+        po.order_state AS state,
+        po.partner_code
+    FROM account_invoice inv
+    JOIN partner_orders po ON po.sale_order_name = inv.origin
+    WHERE inv.state != 'paid'
+),
+
+all_active_totals AS (
+    -- Combine active orders and invoices
+    SELECT * FROM active_orders
+    UNION ALL
+    SELECT * FROM active_invoices
+),
+
+grand_total_cte AS (
+    -- Grand total per partner
+    SELECT
+        partner_code,
+        SUM(total) AS grand_total
+    FROM all_active_totals
+    GROUP BY partner_code
+)
+
+SELECT
+    a.sale_order_name,
+    a.total,
+    a.state,
+    gt.grand_total
+FROM all_active_totals a
+JOIN grand_total_cte gt ON a.partner_code = gt.partner_code
+ORDER BY a.sale_order_name;

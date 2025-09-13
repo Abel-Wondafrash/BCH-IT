@@ -1,0 +1,4 @@
+UPDATE sale_order
+SET client_order_ref = 
+WHERE name = 
+COMMIT;
