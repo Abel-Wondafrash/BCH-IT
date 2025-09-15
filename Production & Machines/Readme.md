@@ -9,7 +9,7 @@ This section documents software solutions, installation guides, and configuratio
 - **Issue**: Setting up or restoring the TOP 1 Packer machine requires correctly flashing a CompactFlash (CF) card with the proper firmware image.
 - **Solution**: Use the PVITransfer tool to create a bootable CF card from the provided `.pil` firmware file.
   - **[Installation Guide (Video)](https://youtu.be/D_yb2clVZiE)**
-  - **[Software](./TOP%201%20Packer%20Machine/B1740010PRO.rar)**
+  - **[Software](https://drive.google.com/file/d/1l5jv5aET6ZChDxpmQivOAs497JX1UFl1/view?usp=drive_link)**
   - **Software Required**: `PVITransfer` (included in `B1740010PRO` package)
   - **Steps**:
     1. Extract the `B1740010PRO` archive to a local folder.
@@ -28,7 +28,7 @@ This section documents software solutions, installation guides, and configuratio
 
 - **Issue**: Configuring the TOP 1 Encoder Machine requires proper software setup and IP address selection.
 - **Solution**: Install and run the configuration software as administrator, then apply settings with the specified password and IP address.
-  - **[Software](./TOP%201%20Encoder%20Machine/Software/Smartgraph_10.17.zip)**
+  - **[Software](https://drive.google.com/file/d/1PP0djzI1Ib6q8gQSx80I0j7EbDS4GviG/view?usp=drive_link)**
   - **[Images](./TOP%201%20Encoder%20Machine/Images/)**
   - **[Installation Guide (Video)](https://youtu.be/hzSvE3C7CZQ)**
   - **Software Required**: TOP 1 Encoder Machine configuration tool
