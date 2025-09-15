@@ -38,8 +38,8 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 ### Safaricom Internet
 
-**Description:** Provide internet connectivity through Safaricom's AirFiber and Fiber Optic Network to all 6 factory sites. Site survey is complete and waiting management approval.
-**Bottleneck(s):** Pending management approval.
+**Description:** Provide internet connectivity through Safaricom's AirFiber and Fiber Optic Network to all 6 factory sites. Site survey is complete and waiting management approval.  
+**Bottleneck(s):** Pending management approval.  
 **Status:** Pending.
 
 ---
