@@ -14,7 +14,7 @@ Find details [here](./PulseBox/)
 
 ## TOP ID
 
-TOP ID is a batch ID generation and entry automation system.
+TOP ID is a batch ID generation and entry automation system. Supports CR-80 cards as well as the option to export to A4 sized paper (front and back) in batch.
 
 Find details [here](./TOP%20ID/)
 

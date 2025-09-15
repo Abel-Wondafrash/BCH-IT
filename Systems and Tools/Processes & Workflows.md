@@ -82,13 +82,17 @@ This SOP covers systems, applications, and support tools used to maintain busine
 
 - Conduct physical inspections of systems (computers, printers, POS machines, switches, network cables, etc.), including dust cleaning, cable management, and general upkeep.
 
-##### Maintain user accounts and access rights
+---
+
+### 🟦 On-demand Operations
+
+#### Maintain user accounts and access rights
 
 - Video guide [here](https://youtu.be/BXI06p6BXbk)
 - Change & Reset Password | Video guide [here](https://youtu.be/9VejQ505IbA)
 - make use of this [Departmental Access Rights Matrix](https://docs.google.com/spreadsheets/d/1ZXbapSx-rJNSuL6kyG_qzd-jaXd-oAmvmHZmoYqik_s/edit?usp=sharing)
 
-##### Maintain contacts (customer, vendor, employee)
+#### Maintain contacts (customer, vendor, employee)
 
 - Video guide [here](https://youtu.be/NEsb_UmYwXc)
 - Important Note:
@@ -100,12 +104,12 @@ This SOP covers systems, applications, and support tools used to maintain busine
     - Invoicing > Customer Payment Terms
     - Invoicing > Pre-Payment Account
 
-##### Maintain Loj SO Engine (Issuers)
+#### Maintain Loj SO Engine (Issuers)
 
 - Convert image into vector digital signature | Video guide [here](https://youtu.be/lkRKYHP1fLg)
 - Add Issuers' Digital Signatures to SO Engine [here](https://youtu.be/sE7V-jnQYKo)
 
-##### Maintain sellable items creation
+#### Maintain sellable items creation
 
 - Video guide [here](https://youtu.be/GOucVCyTxwM)
 - Important Note:
@@ -126,25 +130,31 @@ This SOP covers systems, applications, and support tools used to maintain busine
     - Excisability (for the _Invoicing / Is Excisable_ field)
     - Product WarehouseId and corresponding Warehouse
 
-##### Maintain sales pricelist
+#### Maintain sales pricelist
 
 - Video guide [here](https://youtu.be/zwxdr9eytnA)
 - Note: as long as _Location_ is tied with _Pricelist_, it is recommended to use the same name for both _Location_ & _Pricelist_
 
-##### Maintain sales locations
+#### Maintain sales locations
 
 - Video guide [here](https://youtu.be/7NBnkiCJJBM)
 - Note: as long as _Location_ is tied with _Pricelist_, it is recommended to use the same name for both _Location_ & _Pricelist_
 
-##### Maintain Unit of Measure (UoM) and UoM Categories
+#### Maintain Unit of Measure (UoM) and UoM Categories
 
 - Video guide [here](https://youtu.be/hzYZWPO_XcA)
 - For consistency, please use lowercase for UoM naming
 
-##### Maintain company branches / locations
+#### Maintain company branches / locations
 
 - Inventory > Configurations > Warehouse Management > Locations > Create
 
-##### ID generation & printing
+#### ID generation & printing
 
 - Video guide [here](https://youtu.be/4cB1t63SZIQ)
+
+#### Grant Individual User Access to Inventory Dashboard via Operation Type Responsibility
+
+- Video guide [here](https://youtu.be/ewjsmZ4kAwI)
+
+---
