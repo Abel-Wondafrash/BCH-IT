@@ -8,8 +8,8 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 ### TBIT Fiber Optic Network RFP
 
-**Description:** TBIT seeked proposals for the design, installation, and commissioning of a private, high-speed fiber optic network interconnecting six sites. Two vendors have responded with quotations.
-**Bottleneck(s):** Vendor discussions pending to clarify assumptions and minimize extra costs.
+**Description:** TBIT seeked proposals for the design, installation, and commissioning of a private, high-speed fiber optic network interconnecting six sites. Two vendors have responded with quotations.  
+**Bottleneck(s):** Vendor discussions pending to clarify assumptions and minimize extra costs.  
 **Status:** Progressing; award decision pending further discussions.
 
 ### TOP 6 – CCTV & NVR Setup
