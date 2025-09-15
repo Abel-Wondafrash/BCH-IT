@@ -6,7 +6,7 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 ## 🏗 Infrastructure
 
-### TBIT Fiber Optic Network RFP
+### Company-wide Fiber Optic Network
 
 **Description:** TBIT seeked proposals for the design, installation, and commissioning of a private, high-speed fiber optic network interconnecting six sites. Two vendors have responded with quotations.  
 **Bottleneck(s):** Vendor discussions pending to clarify assumptions and minimize extra costs.  
@@ -38,8 +38,8 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 ### Safaricom Internet
 
-**Description:** Pending internet service setup with Safaricom.  
-**Bottleneck(s):** Not specified.  
+**Description:** Provide internet connectivity through Safaricom's AirFiber and Fiber Optic Network to all 6 factory sites. Site survey is complete and waiting management approval.
+**Bottleneck(s):** Pending management approval.
 **Status:** Pending.
 
 ---
@@ -50,19 +50,19 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 **Description:** Manufacturing productivity system capturing real-time machine data and translating into actionable insights.  
 **Bottleneck(s):** Items requested under PUR-00058 remain unpurchased.  
-**Status:** Functionality stalled; awaiting purchases.
+**Status:** awaiting purchases.
 
 ### PulseBox
 
 **Description:** Gearbox scaler for encoders, installed at TOP 4 (EGA Iron Sheet line).  
 **Bottleneck(s):** Procurement delays (PUR-00028).  
-**Status:** Installed; incomplete without requested items.
+**Status:** awaiting purchases
 
 ### Kashear
 
 **Description:** Automation bridge between Odoo, CNET, and POS for finance and sales operations.  
 **Bottleneck(s):** Barcode scanner (PUR-00106) not yet purchased.  
-**Status:** At risk if existing scanner fails.
+**Status:** awaiting scanner purchases
 
 ### Blink
 
@@ -74,13 +74,13 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 **Description:** Batch ID generation and automation system (CR-80 & A4 export). Functionality complete; in use on-demand.  
 **Bottleneck(s):** Lacks UI and ERP integration; low urgency.  
-**Status:** Stable but incomplete.
+**Status:** interface build is on hold
 
 ### PeachPal
 
 **Description:** Peachtree automation toolkit for import and system setup.  
 **Bottleneck(s):** Low urgency; used infrequently.  
-**Status:** Functional but no UI due to ROI considerations.
+**Status:** interface build is on hold
 
 ### TOP CAM
 
@@ -108,24 +108,24 @@ A running list of tasks, follow-ups, and items awaiting completion across projec
 
 **Description:** Stickers requested for branding, shielding, and identification.  
 **Bottleneck(s):** Not yet purchased.  
-**Status:** Pending.
+**Status:** Pending procurement
 
 ### Printers & Spare Parts
 
 **Description:** Printer replacements and spare parts required to avoid workload disruptions across departments.  
 **Bottleneck(s):** Procurement pending.  
-**Status:** At risk; awaiting purchases.
+**Status:** awaiting purchases.
 
 ### Furniture for IT Staff
 
 **Description:** Chairs and tables required for IT staff relocated to other sites.  
 **Bottleneck(s):** Procurement pending.  
-**Status:** Not yet purchased.
+**Status:** awaiting purchases
 
 ### Stationery for Temporary IDs
 
 **Description:** Hard paper requested for temporary IDs (A4 currently being used but tears easily).  
 **Bottleneck(s):** Procurement pending.  
-**Status:** Not yet purchased.
+**Status:** awaiting purchases
 
 ---
