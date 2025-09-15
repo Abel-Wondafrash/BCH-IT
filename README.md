@@ -74,7 +74,7 @@ If unsure what to do or need help, please check this escalation matrix.
 - **Issue:** File system errors or compromise detected.
 - **Solution:** Run repair tools (fsck/chkdsk), restore from backup (Windows Image Backup) if needed.
 
-### Server Disk Full _(to be detailed)_
+### Server Disk Full
 
 - Follow instructions laid out [here](./Systems%20and%20Tools/Processes%20&%20Workflows.md#1-system-health--monitoring)
 
