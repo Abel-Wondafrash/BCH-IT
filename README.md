@@ -38,7 +38,7 @@ Navigate tabs for details. Quick-start notes are in the Handover & Onboarding ta
 - Consider suggesting improvements to existing procedures or clarifying ambiguous entries.
 - Contributions should help maintain continuity, keep the handbook uptodate and relevant, reduce knowledge gaps, and improve team efficiency. Let your additions be with that in mind.
 
-🟦 Table of Content (Tabs & GitHub Links)
+## 🟦 Table of Content (Tabs & GitHub Links)
 
 - [Systems & Tools](./Systems%20and%20Tools/)
 - [Production & Machines](./Production%20&%20Machines/)
@@ -69,7 +69,7 @@ If unsure what to do or need help, please check this escalation matrix.
 
 - IT Manager → IT Director → Vendor → Executive Leadership
 
-### Contacts of: [TOP Staff](<./Reference%20&%20Resources/Contacts%20(Internal).md>) | [External (Partners & Vendors)](<./Reference%20&%20Resources/Contacts%20(External).md>)
+#### Contacts of: [TOP Staff](<./Reference%20&%20Resources/Contacts%20(Internal).md>) | [External (Partners & Vendors)](<./Reference%20&%20Resources/Contacts%20(External).md>)
 
 ---
 
