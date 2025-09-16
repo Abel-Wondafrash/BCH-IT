@@ -4,7 +4,51 @@ A comprehensive reference of IT Systems and supporting processes designed to saf
 
 ---
 
-Please read the details of this BCH over at [Google Sheets](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.gknsv4hxkm6h)
+## 🟦 Objective
+
+To provide a centralized reference of IT Systems and supporting processes to ensure seamless business continuity during and after personnel transitions.
+
+## 🟦 Primary Goal
+
+Minimize operational disruption, reduce knowledge loss, and maintain critical system uptime during personnel transitions.
+
+## 🟦 Secondary Goal
+
+Facilitate effective knowledge transfer to existing IT staff, enabling them to manage systems accurately, confidently, and independently.
+
+## 🟦 Scope
+
+Covers critical systems, infrastructure, processes, key responsibilities in IT domains.
+
+## 🟦 Audience
+
+Leadership, IT team members, and any personnel responsible for system continuity.
+
+## 🟦 How to Use
+
+Navigate tabs for details. Quick-start notes are in the Handover & Onboarding tab.
+
+## 🟦 Recommendations to Readers
+
+- Review each tab carefully before adding new entries.
+- Before submitting new or missing information, check for duplicates or similar entries.
+- Provide clear context and system names for any additions.
+- When adding a new entry or updating an existing one, retain the previous version and clearly indicate the new information, so the history of changes is preserved and traceable.
+- If adding “tribal knowledge” or lessons learned, include relevant systems, processes, or workflows to ensure it’s actionable.
+- Consider suggesting improvements to existing procedures or clarifying ambiguous entries.
+- Contributions should help maintain continuity, keep the handbook uptodate and relevant, reduce knowledge gaps, and improve team efficiency. Let your additions be with that in mind.
+
+🟦 Table of Content (Tabs & GitHub Links)
+
+- [Systems & Tools](./Systems%20and%20Tools/)
+- [Production & Machines](./Production%20&%20Machines/)
+- [Processes & Workflows](./Systems%20and%20Tools/Processes%20&%20Workflows.md)
+- [Pending Work](./Reference%20&%20Resources/Pending%20Work.md)
+- [References, Documents, & Resources](./Reference%20&%20Resources/)
+- [Tribal Knowledge](./Reference%20&%20Resources/Tribal%20Knowledge.md)
+- [Principles & Recommendations](./Reference%20&%20Resources/Principles%20&%20Recommendations.md)
+- [Contacts (TOP Staff)](<./Reference%20&%20Resources/Contacts%20(Internal).md>)
+- [Contacts (External)](<./Reference%20&%20Resources/Contacts%20(External).md>)
 
 ---
 
@@ -25,7 +69,7 @@ If unsure what to do or need help, please check this escalation matrix.
 
 - IT Manager → IT Director → Vendor → Executive Leadership
 
-### Contacts of: [TOP Staff](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.p5r7sz95ao4n) | [External (Partners & Vendors)](https://docs.google.com/document/d/1_hEis_xVPHiJS8Y0dfEQNExM6SObiQz1FUnA3c57JGM/edit?tab=t.csmeknmtdzmk)
+### Contacts of: [TOP Staff](<./Reference%20&%20Resources/Contacts%20(Internal).md>) | [External (Partners & Vendors)](<./Reference%20&%20Resources/Contacts%20(External).md>)
 
 ---
 
