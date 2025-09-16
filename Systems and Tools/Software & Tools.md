@@ -19,7 +19,7 @@ This section documents software utilities and tools, including code editors, des
 - **Python** – General scripting, data wrangling, automation.
 - **Processing (Java)** – Creative coding, data visualization, experimental projects.
 - **Hyper-V** – Virtual machines for test environments.
-- **AnyDesk / RustDesk / Remote Desktop Connection** – Remote access and troubleshooting.
+- **RustDesk / AnyDesk / Remote Desktop Connection** – Remote access and troubleshooting.
 - **Tailscale** – Secure VPN mesh networking for remote access.
 
 ## 🔹 Productivity & Workflow

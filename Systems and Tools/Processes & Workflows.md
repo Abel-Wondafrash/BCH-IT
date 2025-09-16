@@ -59,8 +59,8 @@ This SOP covers systems, applications, and support tools used to maintain busine
 
 #### 5. Remote Access / Monitoring
 
-- Use **RustDesk** for remote access and maintenance from a computer.
-- Use **AnyDesk** for remote access from mobile devices.
+- Use **RustDesk** for remote access and maintenance from a computer / mobile.
+- Use **AnyDesk** for remote access as an alternative to RustDesk.
 - Use **Remote Desktop Connection** for faster remote access but from local network.
 - Monitor system health, assist colleagues, and troubleshoot remotely as needed.
 
