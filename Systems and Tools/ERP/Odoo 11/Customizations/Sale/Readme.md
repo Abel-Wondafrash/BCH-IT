@@ -792,25 +792,38 @@ This section documents customizations to the Odoo 11 sales module, including uni
     class SaleOrderLine(models.Model):
         _inherit = 'sale.order.line'
 
-        @api.onchange('product_id')
-        def _check_duplicate_product(self):
-            if not self.product_id or not self.order_id:
-                return
+        @api.model
+        def create(self, vals):
+            record = super(SaleOrderLine, self).create(vals)
+            record._check_duplicate_product_unique()
+            return record
 
-            # Look for other lines in the same order with the same product
-            for existing_line in self.order_id.order_line:
-                if existing_line.id != self.id and existing_line.product_id.id == self.product_id.id:
-                    # Duplicate found, reject the selection
-                    self.product_id = False
+        def write(self, vals):
+            res = super(SaleOrderLine, self).write(vals)
+            self._check_duplicate_product_unique()
+            return res
+
+        def _check_duplicate_product_unique(self):
+            for order in self.mapped('order_id'):
+                # Group lines by product
+                product_map = {}
+                for line in order.order_line:
+                    if not line.product_id:
+                        continue
+                    product_map.setdefault(line.product_id, []).append(line)
+
+                # Collect duplicates
+                duplicates = {p: lines for p, lines in product_map.items() if len(lines) > 1}
+
+                if duplicates:
+                    product_list = "\n".join([
+                        "- %s" % p.display_name for p in duplicates.keys()
+                    ])
                     raise UserError(_(
-                        "The product '%s' is already included in this order "
-                        "(%s %s).\n\n"
-                        "To add more, please update the quantity in the existing line."
-                    ) % (
-                        existing_line.product_id.display_name,
-                        existing_line.product_uom_qty,
-                        existing_line.product_uom.name,
-                    ))
+                        "The following products are duplicated in this order:\n\n"
+                        "%s\n\n"
+                        "To add more of each, please update the quantity in the existing lines."
+                    ) % product_list)
     ```
 
   - This ensures:
