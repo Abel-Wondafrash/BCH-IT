@@ -775,3 +775,50 @@ This section documents customizations to the Odoo 11 sales module, including uni
   - After implementation, sales orders are guaranteed to be logistically valid and sourceable from a single warehouse.
 
 ---
+
+## Prevent Duplicate Products in Sales Order Lines
+
+- **Issue**: Sales orders currently allow the same product to be added multiple times as separate lines, causing unintended invoicing and inventory calculations.
+
+- **Solution**: Introduce a validation on `sale.order.line` to **prevent duplicate products** in the same order. Users must update quantities on existing lines rather than creating duplicates.
+
+  - In `sale_order_line.py`, implement:
+
+    ```python
+    # -*- coding: utf-8 -*-
+    from odoo import models, fields, api, _
+    from odoo.exceptions import UserError
+
+    class SaleOrderLine(models.Model):
+        _inherit = 'sale.order.line'
+
+        @api.onchange('product_id')
+        def _check_duplicate_product(self):
+            if not self.product_id or not self.order_id:
+                return
+
+            # Look for other lines in the same order with the same product
+            for existing_line in self.order_id.order_line:
+                if existing_line.id != self.id and existing_line.product_id.id == self.product_id.id:
+                    # Duplicate found, reject the selection
+                    self.product_id = False
+                    raise UserError(_(
+                        "The product '%s' is already included in this order "
+                        "(%s %s).\n\n"
+                        "To add more, please update the quantity in the existing line."
+                    ) % (
+                        existing_line.product_id.display_name,
+                        existing_line.product_uom_qty,
+                        existing_line.product_uom.name,
+                    ))
+    ```
+
+  - This ensures:
+    - No duplicate products can be added in the same sales order.
+    - Users are guided to update quantities on the existing line instead of creating multiple lines for the same product.
+  - Applies on every product selection in order lines.
+  - Restart Odoo and upgrade the module after implementation.
+
+Find the implementation of this module [here](./sale_order_unique_lines/).
+
+---
