@@ -11,6 +11,7 @@ class Querier {
     File queryFile = new File (queryPath);
     if (!queryFile.exists ()) {
       println ("Query File Does Not Exist:", queryPath);
+      cLogger.log ("Query File Does Not Exist: " + queryPath);
       return null;
     }
     String query;
@@ -19,6 +20,7 @@ class Querier {
       String queryRaw [] = loadStrings (queryPath);
       if (queryRaw == null || queryRaw.length < 1) {
         println ("Empty Query");
+        cLogger.log ("Empty Query");
         return null;
       }
 
@@ -26,6 +28,7 @@ class Querier {
     }
     catch (Exception e) {
       println ("Error loading query file:", queryPath);
+      cLogger.log ("Error loading query file: " + queryPath + " " + e);
       return null;
     }
 
@@ -87,9 +90,11 @@ class Querier {
     }
     catch (org.postgresql.util.PSQLException e) {
       println("Connection failed: " + e.getMessage());
+      cLogger.log ("Connection failed: " + e.getMessage());
     } 
     catch (Exception e) {
       println("Error fetching data:");
+      cLogger.log ("Error fetching data:" + e);
       e.printStackTrace();
     } 
     finally {
@@ -112,6 +117,7 @@ class Querier {
 processing.data.Table getVoucherDetails (String voucherCode) {
   if (!isValidInteger (voucherCode)) {
     println ("Invalid voucher code. Code should only consist of a number. '" + voucherCode + "'");
+    cLogger.log ("Invalid voucher code. Code should only consist of a number. '" + voucherCode + "'");
     return null;
   }
 
@@ -123,6 +129,7 @@ processing.data.Table getVoucherDetails (String voucherCode) {
   
   if (query == null) {
     println ("Query is null");
+    cLogger.log ("Query is null");
     return null;
   }
 
@@ -132,6 +139,7 @@ processing.data.Table getVoucherDetails (String voucherCode) {
 processing.data.Table getFS (String voucherCode) {
   if (!isValidInteger (voucherCode)) {
     println ("Invalid voucher code. Code should only consist of a number. '" + voucherCode + "'");
+    cLogger.log ("Invalid voucher code. Code should only consist of a number. '" + voucherCode + "'");
     return null;
   }
 
@@ -143,6 +151,7 @@ processing.data.Table getFS (String voucherCode) {
 
   if (query == null) {
     println ("Query is null");
+    cLogger.log ("Query is null");
     return null;
   }
 
@@ -155,10 +164,12 @@ Boolean setFS (Order order, String fs) {
 Boolean setFS (String voucherCode, String fs) {
   if (!isValidInteger (voucherCode)) {
     println ("Invalid voucher code. Code should only consist of a number. '" + voucherCode + "'");
+    cLogger.log ("Invalid voucher code. Code should only consist of a number. '" + voucherCode + "'");
     return null;
   }
   if (!isValidInteger (fs)) {
     println ("Invalid FS Number. FS should only consist of a number. '" + fs + "'");
+    cLogger.log ("Invalid FS Number. FS should only consist of a number. '" + fs + "'");
     return null;
   }
 
@@ -171,13 +182,14 @@ Boolean setFS (String voucherCode, String fs) {
     }, 
     // Lines to replace with
     new String [] {
-      "SET client_order_ref = '" + FS_NUMBER_PREFIX + fs + "'", 
+      "SET client_order_ref = '" + FS_NUMBER_PREFIX + " " + fs + "'", 
       "WHERE name = '" + SALES_ORDER_PREFIX + voucherCode + "';"
     }
     );
 
   if (query == null) {
     println ("Query is null");
+    cLogger.log ("Query is null");
     return null;
   }
 
@@ -194,6 +206,7 @@ Orders getActivePartnerOrders (String partnerName) {
 processing.data.Table getActivePartnerOrdersT (String partnerCode) {
   if (partnerCode == null || partnerCode.trim ().isEmpty()) {
     println ("Partner Code is Missing");
+    cLogger.log ("Partner Code is Missing");
     return null;
   }
 
@@ -204,6 +217,7 @@ processing.data.Table getActivePartnerOrdersT (String partnerCode) {
     
   if (query == null) {
     println ("Query is null");
+    cLogger.log ("Query is null");
     return null;
   }
   
@@ -215,6 +229,7 @@ Double getPartnerBalance (String partnerCode) {
     return oc.getCurrentBalance (partnerCode);
   } catch (Exception e) {
     System.err.println ("Error while fetching partner balance '" + partnerCode + "'");
+    cLogger.log ("Error while fetching partner balance '" + partnerCode + "'" + e);
     return null;
   }
 }

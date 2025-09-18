@@ -23,20 +23,25 @@ class Printer {
     PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
     if (printServices == null || printServices.length == 0) {
       println("Error: No printers found on the system");
+      cLogger.log ("Error: No printers found on the system");
       return false;
     }
 
     PrintService selectedPrinter = null;
     PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
     println("Available Printers:");
+    cLogger.log ("Available Printers:");
     for (PrintService service : printServices) {
       print("\t" + service.getName());
+      cLogger.log ("\t" + service.getName());
       if (service.getName().trim().equalsIgnoreCase(selectedPrinterName.trim())) {
         selectedPrinter = service;
         print(" <<<< SELECTED");
+        cLogger.log (" <<<< SELECTED");
       }
       if (defaultPrinter != null && service.equals(defaultPrinter)) {
         print(" <<<< DEFAULT");
+        cLogger.log (" <<<< DEFAULT");
       }
       println();
     }
@@ -44,18 +49,23 @@ class Printer {
     // If selected printer not found, check and mark the default
     if (selectedPrinter == null) {
       println("Selected printer '" + selectedPrinterName + "' is not found. Checking default printer...");
+      cLogger.log ("Selected printer '" + selectedPrinterName + "' is not found. Checking default printer...");
       if (defaultPrinter != null) {
         println("Falling back to default printer:");
+        cLogger.log ("Falling back to default printer:");
         for (PrintService service : printServices) {
           print("\t" + service.getName());
+          cLogger.log ("\t" + service.getName());
           if (service.equals(defaultPrinter)) {
             print(" <<<< DEFAULT (FALLBACK)");
+            cLogger.log (" <<<< DEFAULT (FALLBACK)");
           }
           println();
         }
         return false; // Selected not found, using default
       } else {
         println("No default printer available either. Please install printer or provide correct name in Loj's config");
+        cLogger.log ("No default printer available either. Please install printer or provide correct name in Loj's config");
         return false; // No selected or default printer
       }
     }
@@ -72,6 +82,7 @@ class Printer {
       File pdfFile = new File(path);
       if (!pdfFile.exists()) {
         println("Error: PDF file not found at " + path);
+        cLogger.log ("Error: PDF file not found at " + path);
         return null;
       }
       document = Loader.loadPDF(pdfFile);
@@ -79,12 +90,14 @@ class Printer {
       float heightPx = document.getPage(0).getMediaBox().getHeight();
       //println ("Number of Pages:", document.getNumberOfPages());
       print ("Print Job: | ");
+      cLogger.log ("Print Job: | ");
       if (document.getNumberOfPages() == 0) return "No pages to print";
 
       // Get all available print services
       PrintService[] printServices = PrintServiceLookup.lookupPrintServices(null, null);
       if (printServices == null || printServices.length == 0) {
         println("Error: No printers found on the system");
+        cLogger.log ("Error: No printers found on the system");
         document.close();
         return null;
       }
@@ -103,10 +116,12 @@ class Printer {
         printer = PrintServiceLookup.lookupDefaultPrintService();
         if (printer == null) {
           println("Error: Specified printer '" + selectedPrinterName + "' not found, and no default printer available");
+          cLogger.log ("Error: Specified printer '" + selectedPrinterName + "' not found, and no default printer available");
           document.close();
           return null;
         }
         println("Warning: Printer '" + selectedPrinterName + "' not found. Falling back to default printer: " + printer.getName());
+        cLogger.log ("Warning: Printer '" + selectedPrinterName + "' not found. Falling back to default printer: " + printer.getName());
       } else {
         // Check if the printer is the default to determine logging verbosity
         PrintService defaultPrinter = PrintServiceLookup.lookupDefaultPrintService();
@@ -118,9 +133,12 @@ class Printer {
       // Log printer details only if verbose
       if (verbose) {
         println("Selected printer name: '" + selectedPrinterName + "'");
+        cLogger.log ("Selected printer name: '" + selectedPrinterName + "'");
         println("\tAvailable printers:");
+        cLogger.log ("\tAvailable printers:");
         for (PrintService service : printServices) {
           println("\t - '" + service.getName() + "'");
+          cLogger.log ("\t - '" + service.getName() + "'");
         }
       }
 
@@ -137,15 +155,19 @@ class Printer {
       if (verbose) {
         println("Printer state: " + state + ", Accepting jobs: " + (acceptingJobs != null ? acceptingJobs : "Unknown") + 
           ", Jobs in queue: " + (jobCount != null ? jobCount.getValue() : "Unknown"));
+        cLogger.log ("Printer state: " + state + ", Accepting jobs: " + (acceptingJobs != null ? acceptingJobs : "Unknown") + 
+          ", Jobs in queue: " + (jobCount != null ? jobCount.getValue() : "Unknown"));
       }
 
       if (state == PrinterState.STOPPED || state == PrinterState.UNKNOWN) {
         println("Error: Printer '" + printer.getName() + "' is stopped or in unknown state: " + state);
+        cLogger.log ("Error: Printer '" + printer.getName() + "' is stopped or in unknown state: " + state);
         document.close();
         return null;
       }
       if (acceptingJobs == PrinterIsAcceptingJobs.NOT_ACCEPTING_JOBS) {
         println("Error: Printer '" + printer.getName() + "' is not accepting jobs");
+        cLogger.log ("Error: Printer '" + printer.getName() + "' is not accepting jobs");
         document.close();
         return null;
       }
@@ -174,12 +196,14 @@ class Printer {
           document.close();
           document = null;
           println(jobName, "PDF queued successfully to:", printer.getName());
+          cLogger.log (jobName + " PDF queued successfully to: " + printer.getName());
           return printer.getName();
         } 
         catch (PrintException e) {
           if (attempt < MAX_RETRIES && e.getMessage().contains("Printer is not accepting job")) {
             if (verbose) {
               println("Printer not accepting job for " + jobName + ", retrying (" + attempt + "/" + MAX_RETRIES + ")...");
+              cLogger.log ("Printer not accepting job for " + jobName + ", retrying (" + attempt + "/" + MAX_RETRIES + ")...");
             }
             Thread.sleep(RETRY_DELAY_MS);
             // Re-check printer availability after delay
@@ -203,6 +227,7 @@ class Printer {
               printer = PrintServiceLookup.lookupDefaultPrintService();
               if (printer == null) {
                 println("Error: Printer not found during retry, and no default printer available");
+                cLogger.log ("Error: Printer not found during retry, and no default printer available");
                 document.close();
                 document = null;
                 return null;
@@ -212,6 +237,7 @@ class Printer {
             continue;
           }
           println("Error printing PDF for " + jobName + ": " + e.getMessage());
+          cLogger.log ("Error printing PDF for " + jobName + ": " + e.getMessage());
           e.printStackTrace();
           document.close();
           document = null;
@@ -221,12 +247,14 @@ class Printer {
 
       // If retries are exhausted
       println("Error: Failed to print " + jobName + " after " + MAX_RETRIES + " attempts");
+      cLogger.log ("Error: Failed to print " + jobName + " after " + MAX_RETRIES + " attempts");
       document.close();
       document = null;
       return null;
     } 
     catch (Exception e) {
       println("Error printing PDF for " + jobName + ": " + e.getMessage());
+      cLogger.log ("Error printing PDF for " + jobName + ": " + e.getMessage());
       e.printStackTrace();
       if (document != null) {
         try {
@@ -250,20 +278,24 @@ class Printer {
       if (verbose) {
         if (exitCode == 0) {
           println("\tSuccessfully set '" + printerName + "' as the default printer");
+          cLogger.log ("\tSuccessfully set '" + printerName + "' as the default printer");
         } else {
           println("Warning: Failed to set '" + printerName + "' as the default printer (exit code: " + exitCode + ")");
+          cLogger.log ("Warning: Failed to set '" + printerName + "' as the default printer (exit code: " + exitCode + ")");
         }
       }
     } 
     catch (IOException e) {
       if (verbose) {
         println("Error setting default printer (IOException) '" + printerName + "': " + e.getMessage());
+        cLogger.log ("Error setting default printer (IOException) '" + printerName + "': " + e.getMessage());
         e.printStackTrace();
       }
     } 
     catch (InterruptedException e) {
       if (verbose) {
         println("Error setting default printer (InterruptedException) '" + printerName + "': " + e.getMessage());
+        cLogger.log ("Error setting default printer (InterruptedException) '" + printerName + "': " + e.getMessage());
         e.printStackTrace();
       }
     }

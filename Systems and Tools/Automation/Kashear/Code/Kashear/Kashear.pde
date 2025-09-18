@@ -1,4 +1,4 @@
-// With Config
+// With Config with Console Log
 
 RobotTools robot;
 Fields fields;
@@ -11,18 +11,23 @@ Generator aGen;
 Printer printer;
 PDF_Toolkit pdf_toolkit;
 Timeouts timeouts;
+Logger cLogger;
+OrderProcessor op;
 
 void setup () {
-  println ("Initiating ...");
   size (140, 140);
   surface.setVisible (true);
 
+  paths_ = new Paths_ ();
+  cLogger = new Logger (paths_.logDir).setLogFileName ("C_");
+  
+  println ("Initiating ...");
+  cLogger.log ("Initiating ...");
   if (displayWidth != SET_DISPLAY_WIDTH && displayHeight != SET_DISPLAY_HEIGHT) {
     showCMDerror ("Unsupported screen size");
     return;
   }
-
-  paths_ = new Paths_ ();
+  
   String dnaConfigPath = paths_.dnaConfigPath; // Load local config first
   KashearDNAconfig localConfig = new KashearDNAconfig (dnaConfigPath); // Get main config path
   if (!localConfig.init ()) {
@@ -63,7 +68,7 @@ void setup () {
     checksum = new FileChecksum ();
   } 
   catch (Exception e) {
-    System.err.println("Algorithm not found: " + e.getMessage());
+    showCMDerror ("FileCheckSum Algorithm not found: " + e.getMessage());
     exit ();
     return;
   }
@@ -73,6 +78,7 @@ void setup () {
   oc = new OdooClient(DB_NAME);
 
   if (!oc.isAuthenticated()) {
+    showCMDerror ("Login Error", Error.authErrorMessage);
     JOptionPane.showMessageDialog(null, Error.authErrorMessage, "Login Error", JOptionPane.ERROR_MESSAGE);
     exit ();
     return;
@@ -81,8 +87,10 @@ void setup () {
   delay (2000);
   surface.setVisible (false);
 
-  println ("Started");
-  println ("DB: " + DB_NAME + " | " + "USER: " + KASHEAR_ODOO_EMAIL);
+  println ("Started | DB: " + DB_NAME + " | " + "USER: " + KASHEAR_ODOO_EMAIL);
+  cLogger.log ("Started | DB: " + DB_NAME + " | " + "USER: " + KASHEAR_ODOO_EMAIL);
+  
+  op = new OrderProcessor ();
 }
 
 void draw () {

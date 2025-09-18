@@ -10,6 +10,7 @@ class RobotTools {
     }
     catch (Exception e) {
       println(e.getMessage());
+      cLogger.log ("" + e);
       exit();
     }
   }
@@ -92,6 +93,7 @@ class RobotTools {
     Integer [] keyCodes = keyMap.get (character);
     if (keyCodes == null) {
       System.out.println("Unsupported character: " + character);
+      cLogger.log ("Robot: Unsupported character: " + character);
       return;
     }
 
@@ -143,6 +145,7 @@ class RobotTools {
     } 
     catch (Exception e) {
       e.printStackTrace();
+      cLogger.log ("Robot: " + e);
     }
     return null;
   }

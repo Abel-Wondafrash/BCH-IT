@@ -219,27 +219,7 @@ String entry (Order order) {
   }
 
   { /// Confirm | Crate Invoice | Validate
-    order.updateState();
-    if (order.isDraft() && !order.confirmOrder())
-      return "> Failed to confirm draft order '" + order.getName () + "'";
-
-    order.updateState ();
-    if (order.isConfirmed() && !order.createInvoice())
-      return "> Failed to create invoice for order '" + order.getName () + "'";
-
-    order.updateState ();
-    if (!order.isSalesOrder ())
-      return "> Failed to create invoice | malfunctioning createInvoiceOC '" + order.getName () + "'";
-
-    Invoices invoices = order.getInvoices();
-    if (invoices.isEmpty()) return "> Created Invoice but there is no invoiced line '" + order.getName () + "'";
-    if (invoices.isAllPaid()) return "> Nothing to validate. All invoices are 'paid' for order '" + order.getName () + "'";
-
-    for (Invoice invoice : invoices.list ()) {
-      if (!invoice.isDraft()) continue;
-      if (!invoice.validate())
-        return "> Failed to validate invoice " + invoice.getId () + " for order '" + order.getName () + "'";
-    }
+    op.add (order);
   }
 
   if (AUTO_CLOSE_VOUCHER_SAVED_MODAL) {
@@ -256,6 +236,28 @@ String entry (Order order) {
 
   return null;
 }
+
+//  order.updateState();
+//  if (order.isDraft() && !order.confirmOrder())
+//    return "> Failed to confirm draft order '" + order.getName () + "'";
+
+//  order.updateState ();
+//  if (order.isConfirmed() && !order.createInvoice())
+//    return "> Failed to create invoice for order '" + order.getName () + "'";
+
+//  order.updateState ();
+//  if (!order.isSalesOrder ())
+//    return "> Failed to create invoice | malfunctioning createInvoiceOC '" + order.getName () + "'";
+
+//  Invoices invoices = order.getInvoices();
+//  if (invoices.isEmpty()) return "> Created Invoice but there is no invoiced line '" + order.getName () + "'";
+//  if (invoices.isAllPaid()) return "> Nothing to validate. All invoices are 'paid' for order '" + order.getName () + "'";
+
+//  for (Invoice invoice : invoices.list ()) {
+//    if (!invoice.isDraft()) continue;
+//    if (!invoice.validate())
+//      return "> Failed to validate invoice " + invoice.getId () + " for order '" + order.getName () + "'";
+//  }
 
 boolean waitForFieldContent (Field field, String setVal, long timeout) {
   long startTime = millis ();
@@ -293,7 +295,8 @@ boolean isValidField (String fetchedVal, String setVal, String contentValidation
   else cleanedVal = fetchedVal;
 
   if (cleanedVal == null) {
-    System.err.println ("Content is invalid or empty [" + fetchedVal + "]");
+    System.err.println ("Content is invalid or empty fetchedVal: " + fetchedVal + " setVal: " + setVal + " contentValidationType: " + contentValidationType);
+    cLogger.log ("Content is invalid or empty fetchedVal: " + fetchedVal + " setVal: " + setVal + " contentValidationType: " + contentValidationType);
     return false;
   }
 
@@ -322,6 +325,7 @@ boolean updateFields () {
   } 
   catch (Exception e) {
     println ("Missing Field(s)", e);
+    cLogger.log ("Missing Field(s) " + e);
     return false;
   }
   return true;

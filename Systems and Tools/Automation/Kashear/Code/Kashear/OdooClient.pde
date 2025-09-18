@@ -22,6 +22,7 @@ public class OdooClient {
     } 
     catch (Exception e) {
       println ("Error authenticating ", e);
+      cLogger.log ("Error authenticating " + e);
     }
   }
 
@@ -96,6 +97,7 @@ public class OdooClient {
 
     if (ids.length == 0) {
       System.err.println("Order not found: " + orderName);
+      cLogger.log ("Order not found: " + orderName);
       return false;
     }
 
@@ -200,6 +202,7 @@ public class OdooClient {
     catch (org.apache.xmlrpc.XmlRpcException e) {
       // You can inspect the error message for specific handling/logging
       System.err.println("Invoice validation failed: " + e.getMessage());
+      cLogger.log ("Invoice validation failed: " + e.getMessage());
       return false;
     }
   }
@@ -236,6 +239,7 @@ public class OdooClient {
     Integer partnerId = getPartnerId(partnerCode);
     if (partnerId == null) {
       System.err.println("Partner not found for code: " + partnerCode);
+      cLogger.log ("Partner not found for code: " + partnerCode);
       return null;
     }
 
@@ -262,11 +266,13 @@ public class OdooClient {
         } 
         catch (NumberFormatException e) {
           System.err.println("Cannot parse balance string: " + balanceObj);
+          cLogger.log ("Cannot parse balance string: " + balanceObj);
           return null;
         }
       }
     }
     System.err.println("Unexpected result type or missing partner id in result");
+    cLogger.log ("Unexpected result type or missing partner id in result");
     return null;
   }
 }

@@ -72,6 +72,7 @@ class Order {
     }
     catch (Exception e) {
       println ("Error setting values from Order Table:", e);
+      cLogger.log ("Error setting values from Order Table: " + e);
     }
 
     return null;
@@ -176,6 +177,7 @@ class Order {
     } 
     catch (Exception e) {
       System.err.println ("Error fetching state through Odoo Client: " + e);
+      cLogger.log ("Error fetching state through Odoo Client: " + e);
       return null;
     }
   }
@@ -198,6 +200,7 @@ class Order {
     } 
     catch (Exception e) {
       System.err.println ("Error trying to confirm order:" + getName () + " " + e);
+      cLogger.log ("Error trying to confirm order:" + getName () + " " + e);
       return false;
     }
   }
@@ -208,6 +211,7 @@ class Order {
     } 
     catch (Exception e) {
       System.err.println ("Error confirming order:" + getName () + " " + e);
+      cLogger.log ("Error confirming order:" + getName () + " " + e);
       return false;
     }
   }
@@ -225,6 +229,7 @@ class Order {
     } 
     catch (Exception e) {
       System.err.println ("Error obtaining invoices: " + e);
+      cLogger.log ("Error obtaining invoices: " + e);
       return null;
     }
   }
@@ -285,6 +290,7 @@ class Invoice {
     } 
     catch (Exception e) {
       System.err.println ("Error trying to validate: " + e);
+      cLogger.log ("Error trying to validate: " + e);
       return false;
     }
   }
@@ -319,6 +325,8 @@ class OrderLine {
     } 
     catch (Exception e) {
       println ("Error calculating itemPrice:", itemWarehouseCode, itemName, itemSaleQuantity, itemQuantity, itemUnitPrice, itemUnitPrice);
+      cLogger.log ("Error calculating itemPrice: " + 
+        itemWarehouseCode + " | " + itemName + " | " + itemSaleQuantity + " | " + itemQuantity + " | " + itemUnitPrice + " | " +  itemUnitPrice);
     }
   }
   // Excise Tax line
@@ -334,6 +342,8 @@ class OrderLine {
     } 
     catch (Exception e) {
       println ("Error calculating itemPrice:", itemWarehouseCode, itemName, itemSaleQuantity, itemQuantity, itemUnitPrice);
+      cLogger.log ("Error calculating itemPrice: "
+        + " | " + itemWarehouseCode + " | " + itemName + " | " + itemSaleQuantity + " | " + itemQuantity + " | " + itemUnitPrice);
     }
   }
 
@@ -409,12 +419,13 @@ class Reference {
     }
     catch (Exception e) {
       println ("Error setting values from Reference Table:", e);
+      cLogger.log ("Error setting values from Reference Table: " + e);
     }
   }
 
   void setValues (processing.data.Table rTable) {
     code = rTable.getStringColumn ("client_order_ref") [0];
-    println ("code:", code);
+    //println ("code:", code);
   }
 
   boolean exists () {
@@ -446,6 +457,7 @@ class Orders {
     }
     catch (Exception e) {
       println ("Error setting values from Partner Orders Table:", e);
+      cLogger.log ("Error setting values from Partner Orders Table: " + e);
     }
   }
 
@@ -471,5 +483,69 @@ class Orders {
   }
   String getGrandTotal () {
     return grandTotal;
+  }
+}
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+class OrderProcessor implements Runnable {
+  private int checkinPeriod = 5000;
+
+  ConcurrentLinkedQueue<Order> orders;
+
+  OrderProcessor () {
+    orders = new ConcurrentLinkedQueue<Order>();
+    new Thread(this).start();
+  }
+
+  void add (Order order) {
+    orders.add(new Order(order.getName(), order.getTotal(), order.getState()));
+  }
+
+  String confirmInvoiceValidate (Order order) {
+    Order cOrder = new Order (order.getName (), order.getTotal (), order.getState ());
+
+    /// Confirm | Crate Invoice | Validate
+    cOrder.updateState();
+    if (cOrder.isDraft() && !cOrder.confirmOrder())
+      return "> Failed to confirm draft order '" + cOrder.getName () + "'";
+
+    cOrder.updateState ();
+    if (cOrder.isConfirmed() && !cOrder.createInvoice())
+      return "> Failed to create invoice for order '" + cOrder.getName () + "'";
+
+    cOrder.updateState ();
+    if (!cOrder.isSalesOrder ())
+      return "> Failed to create invoice | malfunctioning createInvoiceOC '" + cOrder.getName () + "'";
+
+    Invoices invoices = cOrder.getInvoices();
+    if (invoices.isEmpty()) return "> Created Invoice but there is no invoiced line '" + cOrder.getName () + "'";
+    if (invoices.isAllPaid()) return "> Nothing to validate. All invoices are 'paid' for order '" + cOrder.getName () + "'";
+
+    for (Invoice invoice : invoices.list ()) {
+      if (!invoice.isDraft()) continue;
+      if (!invoice.validate())
+        return "> Failed to validate invoice " + invoice.getId () + " for order '" + cOrder.getName () + "'";
+    }
+
+    return null;
+  }
+
+  void run() {
+    while (true) {
+      Order order;
+      while ((order = orders.poll()) != null) { // drains queue
+        String response = confirmInvoiceValidate(order);
+        if (response != null) {
+          System.err.println(order.getName() + ": " + response);
+          cLogger.log (order.getName() + ": " + response);
+        }
+        else {
+          println("CIV Done:", order.getName());
+          cLogger.log ("CIV Done: " + order.getName());
+        }
+      }
+      delay (checkinPeriod);
+    }
   }
 }

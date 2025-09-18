@@ -24,6 +24,7 @@
 
   <db_details>
     <db_name>TOP_2018</db_name>
+    <!-- <db_name>Testbed</db_name> -->
     <db_ip>192.168.1.154</db_ip>
     <db_port>5432</db_port>
     <db_user>openpg</db_user>

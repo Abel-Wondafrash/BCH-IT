@@ -108,12 +108,14 @@ class Timeouts {
 class Paths_ {
   String appParentDir;
   String tempDir, tempPath;
+  String logDir;
   String dnaConfigPath;
 
   Paths_ () {
     appParentDir = System.getProperty("user.home") + "/AppData/Local/Kashear/";
     tempDir = appParentDir + "temp/";
     tempPath = tempDir + "temp.txt";
+    logDir = appParentDir + "logs/";
     dnaConfigPath = new File (dataPath ("")).getParent () + "/config/" + KASHEAR_DNA_CONFIG_FILE;
   }
 }

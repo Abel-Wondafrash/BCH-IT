@@ -261,6 +261,7 @@ public class FileChecksum {
     } 
     catch (IOException e) {
       System.err.println("Exception in obtaining file checksum for " + filePath + ": " + e.getMessage());
+      cLogger.log ("Exception in obtaining file checksum for " + filePath + ": " + e.getMessage());
       return null;
     }
   }

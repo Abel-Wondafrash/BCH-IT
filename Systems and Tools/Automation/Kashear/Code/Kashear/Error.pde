@@ -13,6 +13,8 @@ void showCMDerror (String errorCode) {
 void showCMDerror (String errorCode, String details) {
   details = details.replace ("\n", "& echo.");
   
+  cLogger.log (errorCode + " - " + details);
+  
   launch ("start cmd /C \"echo ERROR (" + errorCode + "): " + APP_NAME + " is missing critical files. & echo." +
     "FIX: Reinstall " + APP_NAME + " or contact your system provider to help you resolve this issue. & echo." +
     (details.isEmpty ()? "" : "Details: " + details) +

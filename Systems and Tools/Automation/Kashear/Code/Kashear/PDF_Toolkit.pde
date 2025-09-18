@@ -24,6 +24,7 @@ class PDF_Toolkit {
     File inputFile = new File(inputPath);
     if (!inputFile.exists()) {
       println("PDF_Toolkit Error: Input PDF Does Not Exist");
+      cLogger.log ("PDF_Toolkit Error: Input PDF Does Not Exist");
       return false;
     }
 
@@ -35,6 +36,7 @@ class PDF_Toolkit {
 
       if (document.getNumberOfPages() == 0) {
         println("PDF_Toolkit Error: Input PDF has no pages.");
+        cLogger.log ("PDF_Toolkit Error: Input PDF has no pages.");
         return false;
       }
 
@@ -70,6 +72,7 @@ class PDF_Toolkit {
     } 
     catch (Exception e) {
       println("An error occurred:", e);
+      cLogger.log ("PDF_Toolkit: An error occurred: " + e);
       return false;
     } 
     finally {
@@ -80,6 +83,7 @@ class PDF_Toolkit {
         } 
         catch (Exception e) {
           println("Error closing document:", e);
+          cLogger.log ("Error closing document: " + e);
         }
       }
     }
