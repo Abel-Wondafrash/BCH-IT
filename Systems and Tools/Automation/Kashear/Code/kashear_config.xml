@@ -28,14 +28,14 @@
     <db_ip>192.168.1.154</db_ip>
     <db_port>5432</db_port>
     <db_user>openpg</db_user>
-    <db_pass>openpgpwd</db_pass>
+    <db_pass>db_password_here</db_pass>
   </db_details>
 
   <odoo_details>
     <odoo_ip>192.168.1.154</odoo_ip>
     <odoo_port>8069</odoo_port>
     <kashear_odoo_email>ka.shear</kashear_odoo_email>
-    <kashear_odoo_pass>K4$H34r</kashear_odoo_pass>
+    <kashear_odoo_pass>kashear_odoo_password_here</kashear_odoo_pass>
   </odoo_details>
 
   <qr_scanner>

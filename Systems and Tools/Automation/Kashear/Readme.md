@@ -8,62 +8,253 @@ Watch Kashear in action [here](https://youtube.com/shorts/5uMb_Zu7hSY)
 
 ## Configuration Essentials
 
-All critical configurations are designed to be stored on a remote device (typically a server). This is to minimize unauthorized tampering that could disrupt or jeopardize operations.
+All critical configurations are designed to be stored on a **remote device** (typically a server). This minimizes unauthorized tampering that could disrupt or jeopardize operations.
 
 ### Resources required by Kashear
 
-- **link configuration file:** this is the main link between Kashear and the remote device containing resources. It should be named exactly `kashear_dna_config.xml` and contain a `config_file_path` which is where resources should live.
-- **libraries:** this is a list of libraries Kashear depends on.
-  - icu4j-2.6.1.jar _(International Components for Unicode – text, locale, and date/time formatting support)_
-  - jna-5.13.0.jar _(Java Native Access – allows Java to call native shared libraries without JNI)_
-  - jna-platform-5.13.0.jar _(Extra platform-specific mappings and utilities built on JNA)_
-  - pdfbox-app-3.0.4.jar _(Apache PDFBox – creating, manipulating, and extracting content from PDFs)_
-  - postgresql-42.7.5.jar _(PostgreSQL JDBC driver – enables Java apps to connect to PostgreSQL databases)_
-  - ws-commons-util-1.0.2.jar _(Apache Commons utilities for web services – helper classes for XML, I/O, etc.)_
-  - xmlrpc-client-3.1.3.jar _(Apache XML-RPC client – allows calling remote procedures over XML-RPC)_
-  - xmlrpc-common-3.1.3.jar \_(Shared classes for Apache XML-RPC client/server – parsing, serialization, \_utilities)
-- **CNET:** it should be noted that this version of Kashear supports only CNET ERP V2016
+- **Link configuration file:**  
+  The local link between Kashear and the remote server.  
+  Must be named exactly `kashear_dna_config.xml`.  
+  Contains a `config_file_path` tag pointing to the full path of the main config (`kashear_config.xml`).
 
-### Configuration Details
+- **Libraries:**  
+  Kashear depends on the following libraries (must be present in `lib/`):
 
-Please give due attention when changing any of the following parameters as the wrong entry could mean incorrect, corrupted database, difficult to reverse operations, and more. Only proceed to change configuration files after reading and understanding the content below in its entirety.
+  - `icu4j-2.6.1.jar` – International Components for Unicode (text, locale, date/time formatting)
+  - `jna-5.13.0.jar` – Java Native Access (bridge to native shared libraries)
+  - `jna-platform-5.13.0.jar` – Extra JNA utilities for specific platforms
+  - `pdfbox-app-3.0.4.jar` – Apache PDFBox (create and manipulate PDFs)
+  - `postgresql-42.7.5.jar` – PostgreSQL JDBC driver
+  - `ws-commons-util-1.0.2.jar` – Apache Commons utilities (XML, I/O helpers)
+  - `xmlrpc-client-3.1.3.jar` – Apache XML-RPC client (remote procedure calls)
+  - `xmlrpc-common-3.1.3.jar` – Shared classes for XML-RPC parsing & serialization
 
-**NOTICE:** Any changes made to the config file should be upon the request of the Finance team and should be communicated with the Finance team promptly.
+- **CNET ERP support:**  
+  Only **CNET ERP V2016** is supported by this version of Kashear.
 
-#### General
+---
 
-**is_mode_direct:**
+## Configuration Details
 
-- description: this tells Kashear in which mode, 'manual' or 'direct', to take SOV number as input.
-- value: only true or false
-  - if value is `true` Kashear will treat the whole of the content read from the QR scanner as the SOV number.
-  - if value is `false` Kashear will treat scanning as a trigger to launch a textfield where the SOV number should be inserted. In this mode, the content of the QR code used to trigger Kashear is irrelevant and will be rejected (only used for trigger).
-- **IMPORTANT:** In either of the above cases/modes, the value scanned/entered should be a number with no prefix matching exactly the SOV number in Odoo. eg: _04631_ instead of _SOV-04631_
+> ⚠️ **Important:** Any changes to these parameters should only be made under instruction from the Finance team. Wrong entries may cause corrupted data, database inconsistencies, or irrecoverable errors. Always double-check before saving.
 
-**price_dp:**
+---
 
-- description: is the decimal places after the decimal point Kashear should format a given price of an item/product when feeding it to CNET.
-- value: default is 3. There should almost be need to change this unless CNET changes their dp values. Decreasing it to less than 3 will of course increase the calculation deviation between CNET, Odoo, and Kashear.
-- **NOTE:** increasing it to a value above that of CNET's default is meaningless as CNET ignores figures after their set dp.
+### General
 
-**grand_total_nominal_delta:**
+**is_mode_direct**
 
-- description: the delta (deviation) between CNET's calculation and that of Odoo's Kashear should consider as nominal (expected).
-- value: default is 3.
-- **WARNING:** This should only be set to a value the Finance team requires. _The lower the value, the more intolerant Kashear will become and the higher the value the more tolerant Kashear will become. _
+- Defines how Kashear interprets SOV numbers from QR scans.
+- **Values:** `true` or `false` | default `true`
+  - `true`: The scanned QR code content itself is taken as the SOV number (e.g., `04631`).
+  - `false`: Scanning triggers a manual entry field where the user types the SOV number.
+- **Note:** In both modes, the number must match the raw numeric SOV in Odoo (without the `SOV-` prefix).
 
-#### Taxation
+**price_dp**
 
-**excise_tax_percentage:**
+- Number of decimal places Kashear uses when formatting prices for CNET.
+- **Default:** `3`
+- **Tip:** Only change if CNET updates its decimal precision.
 
-- description: the percentage value of excise tax for all excisable items (as defined in Odoo).
-- value: 1 - 100
-- **WARNING:** This should only be set to a value the Finance team requires. Kashear takes this value for excise tax calculation for all products which are marked excisable.
+**grand_total_nominal_delta**
 
-**excise_tax_item_code:**
+- The allowed tolerance (difference) between CNET’s and Odoo’s total calculations.
+- **Default:** `3.000`
+- **Warning:**
+  - Lower = stricter, more rejections.
+  - Higher = looser, may let errors slip.
+  - Always confirm with Finance before adjusting.
 
-- description: the item code of excise tax as appears in CNET's item definition
-- value: eg. ITM-00002
-- **Warning:** This should only be set to a value the Finance team requires.
+---
+
+### Taxation
+
+**excise_tax_percentage**
+
+- Percentage tax applied to all excisable products.
+- **Default:** `10`
+
+**excise_tax_item_code**
+
+- Item code for excise tax in CNET.
+- **Default:** `ITM-00002`
+
+**excise_tax_item_name**
+
+- Item name for excise tax in CNET.
+- **Default:** `Excise TaX`
+
+**excise_tax_quantity**
+
+- Quantity used when applying excise tax.
+- **Default:** `1`
+
+**excise_sale_uom**
+
+- Unit of measure for excise tax in attachments.
+- **Default:** `pcs`
+
+---
+
+### Nomenclature
+
+**sales_order_prefix**
+
+- Prefix used by Odoo sales orders.
+- **Default:** `SOV-`
+
+**attachment_prefix**
+
+- Prefix for generated attachment file names.
+- **Default:** `ATT-`
+
+**fs_number_prefix**
+
+- Prefix to add before FS numbers in Odoo references.
+- **Default:** `FS No. `
+
+**fs_number_sample** _(legacy use)_
+
+- Sample FS number pattern to validate digit count.
+- **Default:** `00000000` (8 digits)
+
+---
+
+### Database Details
+
+**db_name**
+
+- PostgreSQL database name Kashear connects to.
+- **Default:** `TOP_2018`
+
+**db_ip**
+
+- IP address of the PostgreSQL server.
+- **Default:** `192.168.1.154`
+
+**db_port**
+
+- Port number for PostgreSQL.
+- **Default:** `5432`
+
+**db_user**
+
+- Database username.
+- **Default:** `openpg`
+
+**db_pass**
+
+- Database password.
+- **Default:** `********`
+
+---
+
+### Odoo Details
+
+**odoo_ip**
+
+- Odoo server IP address.
+- **Default:** `192.168.1.154`
+
+**odoo_port**
+
+- Odoo server port.
+- **Default:** `8069`
+
+**kashear_odoo_email**
+
+- Odoo login email used by Kashear.
+- **Default:** `ka.shear`
+
+**kashear_odoo_pass**
+
+- Odoo login password.
+- **Default:** `********`
+
+---
+
+### QR Scanner
+
+**qr_scanner_port**
+
+- COM port assigned to the QR scanner.
+- **Default:** `COM5`
+- **How to find:**
+  - Open **Device Manager** → **Ports (COM & LPT)** → find your scanner.
+
+**qr_scanner_baud_rate**
+
+- Baud rate for the QR scanner (must match scanner’s driver setting).
+- **Default:** `9600`
+- **How to verify:**
+  - In **Device Manager**, right-click the COM port → **Properties** → **Port Settings** tab.
+
+---
+
+### Attachment
+
+**file_creation_timeout**
+
+- Maximum time (in milliseconds) to wait for attachment file creation.
+- **Default:** `5000`
+
+**attachment_printer_name**
+
+- Name of the printer used for attachments. Must match exactly as listed under **Windows Settings → Printers & Scanners**.
+- **Default:** `FFFFFF4003`
+- **Fallback:** If not found, the system default printer will be used.
+
+**auto_close_voucher_saved_modal**
+
+- Whether to auto-close the "Congratulations!" modal after voucher save.
+- **Default:** `true`
+
+**auto_close_print_dialog**
+
+- Whether to auto-close the print dialog automatically.
+- **Default:** `true`
+
+---
+
+### Paths
+
+**res_path**
+
+- Resource directory path.
+- **Default:** `\\\\WIN-P0OU438M5IM\Kashear\res`
+
+**query_get_quotation_details_path**
+
+- File path to SQL query that fetches quotation details by code.
+- Eg. `\\WIN-P0OU438M5IM\Kashear\queries\quotation_details_by_code.txt`
+
+**query_get_client_order_ref_by_code**
+
+- File path to SQL query that fetches client order reference using SOV code.
+- Eg. `\\WIN-P0OU438M5IM\Kashear\queries\get_client_order_ref_by_code.txt`
+
+**query_set_client_order_ref_by_code**
+
+- File path to SQL query that sets client order reference using SOV code.
+- Eg. `\\WIN-P0OU438M5IM\Kashear\queries\set_client_order_ref_by_code.txt`
+
+**query_get_partner_active_orders_by_code**
+
+- File path to SQL query that fetches active partner orders by SOV code.
+- Eg. `\\WIN-P0OU438M5IM\Kashear\queries\get_partner_active_orders_by_code.txt`
+
+---
+
+### Timeouts
+
+**win_wait**
+
+- Maximum time (in milliseconds) to wait for Windows UI responses.
+- **Default:** `5000`
+
+**field_wait**
+
+- Maximum time (in milliseconds) to wait for field interactions.
+- **Default:** `5000`
 
 ---
