@@ -3,12 +3,13 @@ static class Error {
   static final String MISSING_OR_CORRUPT_SVGS = "Sx0002";
   static final String MISSING_FONTS_DIR = "Fx0001";
   static final String MISSING_OR_CORRUPT_FONTS = "Fx0002";
+  static final String QR_SCANNER_NOT_FOUND = "QR Reader Not Connected";
+  static final String authErrorMessage  = "Error while logging in.\nMake sure IP, Port, DB Name, Username, and Password are correct.";
 }
 
 void showCMDerror (String errorCode) {
   showCMDerror (errorCode, "");
 }
-
 void showCMDerror (String errorCode, String details) {
   details = details.replace ("\n", "& echo.");
   

@@ -38,7 +38,8 @@ public class OdooClient {
 
   private XmlRpcClient getXmlRpcClient(String endpoint) throws Exception {
     XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-    config.setServerURL(new URL(ODOO_URL + endpoint));
+    String odooURL = "http://" + ODOO_IP + ":" + ODOO_PORT;
+    config.setServerURL(new URL(odooURL + endpoint));
 
     // This enables support for extensions like nulls
     config.setEnabledForExtensions(true);
@@ -49,7 +50,7 @@ public class OdooClient {
   }
 
   private int getUid(XmlRpcClient client) throws Exception {
-    return (int) client.execute("authenticate", Arrays.asList(dbName, ODOO_USER, ODOO_PASS, Collections.emptyMap()));
+    return (int) client.execute("authenticate", Arrays.asList(dbName, KASHEAR_ODOO_EMAIL, KASHEAR_ODOO_PASS, Collections.emptyMap()));
   }
 
   // Get state of sale order by name
@@ -64,7 +65,7 @@ public class OdooClient {
     kwargs.put("limit", 1);
 
     Object[] results = (Object[]) objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "sale.order", "search_read", 
       Arrays.asList(domain), 
       kwargs
@@ -87,7 +88,7 @@ public class OdooClient {
     domain.add(Arrays.asList("name", "=", orderName));
 
     Object[] ids = (Object[]) objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "sale.order", "search", 
       Arrays.asList(domain), 
       Collections.singletonMap("limit", 1)
@@ -100,7 +101,7 @@ public class OdooClient {
 
     // Call action_confirm
     Object result = objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "sale.order", "action_confirm", 
       Arrays.asList(Collections.singletonList(ids[0]))
       ));
@@ -122,7 +123,7 @@ public class OdooClient {
     domain.add(Arrays.asList("name", "=", orderName));
 
     Object[] ids = (Object[]) objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "sale.order", "search", 
       Arrays.asList(domain), 
       Collections.singletonMap("limit", 1)
@@ -134,7 +135,7 @@ public class OdooClient {
 
     // Call action_invoice_create (no extra params)
     Object[] invoiceIds = (Object[]) objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "sale.order", "action_invoice_create", 
       Arrays.asList(Collections.singletonList(ids[0]))
       ));
@@ -164,7 +165,7 @@ public class OdooClient {
 
     // Call 'search_read'
     Object[] result = (Object[]) objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "account.invoice", "search_read", 
       Arrays.asList(domain), 
       kwargs
@@ -189,7 +190,7 @@ public class OdooClient {
     try {
       // Call the method - ignore the return value, focus on exception to detect failure
       objectClient.execute("execute_kw", Arrays.asList(
-        dbName, uid, ODOO_PASS, 
+        dbName, uid, KASHEAR_ODOO_PASS, 
         "account.invoice", "action_invoice_open", 
         Arrays.asList(Collections.singletonList(invoiceId))
         ));
@@ -211,7 +212,7 @@ public class OdooClient {
     domain.add(Arrays.asList("partner_code", "=", partnerCode));
 
     Object[] partnerIds = (Object[]) objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "res.partner", "search", 
       Arrays.asList(domain), 
       Collections.singletonMap("limit", 1)
@@ -240,7 +241,7 @@ public class OdooClient {
 
     // Step 2: Call the method get_current_balance
     Object result = objectClient.execute("execute_kw", Arrays.asList(
-      dbName, uid, ODOO_PASS, 
+      dbName, uid, KASHEAR_ODOO_PASS, 
       "res.partner", "get_current_balance", 
       Arrays.asList(Collections.singletonList(partnerId))
       ));

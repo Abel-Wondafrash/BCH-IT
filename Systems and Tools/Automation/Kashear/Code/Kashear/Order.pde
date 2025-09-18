@@ -424,7 +424,7 @@ class Reference {
     return code != null && code.trim ().isEmpty();
   }
   boolean isValid () {
-    return code != null && getPositiveInt (code).length () >= FS_NUMBER_LENGTH;
+    return code != null && getPositiveInt (code).length () >= FS_NUMBER_SAMPLE.length ();
   }
   String getName () {
     return code;

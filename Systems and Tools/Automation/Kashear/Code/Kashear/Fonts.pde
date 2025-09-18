@@ -39,10 +39,10 @@ class Arial {
   }
 
   boolean init () {
-    regular = createFont (path + "f/a/a-r.ttf", 17);
-    italic = createFont (path + "f/a/a-i.ttf", 17);
-    medium = createFont (path + "f/a/a-m.ttf", 17);
-    bold = createFont (path + "f/a/a-b.ttf", 17);
+    regular = createFont (path + "/f/a/a-r.ttf", 17);
+    italic = createFont (path + "/f/a/a-i.ttf", 17);
+    medium = createFont (path + "/f/a/a-m.ttf", 17);
+    bold = createFont (path + "/f/a/a-b.ttf", 17);
 
     return regular != null && italic != null && medium != null && bold != null;
   }
@@ -57,8 +57,8 @@ class Tahoma {
   }
 
   boolean init () {
-    regular = createFont (path + "f/t/t-r.ttf", 17);
-    bold = createFont (path + "f/t/t-b.ttf", 17);
+    regular = createFont (path + "/f/t/t-r.ttf", 17);
+    bold = createFont (path + "/f/t/t-b.ttf", 17);
 
     return regular != null && bold != null;
   }

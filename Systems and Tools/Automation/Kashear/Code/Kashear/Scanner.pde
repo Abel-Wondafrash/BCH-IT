@@ -1,10 +1,13 @@
-void initScanner () {
+void initScanner (String qrScannerPort, int qrScannerBaudRate) {
   try {
-    serial = new Serial (this, PORT, BAUD_RATE);
-    serial.bufferUntil (bufferUntilChar);
+    serial = new Serial (this, qrScannerPort, qrScannerBaudRate);
+    serial.bufferUntil (serialBufferUntilChar);
   } 
   catch (Exception e) {
-    System.err.println ("QR Reader Not Connected");
+    System.err.println ();
+    JOptionPane.showMessageDialog(null, 
+      e + "\n" + Error.QR_SCANNER_NOT_FOUND + "\n\nMake sure port is: " + qrScannerPort + " and that baud rate is: " + qrScannerBaudRate, 
+      "Error", JOptionPane.ERROR_MESSAGE);
     exit ();
     return;
   }

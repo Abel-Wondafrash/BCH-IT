@@ -14,7 +14,7 @@ class Shapes {
     }
     
     try {
-      attachment = loadAndDisableStyle (path + "s/attachment.svg", 512, 394);
+      attachment = loadAndDisableStyle (path + "/s/attachment.svg", 512, 394);
       return true;
     } 
     catch (Exception e) {

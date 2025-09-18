@@ -58,7 +58,8 @@ class Querier {
 
     try {
       Class.forName("org.postgresql.Driver");
-      conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+      String dbURL = "jdbc:postgresql://" + DB_IP + ":" + DB_PORT + "/" + DB_NAME;;
+      conn = DriverManager.getConnection(dbURL, DB_USER, DB_PASS);
       stmt = conn.createStatement();
 
       boolean hasResultSet = stmt.execute(query);
@@ -117,7 +118,7 @@ processing.data.Table getVoucherDetails (String voucherCode) {
   //println ("\nObtaining order details for '" + voucherCode + "'");
   String query = qDetails.getQuery (
     "WHERE so.name = ", // Line to replace
-    "WHERE so.name = '" + SOV_PREFIX + voucherCode + "'" // Replace line with
+    "WHERE so.name = '" + SALES_ORDER_PREFIX + voucherCode + "'" // Replace line with
     );
   
   if (query == null) {
@@ -137,7 +138,7 @@ processing.data.Table getFS (String voucherCode) {
   //println ("\nObtaining FS Number for '" + voucherCode + "'");
   String query = qGetFS.getQuery (
     "WHERE name = ", // Line to replace
-    "WHERE name = '" + SOV_PREFIX + voucherCode + "'" // Replace line with
+    "WHERE name = '" + SALES_ORDER_PREFIX + voucherCode + "'" // Replace line with
     );
 
   if (query == null) {
@@ -171,7 +172,7 @@ Boolean setFS (String voucherCode, String fs) {
     // Lines to replace with
     new String [] {
       "SET client_order_ref = '" + FS_NUMBER_PREFIX + fs + "'", 
-      "WHERE name = '" + SOV_PREFIX + voucherCode + "';"
+      "WHERE name = '" + SALES_ORDER_PREFIX + voucherCode + "';"
     }
     );
 

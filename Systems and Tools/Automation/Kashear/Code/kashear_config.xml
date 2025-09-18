@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kashear_config>
+
+  <general>
+    <is_mode_direct>true</is_mode_direct>
+    <price_dp>3</price_dp>
+    <grand_total_nominal_delta>3.000</grand_total_nominal_delta>
+  </general>
+
+  <taxation>
+    <excise_tax_percentage>10</excise_tax_percentage>
+    <excise_tax_item_code>ITM-00002</excise_tax_item_code>
+    <excise_tax_item_name>Excise TaX</excise_tax_item_name>
+    <excise_tax_quantity>1</excise_tax_quantity>
+    <excise_sale_uom>pcs</excise_sale_uom>
+  </taxation>
+
+  <nomenclature>
+    <sales_order_prefix>SOV-</sales_order_prefix>
+    <attachment_prefix>ATT-</attachment_prefix>
+    <fs_number_prefix>FS No. </fs_number_prefix>
+    <fs_number_sample>00000000</fs_number_sample>
+  </nomenclature>
+
+  <db_details>
+    <db_name>TOP_2018</db_name>
+    <db_ip>192.168.1.154</db_ip>
+    <db_port>5432</db_port>
+    <db_user>openpg</db_user>
+    <db_pass>openpgpwd</db_pass>
+  </db_details>
+
+  <odoo_details>
+    <odoo_ip>192.168.1.154</odoo_ip>
+    <odoo_port>8069</odoo_port>
+    <kashear_odoo_email>ka.shear</kashear_odoo_email>
+    <kashear_odoo_pass>K4$H34r</kashear_odoo_pass>
+  </odoo_details>
+
+  <qr_scanner>
+    <qr_scanner_port>COM5</qr_scanner_port>
+    <qr_scanner_baud_rate>9600</qr_scanner_baud_rate>
+  </qr_scanner>
+
+  <attachment>
+    <file_creation_timeout>5000</file_creation_timeout>
+    <!-- <attachment_printer_name>HP LaserJet Pro 4003 - Finance</attachment_printer_name> -->
+    <attachment_printer_name>FFFFFF4003</attachment_printer_name>
+    <auto_close_voucher_saved_modal>true</auto_close_voucher_saved_modal>
+    <auto_close_print_dialog>true</auto_close_print_dialog>
+  </attachment>
+
+  <paths>
+    <res_path>\\\\WIN-P0OU438M5IM\Kashear\res</res_path>
+    <query_get_quotation_details_path>\\WIN-P0OU438M5IM\Kashear\queries\quotation_details_by_code.txt</query_get_quotation_details_path>
+
+    <query_get_client_order_ref_by_code>\\WIN-P0OU438M5IM\Kashear\queries\get_client_order_ref_by_code.txt</query_get_client_order_ref_by_code>
+    
+    <query_set_client_order_ref_by_code>\\WIN-P0OU438M5IM\Kashear\queries\set_client_order_ref_by_code.txt</query_set_client_order_ref_by_code>
+    
+    <query_get_partner_active_orders_by_code>\\WIN-P0OU438M5IM\Kashear\queries\get_partner_active_orders_by_code.txt</query_get_partner_active_orders_by_code>
+  </paths>
+
+  <timeouts>
+    <win_wait>5000</win_wait>
+    <field_wait>5000</field_wait>
+  </timeouts>
+
+</kashear_config>
