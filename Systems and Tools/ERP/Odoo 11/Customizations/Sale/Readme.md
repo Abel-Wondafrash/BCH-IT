@@ -835,3 +835,81 @@ This section documents customizations to the Odoo 11 sales module, including uni
 Find the implementation of this module [here](./sale_order_unique_lines/).
 
 ---
+
+## Sales Orders by Warehouse
+
+- **Issue**: Sales teams and managers need a quick way to see **all confirmed (`sent`) sales orders**, grouped by warehouse and state, with only orders that have a `client_order_ref`.  
+  The default Sale Orders list view does not provide this specialized reporting view.
+
+- **Solution**: Introduce a **custom search filter, action, and menu item** to generate a report of sales orders grouped by warehouse and state, filtered to only orders with `client_order_ref`, and ordered descending by `client_order_ref`.
+
+  - In `sale_orders_by_warehouse_views.xml`, implement:
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <odoo>
+      <data>
+
+        <!-- Extend Sale Order search view: strictly show orders with client_order_ref set -->
+        <record id="view_order_search_orders_by_warehouse" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.orders.by.warehouse</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <!-- Filter: Only 'sent' sales orders with client_order_ref -->
+                    <filter name="orders_sent_filter"
+                            string="Sales Orders by Warehouse"
+                            domain="[('state','=','sent'), ('client_order_ref','!=',False)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Action: open sale.order list filtered by 'sent' and client_order_ref, grouped and ordered -->
+        <record id="action_sale_orders_by_warehouse" model="ir.actions.act_window">
+            <field name="name">Orders by Warehouse</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/> <!-- Correct tree view -->
+            <field name="domain">[('state','=','sent'), ('client_order_ref','!=',False)]</field>
+            <field name="context">{'group_by': ['warehouse_id', 'state']}</field>
+            <field name="order">client_order_ref desc</field>
+        </record>
+
+        <!-- Orders by Warehouse menu: under Sales → Reporting -->
+        <menuitem id="menu_sale_orders_by_warehouse"
+                  name="Orders by Warehouse"
+                  parent="sale.menu_sale_report"
+                  action="action_sale_orders_by_warehouse"
+                  sequence="5"/>
+
+        <!-- Server Action: LOJ • Finance Parcel -->
+        <record id="action_sale_order_loj_finance_parcel" model="ir.actions.server">
+            <field name="name">LOJ • Finance Parcel</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.with_context(copies=1, copy_type='Parcel').action_confirm_create_xml()
+            </field>
+        </record>
+
+      </data>
+    </odoo>
+    ```
+
+  - This ensures:
+
+    - Only sales orders with **state = `sent`** and **non-empty `client_order_ref`** are shown.
+    - Orders are grouped by **warehouse** and **state**, with `client_order_ref` descending for easy review.
+    - Users can see the **client order reference** directly in the tree view.
+    - Menu item under **Sales → Reporting → Orders by Warehouse** for easy access.
+    - Works in both **list and form views**.
+    - Compatible with existing `LOJ • Finance Parcel` server action to enable project Parcel.
+
+  - Restart Odoo and upgrade the module after implementation.
+
+Find the implementation of this module [here](./sale_orders_by_warehouse/).
+
+---

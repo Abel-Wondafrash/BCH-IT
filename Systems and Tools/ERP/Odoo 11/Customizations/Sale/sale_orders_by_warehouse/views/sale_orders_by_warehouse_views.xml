@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+    <!-- Extend Sale Order search view to add a filter for sent orders with client_order_ref -->
+    <record id="view_order_search_orders_by_warehouse" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.orders.by.warehouse</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <!-- Filter: Only 'sent' sales orders -->
+                <filter name="orders_sent_filter"
+                        string="Sales Orders by Warehouse"
+                        domain="[('state','=','sent'), ('client_order_ref','!=',False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action: open sale.order list, filtered by 'sent' and client_order_ref set, grouped and ordered -->
+    <record id="action_sale_orders_by_warehouse" model="ir.actions.act_window">
+        <field name="name">Orders by Warehouse</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="domain">[('state','=','sent'), ('client_order_ref','!=',False)]</field>
+        <field name="context">{'group_by': ['warehouse_id', 'state']}</field>
+        <field name="order">client_order_ref desc</field>
+    </record>
+
+    <!-- Orders by Warehouse menu: under Sales → Reporting -->
+    <menuitem id="menu_sale_orders_by_warehouse"
+              name="Orders by Warehouse"
+              parent="sale.menu_sale_report"
+              action="action_sale_orders_by_warehouse"
+              sequence="5"/>
+
+    <!-- Server Action: LOJ • Finance Parcel -->
+    <record id="action_sale_order_loj_finance_parcel" model="ir.actions.server">
+        <field name="name">LOJ • Finance Parcel</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.with_context(copies=1, copy_type='Parcel').action_confirm_create_xml()
+        </field>
+    </record>
+
+  </data>
+</odoo>
