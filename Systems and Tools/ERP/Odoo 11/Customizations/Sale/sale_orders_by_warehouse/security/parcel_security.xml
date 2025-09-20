@@ -1,0 +1,7 @@
+<odoo>
+  <record id="group_parcel_issuer" model="res.groups">
+    <field name="name">Parcel Slip Issuer</field>
+    <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+    <field name="comment">Users in this group can issue LOJ Parcel slips and see related menus</field>
+  </record>
+</odoo>

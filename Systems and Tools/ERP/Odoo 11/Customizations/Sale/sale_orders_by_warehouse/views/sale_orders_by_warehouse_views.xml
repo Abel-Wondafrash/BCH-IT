@@ -2,50 +2,115 @@
 <odoo>
   <data>
 
-    <!-- Extend Sale Order search view to add a filter for sent orders with client_order_ref -->
+    <!-- Filter for Sales Orders -->
     <record id="view_order_search_orders_by_warehouse" model="ir.ui.view">
         <field name="name">sale.order.search.inherit.orders.by.warehouse</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
-                <!-- Filter: Only 'sent' sales orders -->
                 <filter name="orders_sent_filter"
                         string="Sales Orders by Warehouse"
-                        domain="[('state','=','sent'), ('client_order_ref','!=',False)]"/>
+                        domain="[('state','=','sent'), ('client_order_ref','!=',False), ('loj_parcel_batch_id','=',False)]"/>
             </xpath>
         </field>
     </record>
 
-    <!-- Action: open sale.order list, filtered by 'sent' and client_order_ref set, grouped and ordered -->
+    <!-- Action: Orders by Warehouse -->
     <record id="action_sale_orders_by_warehouse" model="ir.actions.act_window">
         <field name="name">Orders by Warehouse</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="sale.view_quotation_tree"/>
-        <field name="domain">[('state','=','sent'), ('client_order_ref','!=',False)]</field>
+        <field name="domain">[
+            ('state','=','sent'),
+            ('client_order_ref','!=',False),
+            ('loj_parcel_batch_id','=',False)
+        ]</field>
         <field name="context">{'group_by': ['warehouse_id', 'state']}</field>
-        <field name="order">client_order_ref desc</field>
     </record>
 
-    <!-- Orders by Warehouse menu: under Sales → Reporting -->
+
+    <!-- Menu for Orders by Warehouse -->
     <menuitem id="menu_sale_orders_by_warehouse"
               name="Orders by Warehouse"
               parent="sale.menu_sale_report"
               action="action_sale_orders_by_warehouse"
-              sequence="5"/>
+              sequence="5"
+              groups="sale_orders_by_warehouse.group_parcel_issuer"/>
 
-    <!-- Server Action: LOJ • Finance Parcel -->
-    <record id="action_sale_order_loj_finance_parcel" model="ir.actions.server">
-        <field name="name">LOJ • Finance Parcel</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">list</field>
-        <field name="state">code</field>
-        <field name="code">
-            records.with_context(copies=1, copy_type='Parcel').action_confirm_create_xml()
+    <!-- LOJ Parcel Batch Views -->
+
+    <!-- Dedicated tree view for order_ids to avoid 'state' domain error -->
+    <record id="view_loj_parcel_batch_order_tree" model="ir.ui.view">
+        <field name="name">loj.parcel.batch.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="client_order_ref"/>
+                <!-- <field name="warehouse_id"/> -->
+            </tree>
         </field>
     </record>
+
+    <!-- Batch Tree View -->
+    <record id="view_loj_parcel_batch_tree" model="ir.ui.view">
+        <field name="name">loj.parcel.batch.tree</field>
+        <field name="model">loj.parcel.batch</field>
+        <field name="arch" type="xml">
+            <tree string="LOJ Parcel Batches">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="create_date"/>
+                <field name="order_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Batch Form View -->
+    <record id="view_loj_parcel_batch_form" model="ir.ui.view">
+        <field name="name">loj.parcel.batch.form</field>
+        <field name="model">loj.parcel.batch</field>
+        <field name="arch" type="xml">
+            <form string="LOJ Parcel Batch">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="user_id"/>
+                        <field name="create_date"/>
+                        <field name="warehouse_id"/> <!-- this is loj.parcel.batch.warehouse_id -->
+                    </group>
+                    <notebook>
+                        <page string="Sales Orders">
+                            <field name="order_ids" context="{'default_loj_parcel_batch_id': False}" mode="tree,form">
+                                <tree string="Sales Orders" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="client_order_ref"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open Batches -->
+    <record id="action_loj_parcel_batch" model="ir.actions.act_window">
+        <field name="name">LOJ Parcel Batches</field>
+        <field name="res_model">loj.parcel.batch</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_order': 'create_date desc'}</field>
+    </record>
+
+    <!-- Menu item for Batches -->
+    <menuitem id="menu_loj_parcel_batch"
+              name="LOJ Parcel Batches"
+              parent="sale.menu_sale_report"
+              action="action_loj_parcel_batch"
+              sequence="10"
+              groups="sale_orders_by_warehouse.group_parcel_issuer"/>
 
   </data>
 </odoo>

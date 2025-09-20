@@ -836,80 +836,79 @@ Find the implementation of this module [here](./sale_order_unique_lines/).
 
 ---
 
-## Sales Orders by Warehouse
+# LOJ Parcel & Sales Orders by Warehouse
 
-- **Issue**: Sales teams and managers need a quick way to see **all confirmed (`sent`) sales orders**, grouped by warehouse and state, with only orders that have a `client_order_ref`.  
-  The default Sale Orders list view does not provide this specialized reporting view.
+## Overview
 
-- **Solution**: Introduce a **custom search filter, action, and menu item** to generate a report of sales orders grouped by warehouse and state, filtered to only orders with `client_order_ref`, and ordered descending by `client_order_ref`.
+This module enhances sales order management by enabling:
 
-  - In `sale_orders_by_warehouse_views.xml`, implement:
+- **LOJ Parcel Batches** for confirmed (`sent`) sales orders.
+- Automatic batch assignment and tracking.
+- Grouping and filtering of sales orders by warehouse.
+- Role-based access control for parcel operations.
 
-    ```xml
-    <?xml version="1.0" encoding="utf-8"?>
-    <odoo>
-      <data>
+---
 
-        <!-- Extend Sale Order search view: strictly show orders with client_order_ref set -->
-        <record id="view_order_search_orders_by_warehouse" model="ir.ui.view">
-            <field name="name">sale.order.search.inherit.orders.by.warehouse</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="//search" position="inside">
-                    <!-- Filter: Only 'sent' sales orders with client_order_ref -->
-                    <filter name="orders_sent_filter"
-                            string="Sales Orders by Warehouse"
-                            domain="[('state','=','sent'), ('client_order_ref','!=',False)]"/>
-                </xpath>
-            </field>
-        </record>
+## Features
 
-        <!-- Action: open sale.order list filtered by 'sent' and client_order_ref, grouped and ordered -->
-        <record id="action_sale_orders_by_warehouse" model="ir.actions.act_window">
-            <field name="name">Orders by Warehouse</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="sale.view_quotation_tree"/> <!-- Correct tree view -->
-            <field name="domain">[('state','=','sent'), ('client_order_ref','!=',False)]</field>
-            <field name="context">{'group_by': ['warehouse_id', 'state']}</field>
-            <field name="order">client_order_ref desc</field>
-        </record>
+### Sales Orders by Warehouse
 
-        <!-- Orders by Warehouse menu: under Sales → Reporting -->
-        <menuitem id="menu_sale_orders_by_warehouse"
-                  name="Orders by Warehouse"
-                  parent="sale.menu_sale_report"
-                  action="action_sale_orders_by_warehouse"
-                  sequence="5"/>
+- **Filter Improvements**:
+  - Only display `sent` sales orders with a `client_order_ref`.
+  - Automatically excludes orders already assigned to a batch (`loj_parcel_batch_id` is empty).
+- **Actions & Views**:
+  - Grouped by `warehouse_id` and `state`.
+  - Ordered descending by `client_order_ref`.
+- **Menu**:
+  - `Orders by Warehouse` under **Sales → Reporting**.
+  - Visibility restricted by user group.
 
-        <!-- Server Action: LOJ • Finance Parcel -->
-        <record id="action_sale_order_loj_finance_parcel" model="ir.actions.server">
-            <field name="name">LOJ • Finance Parcel</field>
-            <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="binding_model_id" ref="sale.model_sale_order"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-                records.with_context(copies=1, copy_type='Parcel').action_confirm_create_xml()
-            </field>
-        </record>
+---
 
-      </data>
-    </odoo>
-    ```
+### LOJ Parcel Batch
 
-  - This ensures:
+- **Batch Model (`loj.parcel.batch`)**:
+  - Tracks `sale.order` records in a batch.
+  - Automatically sets the batch warehouse from the first order.
+  - Orders are assigned to the batch and filtered out of the selection list.
+- **Constraints**:
 
-    - Only sales orders with **state = `sent`** and **non-empty `client_order_ref`** are shown.
-    - Orders are grouped by **warehouse** and **state**, with `client_order_ref` descending for easy review.
-    - Users can see the **client order reference** directly in the tree view.
-    - Menu item under **Sales → Reporting → Orders by Warehouse** for easy access.
-    - Works in both **list and form views**.
-    - Compatible with existing `LOJ • Finance Parcel` server action to enable project Parcel.
+  - All selected orders must be from the same warehouse.
+  - Validation errors are raised if orders have inconsistent warehouses or cannot be sourced.
 
-  - Restart Odoo and upgrade the module after implementation.
+- **Views**:
+  - `warehouse_id` displayed at batch level (above notebook).
+  - Batch orders tree no longer shows warehouse (all orders share the same warehouse).
+  - Batch list view ordered by creation date descending.
 
-Find the implementation of this module [here](./sale_orders_by_warehouse/).
+#### Access Rights & Visibility
+
+- **User Group**: `Parcel Slip Issuer`
+  - Only users in this group can execute the LOJ Parcel server action.
+- **Menu Visibility**:
+  - Both **Orders by Warehouse** and **LOJ Parcel Batches** menus can be hidden from users not in the group.
+
+#### Server Action
+
+- Executes on selected orders in the **Orders by Warehouse** list.
+- Marks processed orders as batched.
+- Filters them out from future selections.
+
+#### Usage
+
+1. **Assign Parcel Slip Issuer Group**: Users must be in this group to create batches.
+2. **Select Orders**: Navigate to **Sales → Reporting → Orders by Warehouse**.
+3. **Create Batch**: Use the LOJ Parcel server action.
+4. **Processed Orders**: Orders are marked as batched and excluded from the selection list automatically.
+
+#### Implementation Notes
+
+- **XML & Python Files**:
+  - Views: `sale_orders_by_warehouse_views.xml`, `loj_parcel_batch_views.xml`
+  - Models: `sale_order.py`, `loj_parcel_batch.py`
+  - Security: `security/ir.model.access.csv` and user group definitions
+- **Dependencies**:
+  - Standard Odoo `sale` and `stock` modules.
+- **Odoo Version**: Tested on Odoo 11.
 
 ---
