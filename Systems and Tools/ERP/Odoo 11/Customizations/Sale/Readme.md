@@ -912,3 +912,28 @@ This module enhances sales order management by enabling:
 - **Odoo Version**: Tested on Odoo 11.
 
 ---
+
+## LOJ • Parcel Slip Reprint
+
+- **Issue**: Occasionally, printed parcel slips may be lost, damaged, or run out of paper before a printing finishes. Users need the ability to **reprint an existing parcel batch** without creating a new batch or having to select individual orders.
+
+- **Solution**: Add a **server action** that allows authorized users to generate the XML for an existing LOJ Parcel Batch using the **same method** as the original batch creation (`create_xml_for_batch`).
+
+- **Details**:
+
+  - Uses the **existing `create_xml_for_batch()`** method — no new code needed.
+  - Restricted to users in the **Parcel Slip Issuer** group (`group_parcel_issuer`).
+  - Available from the **tree or form view** of `loj.parcel.batch`.
+  - Ensures consistent XML generation with the original batch creation process.
+
+- **Benefits**:
+
+  - Easy reprint workflow without creating duplicate batches.
+  - Maintains access control and ensures only authorized personnel can reprint.
+  - Keeps naming and behavior familiar for users.
+
+- **Deployment**:
+  1. Upgrade the module.
+  2. Users in the Parcel Slip Issuer group can select a batch and trigger **LOJ • Parcel Slip Reprint**.
+
+---

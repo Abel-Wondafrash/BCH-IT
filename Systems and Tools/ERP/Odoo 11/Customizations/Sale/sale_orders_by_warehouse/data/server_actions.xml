@@ -1,7 +1,7 @@
 <odoo>
   <data>
     <record id="action_sale_order_loj_parcel" model="ir.actions.server">
-    <field name="name">LOJ • Parcel</field>
+    <field name="name">LOJ • Parcel Slip Print</field>
     <field name="model_id" ref="sale.model_sale_order"/>
     <field name="binding_model_id" ref="sale.model_sale_order"/>
     <field name="binding_view_types">list</field>
@@ -28,5 +28,18 @@ else:
     raise Warning("All selected orders have already been processed in a batch.")
     </field>
 </record>
+
+<record id="action_loj_parcel_batch_reprint" model="ir.actions.server">
+    <field name="name">LOJ • Parcel Slip Reprint</field>
+    <field name="model_id" ref="model_loj_parcel_batch"/>
+    <field name="binding_model_id" ref="model_loj_parcel_batch"/>
+    <field name="binding_view_types">tree,form</field>
+    <field name="state">code</field>
+    <field name="groups_id" eval="[(4, ref('sale_orders_by_warehouse.group_parcel_issuer'))]"/>
+    <field name="code">
+records.create_xml_for_batch()
+    </field>
+</record>
+
   </data>
 </odoo>
