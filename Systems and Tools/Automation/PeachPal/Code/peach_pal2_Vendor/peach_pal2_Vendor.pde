@@ -9,70 +9,44 @@ void setup () {
   robot = new RobotTools ();
 
   Field inv = new Field (20, 132, 130, 16);
-
-  path += "ven_multiple_lines.csv";
-  int delayAfterSetting = 400;
+  
+  path += "ven.csv";
+  int delayAfterSetting = 700;
 
   Table table = loadTable (path, "header");
   //String codes [] = table.getStringColumn ("partner_code");
   String names [] = table.getStringColumn ("name");
-  String dates [] = table.getStringColumn ("date");
-  String inv_no [] = table.getStringColumn ("inv_no");
   String balas [] = table.getStringColumn ("balance");
   delay (2000);
 
   String classes [] = {"ABD_Edit1", "ABD_EditDate1", "ABD_Dollars1", "BBD_EditAcnt1"};
-  String prevName = null;
-  for (int i = 121; i < names.length; i ++) { // names.length
+  for (int i = 100; i < names.length; i ++) { // names.length
     println (nf (i + 1, 3), "of", nf (names.length, 3), nfc ((i + 1.0)*100/names.length, 3), "%\t", names [i], balas [i]);
-    String values [] = {inv_no [i], dates [i], balas [i], "120101"};
+    String values [] = {"BIG 7/8/2024", "7/8/2024", balas [i], "120101"};
     if (float (balas [i]) == 0) continue;
 
-    if (prevName == null || !prevName.equals (names [i])) {
-      //println ("Waiting for", WIN_VBB, "to exist");
-      winWaitUntilExist (WIN_VBB);
-      setForeground(WIN_VBB);
-      winWaitUntilForeground(WIN_VBB);
-
-      Field win = getWinLoc(WIN_VBB);
-      inv.x = win.x + 20;
-      inv.y = win.y + 132;
-
-      robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_B});
-      delay (200);
-      pressFind ();
-      delay (200);
-      winWaitUntilForeground (WIN_FIND);
-      robot.typeString (names [i]);
-      delay (200);
-      robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_O});
-      winWaitUntilForeground (WIN_VBB);
-      //robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_V});
-      robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_P});
-      delay (200);
-      robot.moveMouseAndClick (inv);
-      delay (200);
-    }
-
-    prevName = names [i];
-
-    while (true) {
-      robot.toClipboard("_");
-      delay (200);
-
-      robot.press(new Integer [] {KeyEvent.VK_CONTROL, KeyEvent.VK_C});
-      delay (200);
-      String content = robot.getClipboardContent();
-      if (content == null) {
-        print ("NULL CONTENT");
-        continue;
-      }
-
-      if (content.trim ().equals ("_") || content.trim ().isEmpty()) break;
-      robot.DOWN();
-      delay (200);
-    }
-
+    //println ("Waiting for", WIN_VBB, "to exist");
+    winWaitUntilExist (WIN_VBB);
+    setForeground(WIN_VBB);
+    winWaitUntilForeground(WIN_VBB);
+    Field win = getWinLoc(WIN_VBB);
+    inv.x = win.x + 20;
+    inv.y = win.y + 132;
+    
+    robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_B});
+    delay (100);
+    pressFind ();
+    delay (100);
+    winWaitUntilForeground (WIN_FIND);
+    robot.typeString (names [i]);
+    delay (100);
+    robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_O});
+    winWaitUntilForeground (WIN_VBB);
+    //robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_V});
+    robot.press(new Integer [] {KeyEvent.VK_ALT, KeyEvent.VK_P});
+    delay (100);
+    robot.moveMouseAndClick (inv);
+    
     delay (300);
     setControlText (WIN_VBB, classes [0], values [0]);
     delay (delayAfterSetting);
