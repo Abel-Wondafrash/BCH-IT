@@ -49,9 +49,9 @@ All key configuration values are centralized in a remote configuration file. Thi
   - Resource folder location containing templates and related assets.
   - **Default:** `\\\\WIN-P0OU438M5IM\Loj Parcel\res`
 
-**xml_target_path**
+- **xml_target_path**
 
-- Network path where generated XML slips are saved. Find this in Odoo.
-- **Default:** `\\\\WIN-P0OU438M5IM\Slips`
+  - Network path where generated XML slips are saved. Find this in Odoo.
+  - **Default:** `\\\\WIN-P0OU438M5IM\Slips`
 
 ---
