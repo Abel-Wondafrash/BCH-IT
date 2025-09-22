@@ -109,6 +109,11 @@ This SOP covers systems, applications, and support tools used to maintain busine
 - Convert image into vector digital signature | Video guide [here](https://youtu.be/lkRKYHP1fLg)
 - Add Issuers' Digital Signatures to SO Engine [here](https://youtu.be/sE7V-jnQYKo)
 
+#### Maintain Loj Parcel (Issuers)
+
+- Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
+- Read how to configure Loj Parcel [here](./Automation/Loj%20Parcel/Readme.md)
+
 #### Maintain sellable items creation
 
 - Video guide [here](https://youtu.be/GOucVCyTxwM)

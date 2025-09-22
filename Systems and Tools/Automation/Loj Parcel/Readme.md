@@ -12,8 +12,8 @@ Within finance operations, handovers of receipts and supporting attachments are 
 
 With Loj Parcel, the workflow transforms. Instead of filling out paper by hand, finance staff simply navigate to Sales / Orders by Warehouse, choose the warehouse, select the documents, and print. Parcel automatically generates a slip with all required fields pre-filled and sends it to a thermal printer, ensuring no more paper is used than necessary (significantly less than an A5 paper). Each step is digitally logged, and batches are grouped in a structured, searchable format consistent with Odoo. Slips are re-printable, traceable, and securely stored—removing delays, minimizing risk, and enabling efficient auditing.
 
-Watch Loj Parcel in action [here](https://youtu.be/EOdn9vTJO7A)
-Watch on how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
+Watch Loj Parcel in action [here](https://youtu.be/EOdn9vTJO7A)  
+Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
 
 ---
 
