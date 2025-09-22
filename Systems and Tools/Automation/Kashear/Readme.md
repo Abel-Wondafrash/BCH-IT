@@ -18,7 +18,7 @@ All critical configurations are designed to be stored on a **remote device** (ty
   Contains a `config_file_path` tag pointing to the full path of the main config (`kashear_config.xml`).
 
 - **Libraries:**  
-  Kashear depends on the following libraries (must be present in `lib/`):
+  Kashear depends on the following libraries (must be present in `code/`):
 
   - `icu4j-2.6.1.jar` – International Components for Unicode (text, locale, date/time formatting)
   - `jna-5.13.0.jar` – Java Native Access (bridge to native shared libraries)

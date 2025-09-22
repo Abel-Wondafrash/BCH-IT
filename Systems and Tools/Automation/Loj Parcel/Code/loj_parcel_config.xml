@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loj_parcel_config>
+
+  <slip>
+    <slip_printer_name>Queti(1)</slip_printer_name>
+  </slip>
+
+  <paths>
+    <res_path>\\\\WIN-P0OU438M5IM\Loj Parcel\res</res_path>
+    <xml_target_path>\\\\WIN-P0OU438M5IM\Slips</xml_target_path>
+  </paths>
+
+</loj_parcel_config>
