@@ -1,0 +1,24 @@
+<odoo>
+  <record id="view_parcel_dispatcher_wizard_form" model="ir.ui.view">
+    <field name="name">parcel.dispatcher.wizard.form</field>
+    <field name="model">parcel.dispatcher.wizard</field>
+    <field name="arch" type="xml">
+      <form string="Select Dispatcher">
+        <group>
+          <field name="dispatcher_id"/>
+        </group>
+        <footer>
+          <button string="Confirm" type="object" name="confirm_dispatcher" class="btn-primary"/>
+          <button string="Cancel" special="cancel"/>
+        </footer>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_parcel_dispatcher_wizard" model="ir.actions.act_window">
+    <field name="name">Select Dispatcher</field>
+    <field name="res_model">parcel.dispatcher.wizard</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+  </record>
+</odoo>

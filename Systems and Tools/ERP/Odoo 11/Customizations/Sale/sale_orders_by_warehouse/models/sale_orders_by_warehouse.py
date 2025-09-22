@@ -39,6 +39,7 @@ class LojParcelBatch(models.Model):
     )
     create_date = fields.Datetime(string="Created On", readonly=True)
     user_id = fields.Many2one("res.users", string="Processed By", default=lambda self: self.env.user)
+    dispatcher_id = fields.Many2one("hr.employee", string="Dispatcher", required=True)
     order_ids = fields.One2many("sale.order", "loj_parcel_batch_id", string="Sales Orders")
 
     warehouse_id = fields.Many2one(
@@ -73,9 +74,10 @@ class LojParcelBatch(models.Model):
 
             # Top-level elements
             for tag, value in [
-                ('copy_type', 'Parcel'),
+                ('copy_type', 'New'),
                 ('batch_ref', batch.name),
-                ('stock', batch.warehouse_id.name if batch.warehouse_id else '')
+                ('stock', batch.warehouse_id.name if batch.warehouse_id else ''),
+                ('dispatcher', batch.dispatcher_id.name or ''),
             ]:
                 el = root.createElement(tag)
                 el.appendChild(root.createTextNode(value))

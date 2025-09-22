@@ -75,6 +75,7 @@
             <tree string="LOJ Parcel Batches" default_order="create_date desc">
                 <field name="name"/>
                 <field name="user_id"/>
+                <field name="dispatcher_id"/>
                 <field name="create_date"/>
                 <field name="order_ids"/>
             </tree>
@@ -107,6 +108,17 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="view_loj_parcel_batch_form_inherit_dispatcher" model="ir.ui.view">
+        <field name="name">loj.parcel.batch.form.inherit.dispatcher</field>
+        <field name="model">loj.parcel.batch</field>
+        <field name="inherit_id" ref="sale_orders_by_warehouse.view_loj_parcel_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+            <field name="dispatcher_id"/>
+            </xpath>
         </field>
     </record>
 

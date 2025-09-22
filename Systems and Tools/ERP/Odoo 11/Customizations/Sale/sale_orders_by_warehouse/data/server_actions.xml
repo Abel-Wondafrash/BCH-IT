@@ -8,25 +8,12 @@
     <field name="state">code</field>
     <field name="groups_id" eval="[(4, ref('sale_orders_by_warehouse.group_parcel_issuer'))]"/>
     <field name="code">
-# Filter out already processed orders
-unprocessed_orders = records.filtered(lambda o: not o.loj_parcel_batch_id)
+action = env.ref('sale_orders_by_warehouse.action_parcel_dispatcher_wizard')
+action = action.read()[0]
+action['context'] = dict(env.context)
+action
+</field>
 
-if unprocessed_orders:
-    warehouses = unprocessed_orders.mapped('warehouse_id')
-    if len(warehouses) > 1:
-        raise Warning("You can only process orders from the same warehouse into one batch.")
-
-    # Create batch with the first order's warehouse
-    batch = env['loj.parcel.batch'].create({'warehouse_id': warehouses[0].id})
-    
-    # Assign only unprocessed orders
-    unprocessed_orders.write({'loj_parcel_batch_id': batch.id})
-    
-    # Generate XML for the batch
-    batch.create_xml_for_batch()
-else:
-    raise Warning("All selected orders have already been processed in a batch.")
-    </field>
 </record>
 
 <record id="action_loj_parcel_batch_reprint" model="ir.actions.server">
