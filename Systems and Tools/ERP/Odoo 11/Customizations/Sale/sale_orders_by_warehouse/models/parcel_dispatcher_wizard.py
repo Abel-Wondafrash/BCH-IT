@@ -5,7 +5,12 @@ class ParcelDispatcherWizard(models.TransientModel):
     _name = "parcel.dispatcher.wizard"
     _description = "Parcel Dispatcher Wizard"
 
-    dispatcher_id = fields.Many2one("hr.employee", string="Dispatcher", required=True)
+    dispatcher_id = fields.Many2one(
+        "hr.employee",
+        string="Dispatcher",
+        domain=[('is_parcel_dispatcher', '=', True)],  # <-- filter
+        required=True,
+    )
 
     @api.multi
     def confirm_dispatcher(self):

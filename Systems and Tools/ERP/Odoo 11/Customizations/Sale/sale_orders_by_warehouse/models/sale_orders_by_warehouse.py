@@ -55,7 +55,7 @@ class LojParcelBatch(models.Model):
         return super(LojParcelBatch, self).create(vals)
 
     @api.multi
-    def create_xml_for_batch(self):
+    def create_xml_for_batch(self, reprint=False):
         for batch in self:
             if not batch.order_ids:
                 continue
@@ -72,9 +72,11 @@ class LojParcelBatch(models.Model):
             xml_root = root.createElement('VoucherXml')
             root.appendChild(xml_root)
 
+            copy_type = 'reprint' if reprint else 'new'
+
             # Top-level elements
             for tag, value in [
-                ('copy_type', 'New'),
+                ('copy_type', copy_type),
                 ('batch_ref', batch.name),
                 ('stock', batch.warehouse_id.name if batch.warehouse_id else ''),
                 ('dispatcher', batch.dispatcher_id.name or ''),

@@ -9,6 +9,7 @@
         'security/parcel_security.xml',
         'views/sale_orders_by_warehouse_views.xml',
         'views/parcel_dispatcher_wizard_views.xml',
+        'views/hr_employee_inherit.xml',
         'data/sequence.xml',
         'data/server_actions.xml',
     ],
