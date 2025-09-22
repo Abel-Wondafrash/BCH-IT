@@ -39,17 +39,19 @@ All key configuration values are centralized in a remote configuration file. Thi
 
 - **slip_printer_name**
 
-- Name of the thermal printer used for slip printing as it appears on the host machine. Must match exactly as listed under **Windows Settings → Printers & Scanners**. There is no fallback printer automatically selected as thermal printers are typically not set as default.
-- **Default:** `Queti(1)`
+  - Name of the thermal printer used for slip printing as it appears on the host machine. Must match exactly as listed under **Windows Settings → Printers & Scanners**. There is no fallback printer automatically selected as thermal printers are typically not set as default.
+  - **Default:** `Queti(1)`
 
 #### Paths
 
-**res_path**
+- **res_path**
 
-- Resource folder location containing templates and related assets.
-- **Default:** `\\\\WIN-P0OU438M5IM\Loj Parcel\res`
+  - Resource folder location containing templates and related assets.
+  - **Default:** `\\\\WIN-P0OU438M5IM\Loj Parcel\res`
 
 **xml_target_path**
 
 - Network path where generated XML slips are saved. Find this in Odoo.
 - **Default:** `\\\\WIN-P0OU438M5IM\Slips`
+
+---
