@@ -5,7 +5,9 @@
     <field name="arch" type="xml">
       <form string="Select Dispatcher">
         <group>
-          <field name="dispatcher_id"/>
+          <field name="dispatcher_id" 
+          domain="[('is_parcel_dispatcher','=',True)]"
+          options="{'no_create': True, 'no_create_edit': True}"/>
         </group>
         <footer>
           <button string="Confirm" type="object" name="confirm_dispatcher" class="btn-primary"/>
