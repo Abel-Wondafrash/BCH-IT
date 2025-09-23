@@ -1,5 +1,5 @@
-static final String appName = "Parcel";
-static final String DATE_TIME_FORMAT = "dd-MM-yyyy • hh:mm:ss";
+static final String APP_NAME = "Parcel";
+static final String DATE_TIME_FORMAT = "dd-MM-yyyy • hh:mm:ss a";
 static final String DNA_CONFIG_FILE = "loj_parcel_dna_config.xml";
 static final int SLIP_RANDOM_CODE_LENGTH = 20;
 
@@ -19,5 +19,8 @@ class Paths_ {
   
   String getTempDir () {
     return tempDir;
+  }
+  String getDNAconfigPath () {
+    return dnaConfigPath;
   }
 }

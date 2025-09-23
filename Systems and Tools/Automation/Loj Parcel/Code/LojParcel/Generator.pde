@@ -9,7 +9,7 @@ class Generator {
   static final float marginL = 15, marginR = 15;
   static final int NAME_ABBREVIATION_CHAR_LIMIT = 34;
   static final int REF_ABBREVIATION_CHAR_LIMIT = 8;
-  static final int ISSUER_NAME_CHAR_LIMIT = 20;
+  static final int AUTH_NAME_CHAR_LIMIT = 20;
 
   Generator () {
   }
@@ -103,7 +103,7 @@ class Generator {
     //// Slip Contents
     float vGap = 34, checkboxD = 15;
     float columnsX [] = {42, 170};
-    
+
     // Columns
     startY += tBoxH;
     float columnH = 4 + vGap*parcel.getVouchers().size () + 4;
@@ -111,7 +111,7 @@ class Generator {
     img.strokeWeight (2);
     img.line (columnsX [0], startY, columnsX [0], startY + columnH);
     img.line (columnsX [1], startY, columnsX [1], startY + columnH);
-    
+
     // Row Content
     int sequenceCounter = 1;
     startY += 4; // 4 descent gap
@@ -145,6 +145,7 @@ class Generator {
 
     // Authorizers
     String authLabels [] = {"Issuer", "Dispatcher", "Receiver"};
+    String authValues [] = {parcel.getIssuerName(), parcel.getDispatcherName(), ""};
     for (int i = 0; i < authLabels.length; i ++) {
       startY += authGapH;
       img.stroke (0);
@@ -161,12 +162,11 @@ class Generator {
       img.text ("(name)", 170, startY);
       img.text ("(sign)", 435, startY);
 
-      // Issuer name
-      if (i != 0) continue;
-      String issuerName = abbreviate(parcel.getIssuerName(), ISSUER_NAME_CHAR_LIMIT);
+      // Auth names
+      String authName = abbreviate(authValues [i], AUTH_NAME_CHAR_LIMIT);
       img.textAlign (LEFT, BOTTOM);
       img.textFont (fonts.robotoMono.bold, 20);
-      img.text (issuerName, 170, startY - 4); // 4 = Descent gap
+      img.text (authName, 170, startY - 4); // 4 = Descent gap
     }
     startY += authGapH;
 

@@ -24,15 +24,17 @@ void showCMDerror (String errorCode) {
 void showCMDerror (String errorCode, String details) {
   details = details.replace ("\n", "& echo.");
   
-  launch ("start cmd /C \"echo ERROR (" + errorCode + "): " + appName + " is missing critical files. & echo." +
-    "FIX: Reinstall " + appName + " or contact your system provider to help you resolve this issue. & echo." +
+  launch ("start cmd /C \"echo ERROR (" + errorCode + "): " + APP_NAME + " is missing critical files. & echo." +
+    "FIX: Reinstall " + APP_NAME + " or contact your system provider to help you resolve this issue. & echo." +
     (details.isEmpty ()? "" : "Details: " + details) +
     " & color 0c & timeout /t 30 & start https://t.me/PocoThings\"");
 }
 void showCMDerror (String errorCode, String details, boolean show) {
   details = details.replace ("\n", "& echo.");
   
-  launch ("start cmd /C \"echo ERROR (" + errorCode + "): Another instance of " + appName + " is already running! & echo." +
+  cLogger.log (errorCode + " - " + details);
+  
+  launch ("start cmd /C \"echo ERROR (" + errorCode + "): Another instance of " + APP_NAME + " is already running! & echo." +
     "FIX: Either close the other instance and start Loj again or keep using the existing instance. & echo." +
     (details.isEmpty ()? "" : "Details: " + details) +
     " & color 0c & timeout /t 30 & start https://t.me/PocoThings\"");

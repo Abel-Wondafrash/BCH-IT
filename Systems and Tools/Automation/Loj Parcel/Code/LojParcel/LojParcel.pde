@@ -5,15 +5,18 @@ RasterImagePrint printer;
 Paths_ paths_;
 FileWatcher fWatcher;
 SlipEngine engine;
+Logger cLogger;
 
 void setup () {
   size (300, 140);
   surface.setTitle ("Loj Parcel - Initiating .");
   background (#036DFF);
-
+  
   // Paths
   paths_ = new Paths_ ();
-  String dnaConfigPath = paths_.dnaConfigPath; // Load local config first
+  cLogger = new Logger (paths_.logDir).setLogFileName ("C_");
+  
+  String dnaConfigPath = paths_.getDNAconfigPath (); // Load local config first
   DNAconfig localConfig = new DNAconfig (dnaConfigPath); // Get DNA (main) config path
   if (!localConfig.init ()) {
     exit ();
@@ -55,4 +58,5 @@ void setup () {
   
   surface.setVisible (false);
   println ("Ready");
+  cLogger.log ("Ready");
 }

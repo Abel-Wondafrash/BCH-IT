@@ -29,6 +29,7 @@ class RasterImagePrint {
       File imageFile = new File(imagePath);
       if (!imageFile.exists()) {
         System.err.println("Image file not found: " + imagePath);
+        cLogger.log ("Image file not found: " + imagePath);
         return false;
       }
 
@@ -44,6 +45,7 @@ class RasterImagePrint {
 
       if (printService == null) {
         System.err.println("Printer '" + printerName + "' not found. Available printers:");
+        cLogger.log ("Printer '" + printerName + "' not found. Available printers:");
         for (PrintService ps : printServices) {
           System.out.println(ps.getName());
         }
@@ -66,7 +68,7 @@ class RasterImagePrint {
         escpos.cut(EscPos.CutMode.FULL);
       } 
       catch (IOException ex) {
-        Logger.getLogger(RasterImagePrint.class.getName()).log(Level.SEVERE, null, ex);
+        java.util.logging.Logger.getLogger(RasterImagePrint.class.getName()).log(Level.SEVERE, null, ex);
         ex.printStackTrace();
       } 
       finally {
@@ -75,13 +77,14 @@ class RasterImagePrint {
             escpos.close();
           } 
           catch (IOException ex) {
-            Logger.getLogger(RasterImagePrint.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RasterImagePrint.class.getName()).log(Level.SEVERE, null, ex);
           }
         }
       }
     }
     catch (Exception e) {
       println ("Error printing:", e);
+      cLogger.log ("Error printing: " + e + " Image: " + imagePath);
     }
     
     return true;

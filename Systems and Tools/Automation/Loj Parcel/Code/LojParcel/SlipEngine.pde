@@ -22,6 +22,7 @@ class SlipEngine implements Runnable {
     } 
     catch (Exception e) {
       System.err.println("Error in SlipEngine: " + e);
+      cLogger.log ("Error in SlipEngine: " + e);
     }
   }
 
@@ -29,11 +30,13 @@ class SlipEngine implements Runnable {
     Path path = slips.take(); // blocks until a path is available
     if (!path.toFile().exists()) {
       System.err.println ("Queued file missing: " + path.toString ());
+      cLogger.log ("Queued file missing: " + path.toString ());
       return;
     }
     
     if (!parcel.parse(path.toString ())) {
       System.err.println ("Error occurred during parcel parsing");
+      cLogger.log ("Error occurred during parcel parsing");
       return;
     }
 
@@ -44,10 +47,16 @@ class SlipEngine implements Runnable {
     File slipImg = new File (genPath);
     if (!slipImg.exists ()) {
       System.err.println ("Generator failed to create slip image");
+      cLogger.log ("Generator failed to create slip image");
       return;
     }
-    if (!printer.print(slipImg))
+    if (!printer.print(slipImg)) {
       System.err.println ("Error Printing " + parcel.getBatchReference());
+      cLogger.log ("Error Printing " + parcel.getBatchReference());
+    }
+    
+    println (parcel.getBatchReference() + " Sent to Printer | " + printer.printerName);
+    cLogger.log (parcel.getBatchReference() + " Sent to Printer | " + printer.printerName);
     
     // Clean temp image
     slipImg.delete ();

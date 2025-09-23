@@ -28,6 +28,7 @@ class FileWatcher implements Runnable {
     } 
     catch (Exception e) {
       e.printStackTrace();
+      cLogger.log ("Error initializing File Watcher " + e);
       println ("Error initializing File Watcher", e);
       return false;
     }
@@ -46,6 +47,7 @@ class FileWatcher implements Runnable {
       }
       catch (Exception e) {
         println ("Error watching directory:", e);
+        cLogger.log ("Error occurred while watching directory " + e);
       }
     }
   }

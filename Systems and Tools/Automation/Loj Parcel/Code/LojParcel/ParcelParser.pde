@@ -10,7 +10,8 @@ class ParcelParser {
   private String copyType;
   private String batchRef;
   private String stock;
-  private String issuerName; // required field
+  private String issuerName;
+  private String dispatcherName;
   private boolean valid = false;
   private ArrayList<Voucher> vouchers;
 
@@ -26,6 +27,7 @@ class ParcelParser {
     File file = new File(path);
     if (!file.exists()) {
       println("File does not exist: " + path);
+      cLogger.log ("Couldn't find file to parse: " + path);
       return false;
     }
 
@@ -47,15 +49,18 @@ class ParcelParser {
       org.w3c.dom.Element root = doc.getDocumentElement();
       if (!root.getNodeName().equals("VoucherXml")) {
         println("Invalid root element: " + root.getNodeName());
+        cLogger.log ("Invalid root element: " + root.getNodeName());
         return false;
       }
 
       copyType = getTagText(root, "copy_type");
       batchRef = getTagText(root, "batch_ref");
       stock = getTagText(root, "stock");
+      dispatcherName = getTagText(root, "dispatcher");
 
-      if (copyType == null || batchRef == null || stock == null) {
-        println("Missing required fields: copyType, batchRef, or stock.");
+      if (copyType == null || batchRef == null || stock == null || dispatcherName == null) {
+        println("Missing required fields: copyType, batchRef, stock, or dispatcherName");
+        cLogger.log ("Missing required fields: copyType, batchRef, stock, or dispatcherName");
         return false;
       }
 
@@ -71,6 +76,7 @@ class ParcelParser {
       }
       if (issuerName == null) {
         println("Missing required field: issuerName.");
+        cLogger.log ("Missing required field: issuerName.");
         return false;
       }
 
@@ -98,6 +104,7 @@ class ParcelParser {
     } 
     catch (Exception e) {
       println("Error parsing XML: " + e.getMessage());
+      cLogger.log ("Error parsing XML: " + e.getMessage());
       return false;
     }
   }
@@ -124,6 +131,9 @@ class ParcelParser {
   }
   public String getIssuerName() {
     return issuerName;
+  }
+  public String getDispatcherName () {
+    return dispatcherName;
   }
 
   // Helpers
