@@ -21,6 +21,8 @@ Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO
 
 All key configuration values are centralized in a remote configuration file. This ensures consistency across deployments and minimizes unauthorized or accidental tampering.
 
+Find POS printer driver [here](./Files/YES%20POS%20Printer%20Driver%20Setup%20V7.17_02.exe)
+
 ### Resources Required by Loj Parcel
 
 - **Link configuration file:**
