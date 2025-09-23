@@ -33,10 +33,23 @@ class SlipEngine implements Runnable {
       cLogger.log ("Queued file missing: " + path.toString ());
       return;
     }
-    
-    if (!parcel.parse(path.toString ())) {
-      System.err.println ("Error occurred during parcel parsing");
-      cLogger.log ("Error occurred during parcel parsing");
+
+    boolean parsed = false;
+    int attempts = 0;
+
+    while (attempts < XML_PARSE_ATTEMPTS && !parsed) {
+      attempts ++;
+      parsed = parcel.parse(path.toString());
+      if (!parsed) {
+        System.err.println("Parse failed attempt " + attempts + " for " + path);
+        cLogger.log ("Parse failed attempt " + attempts + " for " + path);
+        Thread.sleep(500); // small backoff
+      }
+    }
+
+    if (!parsed) {
+      System.err.println("Timeout parsing " + path);
+      cLogger.log ("Timeout parsing " + path);
       return;
     }
 
@@ -54,10 +67,10 @@ class SlipEngine implements Runnable {
       System.err.println ("Error Printing " + parcel.getBatchReference());
       cLogger.log ("Error Printing " + parcel.getBatchReference());
     }
-    
+
     println (parcel.getBatchReference() + " Sent to Printer | " + printer.printerName);
     cLogger.log (parcel.getBatchReference() + " Sent to Printer | " + printer.printerName);
-    
+
     // Clean temp image
     slipImg.delete ();
   }

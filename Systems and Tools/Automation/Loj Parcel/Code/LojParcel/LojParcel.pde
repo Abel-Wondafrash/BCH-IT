@@ -7,6 +7,7 @@ FileWatcher fWatcher;
 SlipEngine engine;
 Logger cLogger;
 OneInstance appLock;
+FileChecksum checksum;
 
 void setup () {
   size (300, 140);
@@ -18,6 +19,16 @@ void setup () {
     appLock.showAlreadyRunningMessage();
     appLock.release ();
     exit();
+    return;
+  }
+
+  // Init Checksum
+  try {
+    checksum = new FileChecksum ();
+  } 
+  catch (Exception e) {
+    showCMDerror ("FileCheckSum Algorithm not found: " + e.getMessage());
+    exit ();
     return;
   }
 

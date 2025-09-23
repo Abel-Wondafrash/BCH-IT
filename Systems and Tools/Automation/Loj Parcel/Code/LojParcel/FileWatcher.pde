@@ -39,7 +39,7 @@ class FileWatcher implements Runnable {
     t.setDaemon(true); // Not to block JVM shutdown
     t.start();
   }
-  
+
   void run () {
     while (true) {
       try {
@@ -69,21 +69,48 @@ class FileWatcher implements Runnable {
   }
 
   private boolean waitForCompleteWrite(File f) {
-    try {
-      long size = -1, newSize = f.length();
-      // simple size-stability loop
-      while (size != newSize) {
-        size = newSize;
-        Thread.sleep(100);
-        newSize = f.length();
+    if (!f.exists()) return false;
+
+    final int timeoutMs = 5_000; // 5s max wait
+    final int delayMs = 500;
+    long start = System.currentTimeMillis();
+
+    long lastSize = -1;
+    String lastChecksum = null;
+    int stableCount = 0;
+
+    while (System.currentTimeMillis() - start < timeoutMs) {
+      long size = f.length();
+
+      if (size == lastSize) {
+        // Size stable, check checksum
+        String currentChecksum = checksum.get(f.getAbsolutePath());
+        if (currentChecksum != null && currentChecksum.equals(lastChecksum)) {
+          stableCount++;
+          if (stableCount >= 2) return true; // require 2 consistent rounds
+        } else {
+          lastChecksum = currentChecksum;
+          stableCount = 0;
+        }
+      } else {
+        stableCount = 0;
       }
-      return true;
-    } 
-    catch (Exception e) {
-      return false;
+
+      lastSize = size;
+      try { 
+        Thread.sleep(delayMs);
+      }
+      catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return false;
+      }
     }
+
+    System.err.println("Timeout waiting for complete write: " + f.getAbsolutePath());
+    cLogger.log ("Timeout waiting for complete write: " + f.getAbsolutePath());
+    return false;
   }
-  
+
   boolean isEmpty () {
     return pathQueue.isEmpty ();
   }
