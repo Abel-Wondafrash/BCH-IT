@@ -75,6 +75,7 @@
             <tree string="LOJ Parcel Batches" default_order="create_date desc">
                 <field name="name"/>
                 <field name="user_id"/>
+                <field name="warehouse_id"/>
                 <field name="dispatcher_id"/>
                 <field name="create_date"/>
                 <field name="order_ids"/>
