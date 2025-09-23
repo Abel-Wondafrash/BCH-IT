@@ -14,6 +14,8 @@ With Loj Parcel, the workflow transforms. Instead of filling out paper by hand, 
 
 Watch Loj Parcel in action [here](https://youtu.be/EOdn9vTJO7A)  
 Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
+Watch how to mark employees as dispatchers (couriers) in HR [here](https://youtu.be/sjDOzsjfH8A)
+Watch the latest version of Loj Parcel interaction [here](https://youtu.be/BqQrdN-uyxE)
 
 ---
 
