@@ -6,6 +6,7 @@
     'author': 'Admin',
     'depends': ['sale', 'sale_stock'],
     'data': [
+        'security/ir.model.access.csv',
         'security/parcel_security.xml',
         'views/sale_orders_by_warehouse_views.xml',
         'views/parcel_dispatcher_wizard_views.xml',

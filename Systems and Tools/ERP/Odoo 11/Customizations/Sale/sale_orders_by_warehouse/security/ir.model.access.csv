@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_loj_parcel_batch_issuer,access.loj.parcel.batch.issuer,model_loj_parcel_batch,sale_orders_by_warehouse.group_parcel_issuer,1,1,1,0
