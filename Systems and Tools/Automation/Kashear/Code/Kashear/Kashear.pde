@@ -1,4 +1,4 @@
-// With Config with Console Log
+// With Config with Console Log with Order Processor
 
 RobotTools robot;
 Fields fields;
@@ -13,6 +13,7 @@ PDF_Toolkit pdf_toolkit;
 Timeouts timeouts;
 Logger cLogger;
 OrderProcessor op;
+SystemTray_ sysTray;
 
 void setup () {
   size (140, 140);
@@ -91,6 +92,7 @@ void setup () {
   cLogger.log ("Started | DB: " + DB_NAME + " | " + "USER: " + KASHEAR_ODOO_EMAIL);
   
   op = new OrderProcessor ();
+  sysTray = new SystemTray_ (paths_.iconPath);
 }
 
 void draw () {

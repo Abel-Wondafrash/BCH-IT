@@ -111,8 +111,11 @@ This SOP covers systems, applications, and support tools used to maintain busine
 
 #### Maintain Loj Parcel (Issuers)
 
-- Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
 - Read how to configure Loj Parcel [here](./Automation/Loj%20Parcel/Readme.md)
+- Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
+- Watch how to give access rights to use Loj Parcel [here](https://youtu.be/iSmlkO_qKys)
+- Watch how to mark employees as dispatchers (couriers) in HR [here](https://youtu.be/sjDOzsjfH8A)
+- Watch the latest version of Loj Parcel interaction [here](https://youtu.be/BqQrdN-uyxE)
 
 #### Maintain sellable items creation
 

@@ -1,4 +1,5 @@
 static final String KASHEAR_DNA_CONFIG_FILE = "kashear_dna_config.xml";
+static final String ICON_FILE = "icon.png";
 
 // General
 boolean IS_MODE_DIRECT = true;
@@ -110,13 +111,16 @@ class Paths_ {
   String tempDir, tempPath;
   String logDir;
   String dnaConfigPath;
+  String iconPath;
 
   Paths_ () {
     appParentDir = System.getProperty("user.home") + "/AppData/Local/Kashear/";
     tempDir = appParentDir + "temp/";
     tempPath = tempDir + "temp.txt";
     logDir = appParentDir + "logs/";
-    dnaConfigPath = new File (dataPath ("")).getParent () + "/config/" + KASHEAR_DNA_CONFIG_FILE;
+    String dataDir = new File (dataPath ("")).getParent ();
+    dnaConfigPath = dataDir + "/config/" + KASHEAR_DNA_CONFIG_FILE;
+    iconPath = dataDir + "/res/" + ICON_FILE;
   }
 }
 
