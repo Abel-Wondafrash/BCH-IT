@@ -8,8 +8,10 @@ SlipEngine engine;
 Logger cLogger;
 OneInstance appLock;
 FileChecksum checksum;
+SystemTrayClass sysTray;
 
 void setup () {
+  surface.setVisible (false);
   size (300, 140);
   surface.setTitle ("Loj Parcel - Initiating .");
   background (#036DFF);
@@ -76,7 +78,7 @@ void setup () {
   engine = new SlipEngine (fWatcher.getPathQueue());
   engine.start ();
 
-  surface.setVisible (false);
   println ("Ready");
   cLogger.log ("Ready");
+  sysTray = new SystemTrayClass (paths_.getIconPath ());
 }

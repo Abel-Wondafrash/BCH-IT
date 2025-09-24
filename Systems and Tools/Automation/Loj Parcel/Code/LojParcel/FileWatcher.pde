@@ -1,78 +1,90 @@
-import java.nio.file.*;
-import java.util.concurrent.*;
 import java.io.File;
+import java.io.FilenameFilter;
+import java.nio.file.Path;
+import java.util.Set;
+import java.util.concurrent.*;
 
 class FileWatcher implements Runnable {
-  BlockingQueue<Path> pathQueue;
-  WatchService watchService;
+  private final BlockingQueue<Path> pathQueue;
+  private final Set<String> seenFiles; // track processed files
+  private final String targetDirPathStr;
+  private long startDirModifiedTime; // track dir last modified at startup
 
-  private String targetDirPathStr;
+  private final int pollIntervalMs = 2000; // poll every 2s
 
-  private FileWatcher (String targetDirPathStr) {
+  FileWatcher(String targetDirPathStr) {
     this.targetDirPathStr = targetDirPathStr;
+    this.pathQueue = new LinkedBlockingQueue<Path>();
+    this.seenFiles = ConcurrentHashMap.newKeySet();
+    this.startDirModifiedTime = 0;
   }
 
-  private boolean init () {
-    pathQueue = new LinkedBlockingQueue<Path>();
-    try {
-      Path targetDir = Paths.get(targetDirPathStr);
-      if (!targetDir.toFile().exists()) {
-        System.err.println ("Could not find target directory: " + targetDirPathStr);
-        showCMDerror (Error.MISSING_TARGET_DIR, "Could not find XML listening directory");
-        return false;
-      }
-
-      watchService = FileSystems.getDefault().newWatchService();
-      targetDir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
-      return true;
-    } 
-    catch (Exception e) {
-      e.printStackTrace();
-      cLogger.log ("Error initializing File Watcher " + e);
-      println ("Error initializing File Watcher", e);
+  boolean init() {
+    File targetDir = new File(targetDirPathStr);
+    if (!targetDir.exists() || !targetDir.isDirectory()) {
+      System.err.println("Could not find target directory: " + targetDirPathStr);
+      showCMDerror(Error.MISSING_TARGET_DIR, "Could not find XML listening directory");
       return false;
     }
+
+    // Save the directory last modified timestamp at startup
+    startDirModifiedTime = targetDir.lastModified();
+    return true;
   }
 
-  private void start() {
+  void start() {
     Thread t = new Thread(this, "FileWatcherThread");
-    t.setDaemon(true); // Not to block JVM shutdown
+    t.setDaemon(true); // not to block JVM shutdown
     t.start();
   }
 
-  void run () {
+  public void run() {
     while (true) {
       try {
-        watchDirectory();
-      }
+        pollDirectory();
+        Thread.sleep(pollIntervalMs);
+      } 
+      catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        break;
+      } 
       catch (Exception e) {
-        println ("Error watching directory:", e);
-        cLogger.log ("Error occurred while watching directory " + e);
+        System.err.println("Error polling directory: " + e);
+        cLogger.log("Error occurred while polling directory " + e);
       }
     }
   }
 
-  private void watchDirectory() throws Exception {
-    WatchKey key = watchService.take();
-    for (WatchEvent<?> event : key.pollEvents()) {
-      if (event.kind() != StandardWatchEventKinds.ENTRY_CREATE) continue;
+  private void pollDirectory() {
+    File dir = new File(targetDirPathStr);
 
-      Path dir = (Path) key.watchable();
-      Path newPath = dir.resolve((Path) event.context());
-      if (pathQueue.contains(newPath)
-        || !newPath.toString().toLowerCase().endsWith(".xml")
-        || !waitForCompleteWrite(newPath.toFile())) continue;
-
-      pathQueue.add(newPath);
+    File[] files = dir.listFiles(new FilenameFilter() {
+      public boolean accept(File d, String name) {
+        return name.toLowerCase().endsWith(".xml");
+      }
     }
-    key.reset();
+    );
+
+    if (files == null) return; // directory not accessible
+
+    for (File file : files) {
+      String absPath = file.getAbsolutePath();
+
+      // Only process files created/modified after watcher started
+      if (seenFiles.contains(absPath) || file.lastModified() <= startDirModifiedTime) continue;
+
+      if (waitForCompleteWrite(file)) {
+        pathQueue.add(file.toPath());
+        seenFiles.add(absPath);
+      }
+    }
   }
 
   private boolean waitForCompleteWrite(File f) {
     if (!f.exists()) return false;
 
-    final int timeoutMs = 5_000; // 5s max wait
-    final int delayMs = 500;
+    final int timeoutMs = 5000; // 5s max wait
+    final int delayMs = 200;
     long start = System.currentTimeMillis();
 
     long lastSize = -1;
@@ -97,9 +109,9 @@ class FileWatcher implements Runnable {
       }
 
       lastSize = size;
-      try { 
+      try {
         Thread.sleep(delayMs);
-      }
+      } 
       catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         return false;
@@ -107,14 +119,15 @@ class FileWatcher implements Runnable {
     }
 
     System.err.println("Timeout waiting for complete write: " + f.getAbsolutePath());
-    cLogger.log ("Timeout waiting for complete write: " + f.getAbsolutePath());
+    cLogger.log("Timeout waiting for complete write: " + f.getAbsolutePath());
     return false;
   }
 
-  boolean isEmpty () {
-    return pathQueue.isEmpty ();
+  boolean isEmpty() {
+    return pathQueue.isEmpty();
   }
-  BlockingQueue <Path> getPathQueue () {
+
+  BlockingQueue<Path> getPathQueue() {
     return pathQueue;
   }
 }
