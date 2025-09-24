@@ -1,22 +1,20 @@
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Path;
-import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 class FileWatcher implements Runnable {
   private final BlockingQueue<Path> pathQueue;
-  private final Set<String> seenFiles; // track processed files
   private final String targetDirPathStr;
-  private long startDirModifiedTime; // track dir last modified at startup
+  private long lastPollTime; // track last poll timestamp
 
   private final int pollIntervalMs = 2000; // poll every 2s
 
   FileWatcher(String targetDirPathStr) {
     this.targetDirPathStr = targetDirPathStr;
     this.pathQueue = new LinkedBlockingQueue<Path>();
-    this.seenFiles = ConcurrentHashMap.newKeySet();
-    this.startDirModifiedTime = 0;
+    this.lastPollTime = 0;
   }
 
   boolean init() {
@@ -27,8 +25,8 @@ class FileWatcher implements Runnable {
       return false;
     }
 
-    // Save the directory last modified timestamp at startup
-    startDirModifiedTime = targetDir.lastModified();
+    // Initialize lastPollTime to directory last modified at startup
+    lastPollTime = targetDir.lastModified();
     return true;
   }
 
@@ -62,22 +60,26 @@ class FileWatcher implements Runnable {
       public boolean accept(File d, String name) {
         return name.toLowerCase().endsWith(".xml");
       }
-    }
-    );
+    });
 
     if (files == null) return; // directory not accessible
 
-    for (File file : files) {
-      String absPath = file.getAbsolutePath();
+    long newestFileTime = lastPollTime;
 
-      // Only process files created/modified after watcher started
-      if (seenFiles.contains(absPath) || file.lastModified() <= startDirModifiedTime) continue;
+    for (File file : files) {
+      long fileTime = file.lastModified();
+      if (fileTime <= lastPollTime) continue; // ignore old files
 
       if (waitForCompleteWrite(file)) {
         pathQueue.add(file.toPath());
-        seenFiles.add(absPath);
+      }
+
+      if (fileTime > newestFileTime) {
+        newestFileTime = fileTime; // track newest file timestamp
       }
     }
+
+    lastPollTime = newestFileTime; // update for next poll
   }
 
   private boolean waitForCompleteWrite(File f) {
@@ -95,11 +97,10 @@ class FileWatcher implements Runnable {
       long size = f.length();
 
       if (size == lastSize) {
-        // Size stable, check checksum
         String currentChecksum = checksum.get(f.getAbsolutePath());
         if (currentChecksum != null && currentChecksum.equals(lastChecksum)) {
           stableCount++;
-          if (stableCount >= 2) return true; // require 2 consistent rounds
+          if (stableCount >= 2) return true;
         } else {
           lastChecksum = currentChecksum;
           stableCount = 0;
