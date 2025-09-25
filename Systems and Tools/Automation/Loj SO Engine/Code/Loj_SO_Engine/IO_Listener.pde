@@ -73,7 +73,8 @@ class VoucherProcessor implements Runnable {
               continue;
             }
             queue.put(voucherCode, voucher);
-            //println("Queued voucher: " + voucherCode);
+            println("Queued voucher: " + voucherCode);
+            //cLogger.log ("Queued voucher: " + voucherCode);
           } 
           catch (Exception e) {
             println("Error queuing file: " + file.getName() + ", " + e.getMessage());
@@ -149,34 +150,44 @@ class VoucherProcessor implements Runnable {
             voucherCode + "-" + RandomStringUtils.randomAlphanumeric(VOUCHER_RANDOM_CODE_LENGTH) + ".pdf";
           try {
             if (!temp.exists()) temp.mkdirs();
+            //cLogger.log ("Generating");
             generator.generate(voucher, signature, labels, genPath);
-
-            boolean generated = isFileCreationComplete(genPath, FILE_CREATION_TIMEOUT);
-            if (!generated) {
-              println("Warning: Failed to generate PDF for voucher: " + voucherCode);
-              cLogger.log ("Warning: Failed to generate PDF for voucher: " + voucherCode);
+            
+            if (voucher.getPlateNumber().equals ("#####")) {
+              cLogger.log ("Quotation Saved " + voucherCode);
               continue;
             }
+            
+            //cLogger.log ("Generated");
+            //boolean generated = isFileCreationComplete(genPath, FILE_CREATION_TIMEOUT);
+            //if (!generated) {
+            //  println("Warning: Failed to generate PDF for voucher: " + voucherCode);
+            //  cLogger.log ("Warning: Failed to generate PDF for voucher: " + voucherCode);
+            //  continue;
+            //}
 
             String resizedPath = tempPath + getDateToday("yyyy/MMM/MMM_dd_yyyy/") +
               voucherCode + "-" + RandomStringUtils.randomAlphanumeric(VOUCHER_RANDOM_CODE_LENGTH) + "_resized.pdf";
+            //cLogger.log ("Resizing");
             pdf_toolkit.resize(genPath, resizedPath);
-            boolean resized = isFileCreationComplete(resizedPath, FILE_CREATION_TIMEOUT);
-            if (!resized) {
-              println("Warning: Failed to resize PDF for voucher: " + voucherCode);
-              cLogger.log ("Warning: Failed to resize PDF for voucher: " + voucherCode);
-              continue;
-            }
+            //cLogger.log ("Resized");
+            //boolean resized = isFileCreationComplete(resizedPath, FILE_CREATION_TIMEOUT);
+            //if (!resized) {
+            //  println("Warning: Failed to resize PDF for voucher: " + voucherCode);
+            //  cLogger.log ("Warning: Failed to resize PDF for voucher: " + voucherCode);
+            //  continue;
+            //}
 
             //new File(genPath).delete();
             printerName = printer.printPDF(resizedPath, 1, voucher.getCode());
+            delay (3000);
             printedCopies += printerName != null ? 1 : 0;
             if (printerName == null) {
               println("Warning: Failed to print voucher: " + voucherCode);
               cLogger.log ("Warning: Failed to print voucher: " + voucherCode);
             }
-            new File(resizedPath).delete();
-          } 
+            new File(resizedPath).deleteOnExit();
+          }
           catch (Exception e) {
             println("Error processing PDF for voucher: " + voucherCode + ", " + e.getMessage());
             cLogger.log ("Error processing PDF for voucher: " + voucherCode + ", " + e.getMessage());

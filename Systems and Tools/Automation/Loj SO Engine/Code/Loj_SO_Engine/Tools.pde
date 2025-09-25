@@ -187,25 +187,25 @@ String getDigits (String input) {
   return digits;
 }
 
-FileChecksum checksum;
-boolean isFileCreationComplete(String path, int timeout) {
-  if (!new File(path).exists()) return false;
+//FileChecksum checksum;
+//boolean isFileCreationComplete(String path, int timeout) {
+//  if (!new File(path).exists()) return false;
 
-  long startTime = millis();
-  String lastChecksum = null;
+//  long startTime = millis();
+//  String lastChecksum = null;
 
-  while (millis() - startTime < timeout) {
-    String currentChecksum = checksum.get(path);
-    if (currentChecksum == null) return false; // File inaccessible
-    if (lastChecksum != null && lastChecksum.equals(currentChecksum)) {
-      return true; // Checksum stable
-    }
-    lastChecksum = currentChecksum;
-    delay(200); // Increase delay to reduce resource contention
-  }
+//  while (millis() - startTime < timeout) {
+//    String currentChecksum = checksum.get(path);
+//    if (currentChecksum == null) return false; // File inaccessible
+//    if (lastChecksum != null && lastChecksum.equals(currentChecksum)) {
+//      return true; // Checksum stable
+//    }
+//    lastChecksum = currentChecksum;
+//    delay(200); // Increase delay to reduce resource contention
+//  }
 
-  return false; // Timeout reached, file not stable
-}
+//  return false; // Timeout reached, file not stable
+//}
 
 boolean containsNull (String elements []) {
   if (elements == null) return true;

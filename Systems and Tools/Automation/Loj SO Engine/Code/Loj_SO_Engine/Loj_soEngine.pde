@@ -1,4 +1,4 @@
-Fonts fonts;
+Fonts fonts; 
 Shapes shapes;
 Generator generator;
 Configurations configs;
@@ -57,14 +57,14 @@ void setup () {
   oLogger = new Logger (loggerRootPath);
   cLogger = new Logger (cLoggerRootPath).setLogFileName ("C_");
 
-  // Init Checksum
-  try {
-    checksum = new FileChecksum ();
-  } 
-  catch (NoSuchAlgorithmException e) {
-    cLogger.log ("Algorithm not found: " + e.getMessage());
-    System.err.println("Algorithm not found: " + e.getMessage());
-  }
+  //// Init Checksum
+  //try {
+  //  checksum = new FileChecksum ();
+  //} 
+  //catch (NoSuchAlgorithmException e) {
+  //  cLogger.log ("Algorithm not found: " + e.getMessage());
+  //  System.err.println("Algorithm not found: " + e.getMessage());
+  //}
   
   // Show printer details
   printer.showVerbose ();

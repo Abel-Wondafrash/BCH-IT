@@ -91,9 +91,11 @@ class Printer {
         return null;
       }
       document = Loader.loadPDF(pdfFile);
+      //cLogger.log ("Loaded PDF for print");
       float widthPx = document.getPage(0).getMediaBox().getWidth();
       float heightPx = document.getPage(0).getMediaBox().getHeight();
       //println (widthPx, heightPx);
+      //cLogger.log (widthPx + " - " + heightPx);
       print (getDateToday("HH:mm:ss - MMM d, yyyy"), "Print Job:", jobName + " | ");
       cLogger.log ("Print Job:" + jobName + " | ");
 

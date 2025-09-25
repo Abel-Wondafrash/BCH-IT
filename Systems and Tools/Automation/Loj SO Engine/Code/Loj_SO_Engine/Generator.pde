@@ -39,7 +39,8 @@ class Generator {
 
     PGraphicsPDF pdf = (PGraphicsPDF) createGraphics(paperW, paperH, PDF, opPath);
 
-    for (int i = 0; i < copiesLabels.length; i ++) {
+    //for (int i = 0; i < copiesLabels.length; i ++) {
+    for (int i = copiesLabels.length - 1; i >= 0; i --) {
       pdf.beginDraw ();
 
       // Reset the transformation matrix to clear any accumulated transformations
@@ -57,7 +58,7 @@ class Generator {
 
       pdf.popMatrix();
 
-      if (i + 1 < copiesLabels.length) pdf.nextPage ();
+      if (i > 0) pdf.nextPage ();
       pdf.endDraw();
     }
 
