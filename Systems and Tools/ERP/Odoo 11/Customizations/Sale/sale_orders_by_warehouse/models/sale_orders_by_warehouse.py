@@ -86,7 +86,7 @@ class LojParcelBatch(models.Model):
                 xml_root.appendChild(el)
 
             # Orders
-            for order in batch.order_ids:
+            for order in sorted(batch.order_ids, key=lambda o: o.client_order_ref or '', reverse=True):
                 voucher = root.createElement('Voucher')
                 xml_root.appendChild(voucher)
 

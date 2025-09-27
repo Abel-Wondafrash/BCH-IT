@@ -28,6 +28,9 @@
             <xpath expr="//tree/field[@name='partner_id']" position="before">
                 <field name="client_order_ref"/>
             </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="default_order">client_order_ref desc</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -42,7 +45,7 @@
             ('client_order_ref','!=',False),
             ('loj_parcel_batch_id','=',False)
         ]</field>
-        <field name="context">{'group_by': ['warehouse_id', 'state']}</field>
+        <field name="context">{'group_by': ['warehouse_id', 'state'], 'default_order': 'client_order_ref desc'}</field>
     </record>
 
     <!-- Menu for Orders by Warehouse -->
@@ -60,7 +63,7 @@
         <field name="name">loj.parcel.batch.order.tree</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree default_order="client_order_ref desc">
                 <field name="name"/>
                 <field name="client_order_ref"/>
             </tree>
@@ -74,8 +77,8 @@
         <field name="arch" type="xml">
             <tree string="LOJ Parcel Batches" default_order="create_date desc">
                 <field name="name"/>
-                <field name="user_id"/>
                 <field name="warehouse_id"/>
+                <field name="user_id"/>
                 <field name="dispatcher_id"/>
                 <field name="create_date"/>
                 <field name="order_ids"/>
@@ -99,7 +102,7 @@
                     <notebook>
                         <page string="Sales Orders">
                             <field name="order_ids" context="{'default_loj_parcel_batch_id': False}" mode="tree,form">
-                                <tree string="Sales Orders" editable="bottom">
+                                <tree string="Sales Orders" editable="bottom" default_order="client_order_ref desc">
                                     <field name="name"/>
                                     <field name="client_order_ref"/>
                                     <field name="state"/>
@@ -128,7 +131,7 @@
         <field name="name">LOJ Parcel Batches</field>
         <field name="res_model">loj.parcel.batch</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'default_order': 'create_date desc'}</field>
+        <field name="context">{'default_order': 'client_order_ref desc'}</field>
         <field name="order">create_date desc</field>
     </record>
 
