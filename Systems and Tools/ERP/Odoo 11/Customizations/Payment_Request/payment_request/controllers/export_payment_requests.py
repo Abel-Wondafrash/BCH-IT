@@ -40,7 +40,8 @@ class ExportPaymentRequestController(http.Controller):
         LEFT JOIN company_branch br ON pr.branch_2 = br.id
         LEFT JOIN res_users au ON pr.approve_uid = au.id
         LEFT JOIN res_partner approver_partner ON au.partner_id = approver_partner.id
-        WHERE pr.start_datetime BETWEEN %s AND %s
+        WHERE pr.start_datetime >= %s AND pr.start_datetime < (%s::timestamp + interval '1 day')
+
         """
 
         if approved_only:
