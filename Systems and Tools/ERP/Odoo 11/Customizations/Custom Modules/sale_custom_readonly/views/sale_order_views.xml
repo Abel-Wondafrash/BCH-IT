@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_readonly_price" model="ir.ui.view">
+        <field name="name">sale.order.form.priceunit.readonly</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- 1️⃣ Make price_unit readonly in order_line FORM -->
+            <xpath expr="//field[@name='order_line']//form//field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="attrs"/>
+            </xpath>
+
+            <!-- 2️⃣ Make price_unit readonly in order_line TREE -->
+            <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="attrs"/>
+            </xpath>
+
+            <!-- 3️⃣ Make price_unit readonly in order_line KANBAN -->
+            <xpath expr="//field[@name='order_line']//kanban//field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
