@@ -139,6 +139,10 @@ Key details, safety protocols, and curriculum for motorbike rider training
 [TBIT - Framework - IT Staff Performance Evaluation (Qualitative)](https://docs.google.com/document/d/1JYdB3WYO7xijMQ_NdA2P3OuNW_3znxLGS7hZoMwYNJM/edit?tab=t.0)  
 Standardized 100-point scoring system evaluating IT staff across 5 core competencies: technical skill, problem-solving, communication, ethics, and learning agility
 
+#### Bus Pass Template
+
+[Bus Pass Card Template](https://docs.google.com/document/d/1N7wCgtOwoSUKeMbOe4QYecJgbTS1muf93ypWie8fdPY/edit?usp=sharing)
+
 ---
 
 ### PDFs
