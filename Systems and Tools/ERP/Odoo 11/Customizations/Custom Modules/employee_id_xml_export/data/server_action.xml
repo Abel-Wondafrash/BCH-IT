@@ -1,0 +1,12 @@
+<odoo>
+    <record id="action_export_employee_ids" model="ir.actions.server">
+        <field name="name">Export Employee IDs</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+            env['employee.id.xml.export'].export_employee_ids(records.ids)
+        </field>
+    </record>
+</odoo>
