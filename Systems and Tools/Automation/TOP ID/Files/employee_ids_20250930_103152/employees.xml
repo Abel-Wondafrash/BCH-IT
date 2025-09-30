@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<Employees>
+	<Employee>
+		<FullName>Homer Jay Simpson</FullName>
+		<Department>Production</Department>
+		<Position>Technique Manager</Position>
+		<IDNumber>TOP-1987</IDNumber>
+		<Phone>0987654321</Phone>
+		<EmploymentDate>2024-09-30</EmploymentDate>
+		<IDExpiryDate>2025-10-30</IDExpiryDate>
+		<ContractType>Permanent</ContractType>
+		<EmergencyContactNumber>0912345678</EmergencyContactNumber>
+		<EmergencyContactRelation>Dagmawi W. (Brother)</EmergencyContactRelation>
+		<PhotoPath>photos/2337.png</PhotoPath>
+	</Employee>
+	<Activity>
+		<deviceName>WIN-P0OU438M5IM</deviceName>
+		<user>
+			<fullName>Administrator</fullName>
+			<userName>admin</userName>
+		</user>
+	</Activity>
+</Employees>
