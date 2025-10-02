@@ -5,6 +5,7 @@ import javax.swing.*;
 class SystemTray_ {
   SystemTray tray;
   TrayIcon trayIcon;
+  MenuItem modeMenu;
 
   SystemTray_ (String iconPath) {
     if (SystemTray.isSupported()) {
@@ -19,8 +20,19 @@ class SystemTray_ {
       // Create popup menu
       PopupMenu menu = new PopupMenu();
 
+      // Toggle show/hide item
+      modeMenu = new MenuItem("Entry Mode: " + (IS_MODE_DIRECT? "DIRECT" : "INDIRECT")); // initial state
+      modeMenu.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          IS_MODE_DIRECT = !IS_MODE_DIRECT;
+          modeMenu.setLabel("Entry Mode: " + (IS_MODE_DIRECT? "DIRECT" : "INDIRECT"));
+        }
+      }
+      );
+      menu.add(modeMenu);
+
       // Exit item
-      MenuItem exitItem = new MenuItem("Exit Parcel");
+      MenuItem exitItem = new MenuItem("Exit Kashear");
       exitItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           tray.remove(trayIcon);

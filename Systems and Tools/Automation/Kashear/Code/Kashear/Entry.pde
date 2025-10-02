@@ -32,6 +32,8 @@ String verifyOrderValidity (String code) {
   }
 
   Orders orders = getActivePartnerOrders (order.getPartner ().getCode ());
+  if (orders == null) return "> Partner Data NOT FOUND!\n\n" +
+    "Name: '" + order.getPartner ().getName () + "'\nCode: '" + order.getPartner ().getCode () + "'";
   if (orders.isEmpty()) return "> Improbable Error: No processible orders found for partner '" + order.getPartner () + "'";
 
   Double parBalance = getPartnerBalance (order.getPartner ().getCode ());

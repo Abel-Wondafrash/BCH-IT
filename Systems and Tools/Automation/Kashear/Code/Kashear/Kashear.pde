@@ -17,7 +17,7 @@ SystemTray_ sysTray;
 
 void setup () {
   size (140, 140);
-  surface.setVisible (true);
+  surface.setVisible (false);
 
   paths_ = new Paths_ ();
   cLogger = new Logger (paths_.logDir).setLogFileName ("C_");
@@ -86,7 +86,6 @@ void setup () {
   }
 
   delay (2000);
-  surface.setVisible (false);
 
   println ("Started | DB: " + DB_NAME + " | " + "USER: " + KASHEAR_ODOO_EMAIL);
   cLogger.log ("Started | DB: " + DB_NAME + " | " + "USER: " + KASHEAR_ODOO_EMAIL);

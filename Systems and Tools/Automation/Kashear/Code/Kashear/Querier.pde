@@ -35,7 +35,9 @@ class Querier {
     return query;
   }
   String getQuery (String lineToReplace, String lineToReplaceWith) {
-    return getQuery ().replace (lineToReplace, lineToReplaceWith);
+    String query = getQuery ();
+    if (query == null) return null;
+    return query.replace (lineToReplace, lineToReplaceWith);
   }
   String getQuery (String linesToReplace [], String linesToReplaceWith []) {
     if (linesToReplace == null || linesToReplaceWith == null) return null;
